@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LEVEL 0 · 后室长廊</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   html,body{margin:0;height:100%;background:#0b0a06;overflow:hidden;font-family:"Courier New",monospace;color:#e8d98a;}
   #game{display:block;width:100vw;height:100vh;cursor:crosshair;}
@@ -114,6 +115,22 @@
   .suit button:hover:not(:disabled){border-color:#ffe14d;color:#ffe14d;}
   .suit button:disabled{opacity:.38;cursor:not-allowed;}
   .suit.on{border-color:#ffe14d;box-shadow:0 0 18px rgba(255,225,77,.18);}
+  /* ---------- 分享按钮 + 分享弹层 ---------- */
+  .menu-actions{display:flex;gap:16px;justify-content:center;align-items:stretch;flex-wrap:wrap;margin:30px auto 0;}
+  .menu-actions #homebtn{margin:0;}
+  #sharebtn{display:flex;flex-direction:column;align-items:center;gap:6px;margin:0;background:rgba(24,20,8,.6);border:1px solid #6b5f33;color:#e8d98a;font-family:inherit;font-size:13px;letter-spacing:5px;padding:12px 34px;cursor:pointer;}
+  #sharebtn:hover{border-color:#ffe14d;color:#ffe14d;box-shadow:0 0 18px rgba(255,225,77,.25);}
+  #sharebtn svg{display:block;}
+  #share{background:rgba(4,3,2,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  .sharebox{background:radial-gradient(ellipse at 50% 30%,#221c0e 0%,#0d0b06 70%,#050403 100%);border:1px solid #6b5f33;border-radius:16px;padding:26px 30px 24px;max-width:min(92vw,380px);text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.6);}
+  .sharebox h1{font-size:28px;letter-spacing:10px;color:#ffe14d;margin:0 0 4px;}
+  .sharebox .sub{font-size:12px;letter-spacing:3px;opacity:.6;margin-bottom:18px;}
+  #shareqr{display:flex;justify-content:center;align-items:center;min-height:184px;margin:0 auto 14px;background:#fff;border-radius:10px;padding:8px;width:fit-content;}
+  #shareqr img,#shareqr canvas{display:block;}
+  #shareqr .qrfail{color:#333;font-size:12px;letter-spacing:1px;padding:24px 12px;line-height:1.6;}
+  .shareurl{font-size:12px;letter-spacing:1px;color:#c8b96a;margin:0 0 16px;word-break:break-all;line-height:1.6;}
+  .sharebtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .sharetip{font-size:11px;letter-spacing:1px;opacity:.5;margin-top:16px;line-height:1.7;}
 </style>
 </head>
 <body>
@@ -204,13 +221,25 @@
     <div id="netStatus"></div>
   </div>
   <div class="foot">右键行进 · 空格跳跃 · 空格+右键冲刺 · E 拾取</div>
-  <button id="homebtn">
-    <svg width="46" height="38" viewBox="0 0 46 38" aria-hidden="true">
-      <path d="M23 3 L42 19 L36.5 19 L36.5 35 L27.5 35 L27.5 24 L18.5 24 L18.5 35 L9.5 35 L9.5 19 L4 19 Z"
-            fill="rgba(255,225,77,.10)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-    </svg>
-    商 城
-  </button>
+  <div class="menu-actions">
+    <button id="homebtn">
+      <svg width="46" height="38" viewBox="0 0 46 38" aria-hidden="true">
+        <path d="M23 3 L42 19 L36.5 19 L36.5 35 L27.5 35 L27.5 24 L18.5 24 L18.5 35 L9.5 35 L9.5 19 L4 19 Z"
+              fill="rgba(255,225,77,.10)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      </svg>
+      商 城
+    </button>
+    <button id="sharebtn">
+      <svg width="40" height="38" viewBox="0 0 40 38" aria-hidden="true">
+        <path d="M14 13 L26 6 M14 25 L26 32 M26 6 a5 5 0 1 0 0 .01 M26 32 a5 5 0 1 0 0 .01 M14 13 a5 5 0 1 0 0 .01 M14 25 a5 5 0 1 0 0 .01"
+              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="31" cy="6" r="4.5" fill="rgba(255,225,77,.10)" stroke="currentColor" stroke-width="2.2"/>
+        <circle cx="31" cy="32" r="4.5" fill="rgba(255,225,77,.10)" stroke="currentColor" stroke-width="2.2"/>
+        <circle cx="9" cy="19" r="4.5" fill="rgba(255,225,77,.10)" stroke="currentColor" stroke-width="2.2"/>
+      </svg>
+      分 享
+    </button>
+  </div>
 </div>
 
 <div id="victory" class="page">
@@ -228,6 +257,21 @@
   <div class="sub">积分 <span id="shoppts">0</span> · 每通过一关 +10 积分</div>
   <div id="shopgrid"></div>
   <button class="btn" id="shopback" style="margin-top:30px">返 回 首 页</button>
+</div>
+
+<div id="share" class="page">
+  <div class="sharebox">
+    <h1>分 享</h1>
+    <div class="sub">用手机扫码，或复制链接发给朋友</div>
+    <div id="shareqr"></div>
+    <div class="shareurl" id="shareurl"></div>
+    <div class="sharebtns">
+      <button class="btn" id="copylinkbtn">复制链接</button>
+      <button class="btn" id="nativesharebtn">系统分享</button>
+      <button class="btn" id="shareback">关 闭</button>
+    </div>
+    <div class="sharetip" id="sharetip"></div>
+  </div>
 </div>
 
 <script>
@@ -278,6 +322,8 @@ const victoryEl=document.getElementById("victory"), shopEl=document.getElementBy
       ptsEl=document.getElementById("pts"), shopPtsEl=document.getElementById("shoppts"),
       vcv=document.getElementById("vcv"), vctx=vcv.getContext("2d"),
       vsubEl=document.getElementById("vsub"), shopGridEl=document.getElementById("shopgrid");
+const shareEl=document.getElementById("share"), shareQrEl=document.getElementById("shareqr"),
+      shareUrlEl=document.getElementById("shareurl"), shareTipEl=document.getElementById("sharetip");
 let W=0,H=0,GROUND=0;
 function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;GROUND=H*0.78;}
 addEventListener("resize",resize);resize();
@@ -372,7 +418,7 @@ let entities=[], debris=[], waters=[], waterCount=0, bacteria=[], bacMax=0;
 let teammates=[]; // AI 队友数组
 function openMenu(){
   S.menu=true;S.paused=true;
-  victoryEl.style.display="none";shopEl.style.display="none";
+  victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";
   cv.style.display="block";hudEl.style.display="none";
   menuEl.style.display="flex";
   ptsEl.textContent=String(save.points);
@@ -387,7 +433,7 @@ function startMode(i, teamSize=1){
   S.teamSize=teamSize;
   CFG=MODES[i];WIN_M=CFG.winM;WIN_X=WIN_M*40;PAL=PALS[CFG.pal];
   S.menu=false;S.paused=false;
-  menuEl.style.display="none";victoryEl.style.display="none";shopEl.style.display="none";
+  menuEl.style.display="none";victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";
   cv.style.display="block";hudEl.style.display="block";
   smileyWrapEl.style.display=CFG.smileys?"inline":"none";
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
@@ -575,6 +621,48 @@ document.getElementById("homebtn").addEventListener("click",()=>{
   tone(440,660,.18,.1,"sine");
 });
 document.getElementById("shopback").addEventListener("click",()=>{shopEl.style.display="none";ptsEl.textContent=String(save.points);});
+
+// ---------- 分享：二维码（本地生成）+ 复制链接 + 系统分享 ----------
+const nativeBtn=document.getElementById("nativesharebtn");
+function shareUrl(){
+  let u=location.origin+location.pathname;
+  if(/\/index\.html$/i.test(u))u=u.replace(/index\.html$/i,""); // 指向目录入口，地址更短更稳
+  return u;
+}
+function openShare(){
+  const url=shareUrl();
+  shareUrlEl.textContent=url;
+  shareQrEl.innerHTML="";
+  if(typeof QRCode!=="undefined"){
+    try{ new QRCode(shareQrEl,{text:url,width:180,height:180,colorDark:"#1a1408",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M}); }
+    catch(e){ shareQrEl.innerHTML='<div class="qrfail">二维码生成失败<br>请用下方链接分享</div>'; }
+  } else {
+    shareQrEl.innerHTML='<div class="qrfail">二维码组件未加载<br>请用下方链接分享</div>';
+  }
+  nativeBtn.style.display=(navigator.share)?"":"none";
+  shareTipEl.textContent=navigator.share?"":"当前浏览器不支持系统分享，可复制链接或截屏二维码";
+  shareEl.style.display="flex";
+  tone(660,880,.16,.09,"sine");
+}
+document.getElementById("sharebtn").addEventListener("click",openShare);
+document.getElementById("shareback").addEventListener("click",()=>{shareEl.style.display="none";});
+nativeBtn.addEventListener("click",()=>{
+  if(navigator.share)navigator.share({title:"后室长廊 · Backrooms",text:"一起来玩后室 2D 长廊",url:shareUrl()}).catch(()=>{});
+});
+document.getElementById("copylinkbtn").addEventListener("click",async (e)=>{
+  const btn=e.currentTarget, url=shareUrl();
+  let ok=false;
+  try{ if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url);ok=true;} }catch(_){}
+  if(!ok){ try{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");document.body.removeChild(ta);}catch(_){} }
+  const old="复制链接";
+  if(ok){ btn.textContent="已复制 ✓"; tone(880,1046,.14,.1,"sine"); }
+  else{ // 程序化复制被拦截：选中可见链接，提示手动复制
+    try{ const r=document.createRange(); r.selectNodeContents(shareUrlEl); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); }catch(_){}
+    btn.textContent="已选中 · 请手动复制"; tone(440,440,.14,.08,"sine");
+  }
+  setTimeout(()=>{btn.textContent=old;},1800);
+});
+
 function spawnSmiley(){ entities.push({x:P.x+950+Math.random()*750, bob:Math.random()*6.28, hunt:false}); }
 function ensureDebris(){
   let maxX=P.x-W*0.3;
