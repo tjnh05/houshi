@@ -623,12 +623,9 @@ document.getElementById("homebtn").addEventListener("click",()=>{
 document.getElementById("shopback").addEventListener("click",()=>{shopEl.style.display="none";ptsEl.textContent=String(save.points);});
 
 // ---------- 分享：二维码（本地生成）+ 复制链接 + 系统分享 ----------
+const SITE_URL="https://tjnh05.github.io/houshi/"; // 分享/二维码固定指向线上地址（换域名改这里）
 const nativeBtn=document.getElementById("nativesharebtn");
-function shareUrl(){
-  let u=location.origin+location.pathname;
-  if(/\/index\.html$/i.test(u))u=u.replace(/index\.html$/i,""); // 指向目录入口，地址更短更稳
-  return u;
-}
+function shareUrl(){ return SITE_URL; }
 function openShare(){
   const url=shareUrl();
   shareUrlEl.textContent=url;
