@@ -97,6 +97,11 @@
   .mode .cstat .cv{letter-spacing:1px;font-weight:700;}
   .mode .cv.danger{color:#ff6b6b;text-shadow:0 0 10px rgba(255,80,80,.4);}
   .mode .cv.warn{color:#ffc24d;text-shadow:0 0 10px rgba(255,180,60,.35);}
+  .mode .cv.psy{color:#b073ff;text-shadow:0 0 10px rgba(160,90,255,.45);}
+  .mode .sd-num.dead{font-size:22px;letter-spacing:1px;}
+  .mode.grass .classif.deadzone .sd{border-left-color:#ff4d4d;}
+  .mode.grass .classif.deadzone .sd-meter i.on{background:#ff4d4d;box-shadow:0 0 7px #ff4d4d;}
+  .mode.grass .classif.deadzone .sd-num{color:#ff5a5a;text-shadow:0 0 16px rgba(255,80,80,.6);}
   .mode.pipe,.mode.pool,.mode.office,.mode.gray{--accent:#9aa0bd;}
   .mode .classif.unknown .ustat{display:flex;align-items:center;gap:7px;margin-bottom:9px;font-size:11px;letter-spacing:3px;color:#cdd2e8;}
   .mode .classif.unknown .ustat svg{width:13px;height:13px;flex:none;opacity:.9;}
@@ -144,6 +149,11 @@
   .suit button:hover:not(:disabled){border-color:#ffe14d;color:#ffe14d;}
   .suit button:disabled{opacity:.38;cursor:not-allowed;}
   .suit.on{border-color:#ffe14d;box-shadow:0 0 18px rgba(255,225,77,.18);}
+  .suit.pillitem{border-color:#3a6b3a;}
+  .suit.pillitem:hover{border-color:#5aa85a;}
+  .suit .sw.pillo{background:radial-gradient(circle at 50% 38%,#84e87f,#2f8f4f);display:flex;align-items:center;justify-content:center;}
+  .suit .sw.pillo span{font-size:28px;color:#fff;font-weight:bold;text-shadow:0 2px 8px rgba(18,70,28,.7);}
+  .suit .pillown{color:#8fe06a;font-weight:bold;}
   /* ---------- 分享按钮 + 分享弹层 ---------- */
   .menu-actions{display:flex;gap:16px;justify-content:center;align-items:stretch;flex-wrap:wrap;margin:30px auto 0;}
   .menu-actions #homebtn{margin:0;}
@@ -173,11 +183,42 @@
   .hrow .hpts{font-size:15px;letter-spacing:1px;color:#59d67b;font-weight:bold;}
   .hrow .htime{font-size:11px;letter-spacing:0;color:#a99b6a;white-space:nowrap;}
   .hempty{font-size:13px;letter-spacing:2px;opacity:.55;padding:26px 0;}
-  /* ---------- 主题滚动条（菜单/历史） ---------- */
-  #menu::-webkit-scrollbar,#history::-webkit-scrollbar,#histlist::-webkit-scrollbar{width:10px;}
-  #menu::-webkit-scrollbar-track,#history::-webkit-scrollbar-track,#histlist::-webkit-scrollbar-track{background:rgba(10,8,3,.6);}
-  #menu::-webkit-scrollbar-thumb,#history::-webkit-scrollbar-thumb,#histlist::-webkit-scrollbar-thumb{background:linear-gradient(#caa83a,#7a6420);border-radius:6px;border:2px solid rgba(10,8,3,.6);}
-  #menu::-webkit-scrollbar-thumb:hover,#history::-webkit-scrollbar-thumb:hover,#histlist::-webkit-scrollbar-thumb:hover{background:linear-gradient(#ffe14d,#caa83a);}
+  /* ---------- 每日签到 ---------- */
+  #signbtn{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;margin:0;background:rgba(24,20,8,.6);border:1px solid #6b5f33;color:#e8d98a;font-family:inherit;font-size:13px;letter-spacing:4px;padding:12px 28px;cursor:pointer;}
+  #signbtn:hover{border-color:#ffe14d;color:#ffe14d;box-shadow:0 0 18px rgba(255,225,77,.25);}
+  #signbtn:focus-visible,#signClaim:focus-visible{outline:2px solid #ffe14d;outline-offset:3px;}
+  #signbtn svg{display:block;}
+  #signbtn .signdot{position:absolute;top:9px;right:11px;width:9px;height:9px;border-radius:50%;background:#ff5a5a;box-shadow:0 0 10px rgba(255,90,90,.9);animation:signpulse 1.8s ease-in-out infinite;}
+  @keyframes signpulse{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
+  #sign{background:radial-gradient(ellipse at 50% 28%,#221c0e 0%,#0d0b06 66%,#050403 100%);justify-content:flex-start;padding-top:56px;overflow:auto;}
+  #sign h1{font-size:32px;letter-spacing:10px;color:#ffe14d;margin:0 0 6px;}
+  #sign .sub{font-size:12px;letter-spacing:3px;opacity:.7;margin-bottom:22px;}
+  .signcard{width:min(92vw,520px);box-sizing:border-box;background:rgba(18,14,6,.72);border:1px solid #5b5030;border-radius:14px;padding:20px 20px 22px;}
+  .signstat{display:flex;justify-content:space-around;gap:10px;margin-bottom:18px;}
+  .signstat div{display:flex;flex-direction:column;gap:4px;}
+  .signstat b{font-size:26px;color:#ffe14d;letter-spacing:1px;}
+  .signstat span{font-size:11px;letter-spacing:2px;color:#a99b6a;}
+  .signcycle{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:10px;}
+  .signcycle i{display:flex;align-items:center;justify-content:center;height:38px;border-radius:8px;border:1px solid #4a4128;background:rgba(10,8,3,.5);font-size:12px;font-style:normal;color:#6f6440;}
+  .signcycle i.on{border-color:#caa83a;background:rgba(255,225,77,.14);color:#ffe14d;}
+  .signcycle i.gift{border-color:#6a4f96;color:#b073ff;}
+  .signcycle i.gift.on{border-color:#b073ff;background:rgba(176,115,255,.18);color:#e2d0ff;box-shadow:0 0 14px rgba(176,115,255,.35);}
+  .signnote{font-size:11px;letter-spacing:1px;color:#8d8159;margin-bottom:16px;}
+  #signClaim{width:100%;box-sizing:border-box;padding:12px 24px;}
+  #signClaim:disabled{opacity:.45;cursor:not-allowed;}
+  #signClaim:disabled:hover{border-color:#6b5f33;color:#e8d98a;}
+  .signmsg{margin-top:12px;font-size:12px;letter-spacing:2px;color:#a99b6a;min-height:18px;}
+  .signreward{margin-top:14px;padding:12px 14px;border-radius:10px;border:1px solid #b073ff;background:rgba(176,115,255,.12);color:#e2d0ff;font-size:13px;letter-spacing:1px;line-height:1.8;text-align:left;}
+  .signreward b{color:#ffe14d;}
+  .signsub{width:min(92vw,520px);box-sizing:border-box;text-align:left;font-size:12px;letter-spacing:3px;color:#a99b6a;margin:22px 0 10px;}
+  #signLog{display:flex;flex-direction:column;gap:8px;width:min(92vw,520px);box-sizing:border-box;}
+  @media (prefers-reduced-motion:reduce){#signbtn .signdot{animation:none}}
+  @media (max-width:560px){#sign{padding-top:34px}#sign h1{font-size:26px;letter-spacing:6px}.signstat b{font-size:22px}.signcycle i{height:32px;font-size:11px}}
+  /* ---------- 主题滚动条（菜单/历史/签到） ---------- */
+  #menu::-webkit-scrollbar,#history::-webkit-scrollbar,#histlist::-webkit-scrollbar,#sign::-webkit-scrollbar,#signLog::-webkit-scrollbar{width:10px;}
+  #menu::-webkit-scrollbar-track,#history::-webkit-scrollbar-track,#histlist::-webkit-scrollbar-track,#sign::-webkit-scrollbar-track,#signLog::-webkit-scrollbar-track{background:rgba(10,8,3,.6);}
+  #menu::-webkit-scrollbar-thumb,#history::-webkit-scrollbar-thumb,#histlist::-webkit-scrollbar-thumb,#sign::-webkit-scrollbar-thumb,#signLog::-webkit-scrollbar-thumb{background:linear-gradient(#caa83a,#7a6420);border-radius:6px;border:2px solid rgba(10,8,3,.6);}
+  #menu::-webkit-scrollbar-thumb:hover,#history::-webkit-scrollbar-thumb:hover,#histlist::-webkit-scrollbar-thumb:hover,#sign::-webkit-scrollbar-thumb:hover,#signLog::-webkit-scrollbar-thumb:hover{background:linear-gradient(#ffe14d,#caa83a);}
   /* ---------- 草原 3D 模式卡片 ---------- */
   .mode.grass{--accent:#7cc24a;border-left:5px solid #5f9e3f;color:#dff3c8;position:relative;overflow:hidden;}
   .mode.grass:hover{border-color:#a8d84a;background:rgba(20,40,14,.6);box-shadow:0 0 24px rgba(124,194,74,.3);}
@@ -226,6 +267,32 @@
   .g3d-ringlabel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
   .g3d-ringlabel b{font-size:30px;color:#ffcf5a;letter-spacing:2px;}
   .g3d-ringlabel span{font-size:11px;letter-spacing:2px;color:#cfe6b8;}
+  /* 精神危害（草原死区 · 5 级） */
+  #g3d-dread{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;background:radial-gradient(ellipse at 50% 44%,rgba(96,8,16,0) 26%,rgba(96,8,16,.5) 72%,rgba(34,0,6,.92) 100%);}
+  #g3d-hazard{position:absolute;left:16px;bottom:calc(74px + env(safe-area-inset-bottom));width:238px;box-sizing:border-box;z-index:5;
+    background:rgba(16,8,20,.66);border:1px solid rgba(176,115,255,.42);border-radius:12px;padding:11px 14px 12px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 20px rgba(0,0,0,.45);transition:border-color .3s,box-shadow .3s;}
+  #g3d-hazard .hz-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:2px;color:#c9a8f0;}
+  #g3d-hazard .hz-head b{font-size:21px;letter-spacing:1px;color:#b073ff;text-shadow:0 0 12px rgba(160,90,255,.55);font-weight:800;}
+  #g3d-hazard .hz-bar{margin:8px 0 9px;height:9px;border-radius:5px;border:1px solid rgba(176,115,255,.25);background:rgba(255,255,255,.1);overflow:hidden;}
+  #g3d-hazard .hz-bar i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#7cc24a,#ffcf5a 42%,#ff6b6b 72%,#b073ff);}
+  #g3d-hazard .hz-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:1px;color:#9dd07a;}
+  #g3d-hazard .hz-foot > span{flex:1 1 auto;min-width:0;}
+  #g3d-hazard.crit{border-color:rgba(255,107,107,.62);box-shadow:0 0 28px rgba(150,20,30,.5);}
+  #g3d-hazard.crit .hz-head b{color:#ff6b6b;text-shadow:0 0 16px rgba(255,80,80,.6);}
+  #g3d-hazard.crit .hz-foot > span{color:#ffb3a8;}
+  #g3d-hazard.pressed{animation:hzflash .55s ease-out;}
+  @keyframes hzflash{0%{box-shadow:0 0 0 rgba(132,232,127,0)}30%{box-shadow:0 0 30px rgba(132,232,127,.7)}100%{box-shadow:0 4px 20px rgba(0,0,0,.45)}}
+  #g3d-pillbtn{flex:0 0 auto;display:flex;align-items:center;gap:5px;font-family:inherit;font-size:11px;letter-spacing:1px;color:#dff3c8;
+    background:rgba(47,143,79,.34);border:1px solid rgba(132,232,127,.5);border-radius:9px;padding:6px 10px;cursor:pointer;transition:.15s;}
+  #g3d-pillbtn b{color:#8fe06a;font-size:13px;}
+  #g3d-pillbtn span{border:1px solid rgba(223,243,200,.4);border-radius:4px;padding:0 5px;font-size:10px;opacity:.82;}
+  #g3d-pillbtn:hover:not(:disabled){border-color:#84e87f;box-shadow:0 0 14px rgba(132,232,127,.35);}
+  #g3d-pillbtn:disabled{opacity:.42;cursor:not-allowed;}
+  #g3d-pillbtn:focus-visible,.g3d-iconbtn:focus-visible{outline:2px solid #ffcf5a;outline-offset:2px;}
+  #grass3d.touch #g3d-pillbtn span{display:none;}
+  @media (prefers-reduced-motion:reduce){#g3d-hazard.pressed{animation:none}.g3d-promptcard .pulse{animation:none}}
+  @media (max-width:560px){#g3d-hazard{left:10px;right:auto;width:min(244px,calc(100vw - 20px));top:calc(62px + env(safe-area-inset-top));bottom:auto}}
   /* 加载 / 错误 */
   #g3d-loading,#g3d-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:6;background:#0a1407;text-align:center;}
   #g3d-loading .spin{width:46px;height:46px;border:4px solid rgba(124,194,74,.25);border-top-color:#a8d84a;border-radius:50%;animation:g3dspin 1s linear infinite;margin:0 auto 18px;}
@@ -361,15 +428,16 @@
       <span class="badge3d">3D</span>
       <span class="tag" style="color:#a8d84a">LEVEL 7</span>
       <h2>草原</h2>
-      <div class="classif">
+      <div class="classif deadzone">
         <div class="sd">
-          <div class="sd-left"><span class="sd-cap">生存难度</span><div class="sd-meter"><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
-          <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">1</span></div>
+          <div class="sd-left"><span class="sd-cap">生存难度</span><div class="sd-meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+          <div class="sd-badge"><span class="sd-class">DEATH ZONE</span><span class="sd-num dead">死区</span></div>
         </div>
-        <div class="cstat"><span class="ck">实体</span><span class="cv info">少量实体</span></div>
-        <div class="cstat"><span class="ck">宜居</span><span class="cv good">宜居地带</span></div>
+        <div class="cstat"><span class="ck">实体</span><span class="cv info">无实体</span></div>
+        <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">5 级</span></div>
+        <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
-      <p style="margin-top:10px">第三人称 3D 草原 · 鼠标锁定视角 · WASD 奔跑 · 穿着你的防护服自由探索</p>
+      <p style="margin-top:10px">第三人称 3D · 看似草原实为<b style="color:#ff8a8a">死区</b> · 树木即实体 · 裸身只能撑 <b style="color:#ffcf5a">30 秒</b>，标准防护服拖延 <b style="color:#8fe06a">70%</b> · 视野随精神危害逐渐模糊</p>
     </button>
   </div>
   <div class="team-select" style="margin:20px 0;display:flex;gap:15px;justify-content:center;">
@@ -397,6 +465,15 @@
   </div>
   <div class="foot">右键行进 · 空格跳跃 · 空格+右键冲刺 · E 拾取</div>
   <div class="menu-actions">
+    <button id="signbtn">
+      <svg width="40" height="38" viewBox="0 0 40 38" aria-hidden="true">
+        <rect x="6" y="8" width="28" height="25" rx="3" fill="rgba(255,225,77,.10)" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M6 15 L34 15 M13 5 L13 11 M27 5 L27 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M14 24 L18 28 L27 19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      每日签到
+      <span class="signdot" id="signdot" hidden></span>
+    </button>
     <button id="homebtn">
       <svg width="46" height="38" viewBox="0 0 46 38" aria-hidden="true">
         <path d="M23 3 L42 19 L36.5 19 L36.5 35 L27.5 35 L27.5 24 L18.5 24 L18.5 35 L9.5 35 L9.5 19 L4 19 Z"
@@ -463,10 +540,31 @@
   <button class="btn" id="histback" style="margin-top:24px">返 回 首 页</button>
 </div>
 
+<div id="sign" class="page">
+  <h1>每日签到</h1>
+  <div class="sub">每天 +50 积分 · 累计每 7 天额外送一份随机奖励</div>
+  <div class="signcard">
+    <div class="signstat">
+      <div><b id="signTotal">0</b><span>累计签到（天）</span></div>
+      <div><b id="signNext">7</b><span>距下次奖励（天）</span></div>
+      <div><b id="signPts">0</b><span>当前积分</span></div>
+    </div>
+    <div class="signcycle" id="signCycle"></div>
+    <div class="signnote">按累计天数计算 · 漏签不清零 · 第 7 格为随机奖励</div>
+    <button class="btn" id="signClaim">领 取 50 积 分</button>
+    <div class="signmsg" id="signMsg" aria-live="polite"></div>
+    <div class="signreward" id="signReward" hidden></div>
+  </div>
+  <div class="signsub">奖励池：五级 / 六级 / 七级 / 八级防护服，或止晕药 5 包（已拥有的防护服按原价折算积分）</div>
+  <div id="signLog"></div>
+  <button class="btn" id="signback" style="margin-top:24px">返 回 首 页</button>
+</div>
+
 <div id="grass3d">
   <div id="g3d-mount"></div>
   <div id="g3d-vignette"></div>
   <div id="g3d-grain"></div>
+  <div id="g3d-dread"></div>
 
   <div class="g3d-top">
     <div class="g3d-title">
@@ -494,6 +592,12 @@
     <span><span class="k">E</span> 长按 2 秒退出</span>
   </div>
 
+  <div id="g3d-hazard">
+    <div class="hz-head"><span>精神危害 · 5 级</span><b id="g3d-hznum">0%</b></div>
+    <div class="hz-bar"><i id="g3d-hzfill"></i></div>
+    <div class="hz-foot"><span id="g3d-hzstate">危害累积中</span><button id="g3d-pillbtn" type="button">止晕药 <b id="g3d-pillcount">0</b><span>Q</span></button></div>
+  </div>
+
   <div id="g3d-touch">
     <div id="g3d-look"></div>
     <div id="g3d-stick"><div id="g3d-knob"></div></div>
@@ -504,7 +608,7 @@
     <div class="g3d-promptcard">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></svg>
       <h2 id="g3d-prompttitle">点击进入草原</h2>
-      <p id="g3d-prompttext">鼠标将锁定为视角 · 移动鼠标环顾四周<br>W A S D 奔跑 · 长按 E 键 2 秒随时退出</p>
+      <p id="g3d-prompttext">鼠标将锁定为视角 · 移动鼠标环顾四周<br>W A S D 奔跑 · <b style="color:#b073ff">Q</b> 吃止晕药压制精神危害 · 长按 E 键 2 秒随时退出</p>
       <span class="pulse" id="g3d-promptpulse">点击画面开始</span>
     </div>
   </div>
@@ -572,6 +676,11 @@ const shareEl=document.getElementById("share"), shareQrEl=document.getElementByI
       shareUrlEl=document.getElementById("shareurl"), shareTipEl=document.getElementById("sharetip");
 const histEl=document.getElementById("history"), histListEl=document.getElementById("histlist"),
       histTotalEl=document.getElementById("histTotal"), histCountEl=document.getElementById("histCount");
+const signEl=document.getElementById("sign"), signTotalEl=document.getElementById("signTotal"),
+      signNextEl=document.getElementById("signNext"), signPtsEl=document.getElementById("signPts"),
+      signCycleEl=document.getElementById("signCycle"), signClaimBtn=document.getElementById("signClaim"),
+      signMsgEl=document.getElementById("signMsg"), signRewardEl=document.getElementById("signReward"),
+      signLogEl=document.getElementById("signLog"), signDotEl=document.getElementById("signdot");
 let W=0,H=0,GROUND=0;
 function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;GROUND=H*0.78;}
 addEventListener("resize",resize);resize();
@@ -642,7 +751,8 @@ const SUITS=[
   {n:100, charges:10, name:"十级防护服", body:"#34495e", body2:"#1a252f", regen:0.85, drain:0.8, mask:true, visor:true, halo:true, note:"黑曜石终极 · 抵挡 10 次"},
 ];
 const SAVE_KEY="houshi-backrooms-v1";
-const save={points:0, owned:[true,false,false,false,false,false,false,false,false,false], equipped:0, history:[]};
+const save={points:0, owned:[true,false,false,false,false,false,false,false,false,false], equipped:0, history:[], pills:0,
+            checkin:{last:"",total:0,log:[]}};
 try{ const raw=localStorage.getItem(SAVE_KEY); if(raw)Object.assign(save,JSON.parse(raw)); }catch(e){}
 if(!Array.isArray(save.owned))save.owned=[];
 for(let i=0;i<SUITS.length;i++)if(typeof save.owned[i]!=="boolean")save.owned[i]=false;
@@ -650,6 +760,13 @@ save.owned.length=SUITS.length;save.owned[0]=true;
 if(save.equipped==null||!save.owned[save.equipped])save.equipped=0;
 if(!Array.isArray(save.history))save.history=[];
 save.history=save.history.filter(h=>h&&typeof h.m==="string"&&typeof h.p==="number"&&typeof h.t==="number");
+if(typeof save.pills!=="number"||isNaN(save.pills)||save.pills<0)save.pills=0;
+if(!save.checkin||typeof save.checkin!=="object")save.checkin={last:"",total:0,log:[]};
+if(typeof save.checkin.last!=="string")save.checkin.last="";
+if(typeof save.checkin.total!=="number"||isNaN(save.checkin.total)||save.checkin.total<0)save.checkin.total=0;
+save.checkin.total=Math.floor(save.checkin.total);
+if(!Array.isArray(save.checkin.log))save.checkin.log=[];
+save.checkin.log=save.checkin.log.filter(r=>r&&typeof r.m==="string"&&typeof r.t==="number");
 function persist(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify(save)); }catch(e){} }
 function addPoints(n){ save.points+=n; persist(); ptsEl.textContent=String(save.points); }
 function logPoints(m,p){ save.history.unshift({m:m,p:p,t:Date.now()}); if(save.history.length>300)save.history.length=300; persist(); }
@@ -670,10 +787,11 @@ let teammates=[]; // AI 队友数组
 let grassActive=false; // 草原 3D 模式激活时暂停 2D 逻辑与输入
 function openMenu(){
   S.menu=true;S.paused=true;
-  victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";histEl.style.display="none";
+  victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";histEl.style.display="none";signEl.style.display="none";
   cv.style.display="block";hudEl.style.display="none";
   menuEl.style.display="flex";
   ptsEl.textContent=String(save.points);
+  updateSignDot();
   if(alarmGain)alarmGain.gain.value=0;
   alertEl.style.opacity=0;kittyEl.style.opacity=0;
   teamHudEl.classList.remove("on");
@@ -685,7 +803,7 @@ function startMode(i, teamSize=1){
   S.teamSize=teamSize;
   CFG=MODES[i];WIN_M=CFG.winM;WIN_X=WIN_M*40;PAL=PALS[CFG.pal];
   S.menu=false;S.paused=false;
-  menuEl.style.display="none";victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";histEl.style.display="none";
+  menuEl.style.display="none";victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";histEl.style.display="none";signEl.style.display="none";
   cv.style.display="block";hudEl.style.display="block";
   smileyWrapEl.style.display=CFG.smileys?"inline":"none";
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
@@ -867,6 +985,20 @@ function renderShop(){
     else {btn.textContent="积分不足（"+save.points+"/"+s.n+"）";btn.disabled=true;}
     shopGridEl.appendChild(el);
   });
+  // 止晕药（消耗品 · 草原精神危害用）
+  (function(){
+    const el=document.createElement("div");
+    el.className="suit pillitem";
+    el.innerHTML='<h3>止晕药</h3>'+
+      '<div class="sw pillo"><span>✚</span></div>'+
+      '<div>压制精神危害 · 每包可抵挡 4 秒<br>进入草原后按 <b style="color:#ffe14d">Q</b> 使用 · 持有 <span class="pillown">'+save.pills+'</span> 包</div>'+
+      '<div class="price">需要 10 积分</div>'+
+      '<button></button>';
+    const btn=el.querySelector("button");
+    if(save.points>=10){btn.textContent="购 买";btn.onclick=()=>{save.points-=10;save.pills++;persist();renderShop();tone(600,900,.2,.13,"sine");};}
+    else {btn.textContent="积分不足（"+save.points+"/10）";btn.disabled=true;}
+    shopGridEl.appendChild(el);
+  })();
 }
 document.getElementById("homebtn").addEventListener("click",()=>{
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
@@ -933,6 +1065,77 @@ function renderHistory(){
 }
 document.getElementById("histbtn").addEventListener("click",()=>{ initAudio();if(AC&&AC.state==="suspended")AC.resume(); renderHistory(); histEl.style.display="flex"; tone(520,700,.16,.09,"sine"); });
 document.getElementById("histback").addEventListener("click",()=>{histEl.style.display="none";});
+
+// ---------- 每日签到：每天 50 积分，累计每 7 天送随机奖励 ----------
+const CHECKIN_POINTS=50, CHECKIN_CYCLE=7, CHECKIN_PILLS=5;
+const CHECKIN_SUITS=[4,5,6,7]; // 奖励只出五~八级防护服
+function dayKey(d){ const t=d||new Date(), z=n=>String(n).padStart(2,"0");
+  return t.getFullYear()+"-"+z(t.getMonth()+1)+"-"+z(t.getDate()); }
+function canCheckin(){ return save.checkin.last!==dayKey(); }
+function updateSignDot(){ const on=canCheckin(); signDotEl.hidden=!on;
+  document.getElementById("signbtn").title=on?"今日可签到 +50 积分":"今日已签到"; }
+function drawSignReward(){
+  const pick=Math.floor(Math.random()*(CHECKIN_SUITS.length+1));
+  let m;
+  if(pick===CHECKIN_SUITS.length){ save.pills+=CHECKIN_PILLS; m="止晕药 ×"+CHECKIN_PILLS+" 包"; }
+  else{ const i=CHECKIN_SUITS[pick], su=SUITS[i];
+    if(save.owned[i]){ addPoints(su.n); logPoints("签到奖励折算",su.n); m=su.name+"（已拥有）折算 +"+su.n+" 积分"; }
+    else{ save.owned[i]=true; m=su.name+" · 已入库，可在商城装备"; } }
+  save.checkin.log.unshift({m:m,t:Date.now()});
+  if(save.checkin.log.length>30)save.checkin.log.length=30;
+  return m;
+}
+function doCheckin(){
+  if(!canCheckin())return null;
+  save.checkin.last=dayKey(); save.checkin.total++;
+  addPoints(CHECKIN_POINTS); logPoints("每日签到",CHECKIN_POINTS);
+  const bonus=(save.checkin.total%CHECKIN_CYCLE===0)?drawSignReward():null;
+  persist(); updateSignDot();
+  return {bonus:bonus,total:save.checkin.total};
+}
+function renderSign(reward){
+  const done=!canCheckin(), total=save.checkin.total, used=total%CHECKIN_CYCLE;
+  signTotalEl.textContent=String(total);
+  signNextEl.textContent=String(CHECKIN_CYCLE-used);
+  signPtsEl.textContent=String(save.points);
+  signCycleEl.innerHTML="";
+  for(let i=0;i<CHECKIN_CYCLE;i++){
+    const c=document.createElement("i");
+    if(i===CHECKIN_CYCLE-1){ c.className="gift"; c.textContent="礼"; if(used===CHECKIN_CYCLE-1)c.classList.add("on"); }
+    else{ c.textContent=String(i+1); if(i<used)c.classList.add("on"); }
+    signCycleEl.appendChild(c);
+  }
+  signClaimBtn.disabled=done;
+  signClaimBtn.textContent=done?"今 日 已 签 到":"领 取 "+CHECKIN_POINTS+" 积 分";
+  signMsgEl.textContent=done?"今天已领取 · 明天再来":"今天还没签到 · 领取后累计 "+(total+1)+" 天";
+  const last=save.checkin.log[0];
+  const shown=reward?{total:reward.total,m:reward.bonus}
+    :(last&&dayKey(new Date(last.t))===dayKey()?{total:total,m:last.m}:null);
+  signRewardEl.hidden=!shown;
+  if(shown){ signRewardEl.textContent="";
+    const b=document.createElement("b"); b.textContent="累计 "+shown.total+" 天奖励 · ";
+    signRewardEl.appendChild(b); signRewardEl.appendChild(document.createTextNode(shown.m)); }
+  signLogEl.innerHTML="";
+  if(!save.checkin.log.length){ const e=document.createElement("div"); e.className="hempty";
+    e.textContent="还没有奖励记录 · 累计签到 7 天即可抽取"; signLogEl.appendChild(e); }
+  else for(const r of save.checkin.log){
+    const row=document.createElement("div"); row.className="hrow";
+    const m=document.createElement("span"); m.className="hmode"; m.textContent=r.m;
+    const t=document.createElement("span"); t.className="htime"; t.textContent=fmtTime(r.t);
+    row.appendChild(m); row.appendChild(t); signLogEl.appendChild(row);
+  }
+}
+document.getElementById("signbtn").addEventListener("click",()=>{
+  initAudio();if(AC&&AC.state==="suspended")AC.resume();
+  renderSign(null); signEl.style.display="flex"; tone(520,700,.16,.09,"sine");
+});
+document.getElementById("signback").addEventListener("click",()=>{signEl.style.display="none";});
+signClaimBtn.addEventListener("click",()=>{
+  const r=doCheckin(); if(!r)return;
+  renderSign(r); tone(600,900,.2,.13,"sine");
+  if(r.bonus){ setTimeout(()=>tone(760,1180,.22,.13,"sine"),150); setTimeout(()=>tone(980,1500,.3,.13,"sine"),320); }
+});
+updateSignDot();
 
 function spawnSmiley(){ entities.push({x:P.x+950+Math.random()*750, bob:Math.random()*6.28, hunt:false}); }
 function ensureDebris(){
@@ -2396,8 +2599,17 @@ const Grassland3D=(function(){
         swatch=document.getElementById("g3d-swatch"),
         suitName=document.getElementById("g3d-suitname"),
         muteBtn=document.getElementById("g3d-mute"),
-        muteLabel=document.getElementById("g3d-mutelabel");
+        muteLabel=document.getElementById("g3d-mutelabel"),
+        dreadEl=document.getElementById("g3d-dread"),
+        hzEl=document.getElementById("g3d-hazard"),
+        hzNum=document.getElementById("g3d-hznum"),
+        hzFill=document.getElementById("g3d-hzfill"),
+        hzState=document.getElementById("g3d-hzstate"),
+        pillBtn=document.getElementById("g3d-pillbtn"),
+        pillCount=document.getElementById("g3d-pillcount");
   const RING_C=339.292, HALF=124, GSIZE=260;
+  const HZ_LEVEL=5, HZ_BARE=30, HZ_DELAY=0.7, PILL_SECONDS=4;
+  const LEAF_CALM=[0x3f7d33,0x4f9138,0x356b2b], LEAF_TRUE=[0x2b1f2a,0x382233,0x1c1218];
   let active=false, isTouch=false, renderer=null, scene=null, camera=null, char=null;
   let raf=0, last=0, gtime=0, suitColor="#f39b1f";
   let yaw=0, pitch=0.34, dist=8, targetDist=8, locked=false;
@@ -2406,6 +2618,9 @@ const Grassland3D=(function(){
   let keys={}, eHolding=false, eHoldStart=0;
   let touchMove={x:0,y:0}, touchSprint=false;
   let sun=null, sunGlow=null, particles=null, pSeed=[], clouds=[];
+  let skyMat=null, hemiLight=null, ambLight=null, fillLight=null, groundMat=null, tuftMat=null, flowerMat=null, rockMat=null, cloudMat=null, trunkMat=null;
+  let leafMats=[], trees=[], eyeMat=null, scratch=null;
+  let strain=0, pillTimer=0, pills=save.pills, pillsUsed=0, resistCap=3, immune=false, hzRate=(1-HZ_DELAY)/HZ_BARE, hazTier=-1, visionKey="";
   let armL,armR,legL,legR,head,torso;
   let gMaster=null, windSrc=null, windLfo=null, muted=false;
   const dyn=[];
@@ -2434,38 +2649,40 @@ const Grassland3D=(function(){
     mount.appendChild(renderer.domElement);
     camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,650);
     scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0xcfe0ea,0.0085);
+    scratch=new THREE.Color();
   }
+  function mixc(target,calmHex,trueHex,r){ target.setHex(calmHex).lerp(scratch.setHex(trueHex),r); }
   function buildSky(){
     const geo=new THREE.SphereGeometry(430,32,16);
-    const mat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,
+    skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,
       uniforms:{top:{value:new THREE.Color(0x2a63c8)},mid:{value:new THREE.Color(0x8fbded)},bot:{value:new THREE.Color(0xdce9f2)}},
       vertexShader:"varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
       fragmentShader:"varying vec3 vP;uniform vec3 top;uniform vec3 mid;uniform vec3 bot;void main(){float h=normalize(vP).y;vec3 c=h>0.0?mix(mid,top,pow(h,0.6)):mix(mid,bot,pow(-h,0.5));gl_FragColor=vec4(c,1.0);}"});
-    scene.add(new THREE.Mesh(geo,mat));
+    scene.add(new THREE.Mesh(geo,skyMat));
     const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:makeGlow(),color:0xfff0c0,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,depthTest:false,fog:false}));
     glow.scale.set(90,90,1);scene.add(glow);sunGlow=glow;
   }
   function buildLights(){
-    scene.add(new THREE.HemisphereLight(0xbfd9ff,0x4a6b3a,0.78));
-    scene.add(new THREE.AmbientLight(0xffffff,0.16));
+    hemiLight=new THREE.HemisphereLight(0xbfd9ff,0x4a6b3a,0.78);scene.add(hemiLight);
+    ambLight=new THREE.AmbientLight(0xffffff,0.16);scene.add(ambLight);
     sun=new THREE.DirectionalLight(0xfff0d0,1.55);sun.position.set(50,80,30);sun.castShadow=true;
     sun.shadow.mapSize.set(1024,1024);const sc=sun.shadow.camera;sc.near=1;sc.far=260;sc.left=-42;sc.right=42;sc.top=42;sc.bottom=-42;
     sun.shadow.bias=-0.0004;scene.add(sun);scene.add(sun.target);
-    const fill=new THREE.DirectionalLight(0x88aaff,0.34);fill.position.set(-50,30,-60);scene.add(fill);
+    fillLight=new THREE.DirectionalLight(0x88aaff,0.34);fillLight.position.set(-50,30,-60);scene.add(fillLight);
   }
   function buildGround(){
     const geo=new THREE.PlaneGeometry(GSIZE,GSIZE,140,140);geo.rotateX(-Math.PI/2);
     const pos=geo.attributes.position;
     for(let i=0;i<pos.count;i++){ pos.setY(i,heightAt(pos.getX(i),pos.getZ(i))); }
     geo.computeVertexNormals();
-    const mat=new THREE.MeshStandardMaterial({map:makeGrassTex(),color:0xffffff,roughness:1,metalness:0});
-    const ground=new THREE.Mesh(geo,mat);ground.receiveShadow=true;scene.add(ground);
+    groundMat=new THREE.MeshStandardMaterial({map:makeGrassTex(),color:0xffffff,roughness:1,metalness:0});
+    const ground=new THREE.Mesh(geo,groundMat);ground.receiveShadow=true;scene.add(ground);
   }
   function buildVegetation(){
     const dummy=new THREE.Object3D();
     // 草丛（实例化）
     const tuftGeo=new THREE.ConeGeometry(0.14,0.78,4);tuftGeo.translate(0,0.39,0);
-    const tuftMat=new THREE.MeshStandardMaterial({color:0x5f9e3f,roughness:1,flatShading:true});
+    tuftMat=new THREE.MeshStandardMaterial({color:0x5f9e3f,roughness:1,flatShading:true});
     const tufts=new THREE.InstancedMesh(tuftGeo,tuftMat,680);
     for(let i=0;i<680;i++){ const x=rand(-HALF,HALF),z=rand(-HALF,HALF);
       dummy.position.set(x,heightAt(x,z),z);dummy.rotation.set(rand(-.12,.12),rand(0,6.28),rand(-.12,.12));
@@ -2473,8 +2690,8 @@ const Grassland3D=(function(){
     tufts.instanceMatrix.needsUpdate=true;scene.add(tufts);
     // 野花（实例化 + 逐实例颜色）
     const fGeo=new THREE.SphereGeometry(0.13,6,5);fGeo.translate(0,0.52,0);
-    const fMat=new THREE.MeshStandardMaterial({roughness:.8});
-    const flowers=new THREE.InstancedMesh(fGeo,fMat,160);
+    flowerMat=new THREE.MeshStandardMaterial({roughness:.8});
+    const flowers=new THREE.InstancedMesh(fGeo,flowerMat,160);
     const pal=[0xe8503a,0xffcf5a,0xe85a9c,0xffffff,0x9b6fe8,0xff8a3a];
     for(let i=0;i<160;i++){ const x=rand(-HALF,HALF),z=rand(-HALF,HALF);
       dummy.position.set(x,heightAt(x,z),z);dummy.rotation.set(0,rand(0,6.28),0);const s=rand(.7,1.3);dummy.scale.set(s,s,s);
@@ -2482,28 +2699,34 @@ const Grassland3D=(function(){
     flowers.instanceMatrix.needsUpdate=true;flowers.instanceColor.needsUpdate=true;scene.add(flowers);
     // 岩石（实例化）
     const rGeo=new THREE.DodecahedronGeometry(0.7,0);
-    const rMat=new THREE.MeshStandardMaterial({color:0x8b8f96,roughness:1,flatShading:true});
-    const rocks=new THREE.InstancedMesh(rGeo,rMat,24);
+    rockMat=new THREE.MeshStandardMaterial({color:0x8b8f96,roughness:1,flatShading:true});
+    const rocks=new THREE.InstancedMesh(rGeo,rockMat,24);
     for(let i=0;i<24;i++){ let x,z;do{x=rand(-HALF,HALF);z=rand(-HALF,HALF);}while(Math.hypot(x,z)<7);
       dummy.position.set(x,heightAt(x,z)+0.1,z);dummy.rotation.set(rand(0,6.28),rand(0,6.28),rand(0,6.28));
       const s=rand(.5,1.4);dummy.scale.set(s,s*rand(.6,1),s);dummy.updateMatrix();rocks.setMatrixAt(i,dummy.matrix); }
     rocks.instanceMatrix.needsUpdate=true;rocks.castShadow=true;rocks.receiveShadow=true;scene.add(rocks);
-    // 树（共享几何/材质）
+    // 树（共享几何/材质）· 树木本身就是实体
     const trunkGeo=new THREE.CylinderGeometry(0.22,0.34,2.6,7);trunkGeo.translate(0,1.3,0);
-    const trunkMat=new THREE.MeshStandardMaterial({color:0x6b4a2a,roughness:1});
+    trunkMat=new THREE.MeshStandardMaterial({color:0x6b4a2a,roughness:1});
     const leafGeos=[new THREE.ConeGeometry(1.7,3.2,8),new THREE.ConeGeometry(1.3,2.6,8),new THREE.ConeGeometry(0.9,2.0,8)];
     leafGeos[0].translate(0,3.4,0);leafGeos[1].translate(0,4.6,0);leafGeos[2].translate(0,5.7,0);
-    const leafMats=[0x3f7d33,0x4f9138,0x356b2b].map(c=>new THREE.MeshStandardMaterial({color:c,roughness:1,flatShading:true}));
+    leafMats=LEAF_CALM.map(c=>new THREE.MeshStandardMaterial({color:c,roughness:1,flatShading:true}));
+    eyeMat=new THREE.MeshStandardMaterial({color:0x140305,emissive:0xff2a14,emissiveIntensity:.2,roughness:.45});
+    const eyeGeo=new THREE.SphereGeometry(0.12,8,7);
     for(let i=0;i<34;i++){ let x,z;do{x=rand(-HALF,HALF);z=rand(-HALF,HALF);}while(Math.hypot(x,z)<9);
       const g=new THREE.Group();const tr=new THREE.Mesh(trunkGeo,trunkMat);tr.castShadow=true;g.add(tr);
       for(let k=0;k<3;k++){const lf=new THREE.Mesh(leafGeos[k],leafMats[k]);lf.castShadow=true;g.add(lf);}
-      g.position.set(x,heightAt(x,z),z);const s=rand(.8,1.4);g.scale.set(s,s,s);g.rotation.y=rand(0,6.28);scene.add(g); }
+      const eyes=new THREE.Group();eyes.position.y=1.95;eyes.scale.setScalar(.02);
+      [-.16,.16].forEach(ex=>{const em=new THREE.Mesh(eyeGeo,eyeMat);em.position.set(ex,0,.29);eyes.add(em);});
+      g.add(eyes);
+      g.position.set(x,heightAt(x,z),z);const s=rand(.8,1.4);g.scale.set(s,s,s);const ry=rand(0,6.28);g.rotation.y=ry;scene.add(g);
+      trees.push({g:g,eyes:eyes,x:x,z:z,s:s,ry:ry,lx:rand(-.24,.05),lz:rand(-.26,.26),ph:rand(0,6.28)}); }
   }
   function buildClouds(){
-    const mat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:1,transparent:true,opacity:.92,flatShading:true,fog:false});
+    cloudMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:1,transparent:true,opacity:.92,flatShading:true,fog:false});
     const geo=new THREE.SphereGeometry(1,8,6);
     for(let i=0;i<7;i++){ const g=new THREE.Group();const n=3+(Math.random()*3|0);
-      for(let k=0;k<n;k++){const m=new THREE.Mesh(geo,mat);m.position.set(rand(-6,6),rand(-1,1),rand(-3,3));const s=rand(3,6);m.scale.set(s,s*.5,s);g.add(m);}
+      for(let k=0;k<n;k++){const m=new THREE.Mesh(geo,cloudMat);m.position.set(rand(-6,6),rand(-1,1),rand(-3,3));const s=rand(3,6);m.scale.set(s,s*.5,s);g.add(m);}
       g.position.set(rand(-200,200),rand(46,72),rand(-200,200));g.userData.sp=rand(.8,2.0);scene.add(g);clouds.push(g); }
   }
   function buildParticles(){
@@ -2550,6 +2773,72 @@ const Grassland3D=(function(){
   }
 
   function updateSuitHUD(){ const SU=SUITS[save.equipped];swatch.style.background=SU.body;swatch.style.color=SU.body;suitName.textContent=SU.name; }
+
+  // ---------- 精神危害：草原的真实样貌 ----------
+  function applyReveal(){
+    if(!scene||!scratch)return;
+    const s=clamp(strain,0,1), e=s*s*(3-2*s);
+    mixc(scene.fog.color,0xcfe0ea,0x2b1017,e);scene.fog.density=0.0085+e*0.0245;
+    if(skyMat){ mixc(skyMat.uniforms.top.value,0x2a63c8,0x160a14,e); mixc(skyMat.uniforms.mid.value,0x8fbded,0x6b2130,e); mixc(skyMat.uniforms.bot.value,0xdce9f2,0xb8452a,e); }
+    if(hemiLight){ mixc(hemiLight.color,0xbfd9ff,0x54222e,e); mixc(hemiLight.groundColor,0x4a6b3a,0x1a0c07,e); hemiLight.intensity=0.78-e*0.46; }
+    if(ambLight){ mixc(ambLight.color,0xffffff,0xff7a5a,e); ambLight.intensity=0.16-e*0.10; }
+    if(sun){ mixc(sun.color,0xfff0d0,0xff5f38,e); sun.intensity=1.55-e*1.08; }
+    if(fillLight){ mixc(fillLight.color,0x88aaff,0x6a2a86,e); fillLight.intensity=0.34-e*0.20; }
+    if(groundMat) mixc(groundMat.color,0xffffff,0x6b564a,e);
+    if(tuftMat) mixc(tuftMat.color,0x5f9e3f,0x3a2f26,e);
+    if(flowerMat) mixc(flowerMat.color,0xffffff,0x241a20,e);
+    if(rockMat) mixc(rockMat.color,0x8b8f96,0x3c2a30,e);
+    if(cloudMat) mixc(cloudMat.color,0xffffff,0x53232e,e);
+    if(trunkMat) mixc(trunkMat.color,0x6b4a2a,0x241318,e);
+    if(sunGlow) mixc(sunGlow.material.color,0xfff0c0,0xff3a14,e);
+    if(particles){ mixc(particles.material.color,0xfff2b0,0xff4a2a,e); particles.material.opacity=0.85+e*0.13; }
+    for(let k=0;k<leafMats.length;k++) mixc(leafMats[k].color,LEAF_CALM[k],LEAF_TRUE[k],e);
+    if(eyeMat) eyeMat.emissiveIntensity=0.2+e*3.0;
+    for(const t of trees){
+      t.eyes.scale.setScalar(0.02+e*1.05);
+      t.eyes.rotation.y=Math.atan2(charX-t.x,charZ-t.z)-t.ry;
+      t.g.rotation.x=e*t.lx;t.g.rotation.z=e*t.lz;
+      t.g.scale.set(t.s,t.s*(1+e*0.05*Math.sin(gtime*1.5+t.ph)),t.s);
+    }
+  }
+  function visionText(){
+    if(immune)return "防护服已屏蔽精神危害";
+    if(pillTimer>0)return "止晕药抑制中 "+pillTimer.toFixed(1)+" 秒";
+    const p=strain*100,left=Math.ceil((1-strain)/hzRate);
+    if(p<25)return "还能撑 "+left+" 秒";
+    if(p<55)return "视野模糊 · 剩"+left+"秒";
+    if(p<85)return "真面目 · 剩"+left+"秒";
+    return "已看清真实样貌";
+  }
+  function updateVision(force){
+    const p=Math.round(strain*100);
+    const key=p+"|"+(pillTimer>0?Math.round(pillTimer*10):0)+"|"+(immune?1:0)+"|"+pills;
+    if(!force&&key===visionKey)return;
+    visionKey=key;
+    const s=clamp(strain,0,1);
+    mount.style.filter="blur("+(s*s*4.6+s*2.6).toFixed(2)+"px) saturate("+(1-s*.5).toFixed(3)+") contrast("+(1+s*.2).toFixed(3)+")";
+    hzFill.style.width=p+"%";hzNum.textContent=p+"%";hzState.textContent=visionText();
+    dreadEl.style.opacity=(s*s*.9).toFixed(3);
+    hzEl.classList.toggle("crit",s>0.66);
+    pillBtn.disabled=immune||pills<=0||pillTimer>0;
+    pillCount.textContent=String(pills);
+  }
+  function updateHazard(dt){
+    if(immune){ strain=Math.max(0,strain-dt*0.4);pillTimer=0; }
+    else if(pillTimer>0){ pillTimer=Math.max(0,pillTimer-dt);strain=Math.max(0,strain-dt*hzRate*2.2); }
+    else strain=Math.min(1,strain+dt*hzRate);
+    const tier=strain<0.34?0:(strain<0.67?1:2);
+    if(tier!==hazTier){ if(tier>hazTier&&hazTier>=0)gTone(96,52,1.5,.15,"sine");hazTier=tier; }
+    applyReveal();updateVision(false);
+  }
+  function usePill(){
+    if(!active||immune||pillTimer>0||pills<=0)return;
+    pills--;pillsUsed++;pillTimer=PILL_SECONDS;
+    gTone(560,980,.34,.13,"sine");
+    hzEl.classList.remove("pressed");void hzEl.offsetWidth;hzEl.classList.add("pressed");
+    updateVision(true);
+  }
+
   function initGrassAudio(){ if(!AC)return;
     gMaster=AC.createGain();gMaster.gain.value=muted?0:.9;gMaster.connect(AC.destination);
     const len=AC.sampleRate*2,buf=AC.createBuffer(1,len,AC.sampleRate),d=buf.getChannelData(0);let l=0;
@@ -2579,6 +2868,7 @@ const Grassland3D=(function(){
 
   function update(dt){
     gtime+=dt;
+    updateHazard(dt);
     const canControl=active&&(locked||isTouch);
     let ix=0,iz=0;
     if(canControl){
@@ -2612,7 +2902,9 @@ const Grassland3D=(function(){
     const tx=charX,ty=charY0()+1.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
     let cx=tx+dist*Math.sin(yaw)*cp,cy=ty+dist*sp,cz=tz+dist*Math.cos(yaw)*cp;
     const cgh=heightAt(cx,cz)+.7;if(cy<cgh)cy=cgh;
-    camera.position.set(cx,cy,cz);camera.lookAt(tx,ty+Math.sin(gtime*.8)*.03,tz);
+    const shk=strain*strain*0.38;
+    camera.position.set(cx+Math.sin(gtime*7.3)*shk,cy+Math.sin(gtime*5.1)*shk,cz+Math.cos(gtime*6.2)*shk);
+    camera.lookAt(tx,ty+Math.sin(gtime*.8)*.03,tz);
     // 太阳与光晕跟随
     sun.position.set(charX+50,charY0()+80,charZ+30);sun.target.position.set(charX,charY0(),charZ);sun.target.updateMatrixWorld();
     sunGlow.position.set(charX+160,charY0()+250,charZ+96);
@@ -2633,6 +2925,7 @@ const Grassland3D=(function(){
   function onKeyDown(e){ if(!active)return;const c=e.code;
     if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
     if(c==="KeyE"){ if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);} return; }
+    if(c==="KeyQ"){ if(!e.repeat)usePill(); return; }
     if(c==="Space"){ if(!e.repeat)jumpQueued=true;keys[c]=true;return; }
     keys[c]=true; }
   function onKeyUp(e){ if(!active)return;const c=e.code;
@@ -2677,10 +2970,14 @@ const Grassland3D=(function(){
       if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();});} });
     if(renderer){renderer.dispose();const el=renderer.domElement;if(el&&el.parentNode)el.parentNode.removeChild(el);}
     scene=null;renderer=null;camera=null;char=null;sun=null;sunGlow=null;particles=null;clouds=[];pSeed=[];
+    skyMat=null;hemiLight=null;ambLight=null;fillLight=null;groundMat=null;tuftMat=null;flowerMat=null;rockMat=null;cloudMat=null;trunkMat=null;
+    leafMats=[];trees=[];eyeMat=null;scratch=null;
   }
   function hideOverlay(){ overlay.style.display="none"; }
   function exit(){
     active=false;grassActive=false;
+    save.pills=Math.max(0,save.pills-pillsUsed);pillsUsed=0;persist();
+    mount.style.filter="none";hzEl.classList.remove("crit","pressed");visionKey="";
     if(raf)cancelAnimationFrame(raf);raf=0;
     removeListeners();
     if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
@@ -2701,15 +2998,23 @@ const Grassland3D=(function(){
     try{ buildRenderer();buildSky();buildLights();buildGround();buildVegetation();buildClouds();buildParticles();buildCharacter(); }
     catch(err){ showError("初始化 3D 场景失败："+((err&&err.message)||err));active=false;grassActive=false;loadingEl.style.display="none";return; }
     initGrassAudio();updateSuitHUD();addListeners();loadingEl.style.display="none";
+    overlay.classList.toggle("touch",isTouch);
+    // 精神危害抗性：1-4 级防护服拖延 70%（裸身 30 秒 → 100 秒），5-10 级挡 4 级以上全部危害
+    resistCap=(save.equipped+1)>=5?99:3;
+    immune=HZ_LEVEL<=resistCap;
+    hzRate=(1-HZ_DELAY)/HZ_BARE;
+    pills=save.pills;pillsUsed=0;pillTimer=0;strain=0;hazTier=-1;visionKey="";
+    updateVision(true);
     if(isTouch){ touchLayer.style.display="block";hidePrompt();
-      hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>右侧拖动</b> 视角</span><span><b>跳跃键</b> 跳</span><span><b>右上退出</b> 离开</span>'; }
+      hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>右侧拖动</b> 视角</span><span><b>跳跃键</b> 跳</span><span><b>止晕药</b> 点面板按钮</span><span><b>右上退出</b> 离开</span>'; }
     else{ touchLayer.style.display="none";showPrompt("点击进入草原");
-      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>鼠标</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
+      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>鼠标</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">Q</span> 止晕药</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
     onResize();last=performance.now();raf=requestAnimationFrame(frame);
   }
   // 静态 UI 绑定（一次）
   document.getElementById("g3d-exitbtn").addEventListener("click",exit);
   muteBtn.addEventListener("click",toggleMute);
+  pillBtn.addEventListener("click",usePill);
   document.getElementById("g3d-errback").addEventListener("click",exit);
   promptEl.addEventListener("click",onPromptClick);
   return {launch:launch,exit:exit,isActive:function(){return active;}};
