@@ -25,6 +25,17 @@
   #stam{display:block;height:100%;width:100%;background:#59d67b;transition:background .2s;}
   #progwrap{display:inline-block;vertical-align:middle;margin-left:6px;width:96px;height:8px;border-radius:5px;background:rgba(255,255,255,.14);overflow:hidden;}
   #prog{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ffe14d,#fff);box-shadow:0 0 10px rgba(255,255,255,.8);}
+  #hazchip{margin-top:6px;display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:999px;max-width:calc(100vw - 28px);box-sizing:border-box;
+    background:rgba(14,8,20,.66);border:1px solid rgba(176,115,255,.32);
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+    font-size:10px;letter-spacing:1px;color:#d9c6f2;text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;}
+  #hazchip b{font-size:12px;letter-spacing:0;color:#b073ff;}
+  #hazbar{width:64px;height:6px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden;flex:0 0 auto;}
+  #hazbar>i{display:block;height:100%;width:0%;background:#b073ff;}
+  #hazchip.safe{border-color:rgba(143,224,106,.35);color:#cfe9c0;}
+  #hazchip.safe b{color:#8fe06a;} #hazchip.safe #hazbar>i{background:#8fe06a;}
+  #hazchip.hot{border-color:rgba(255,107,107,.5);color:#ffd9d9;}
+  #hazchip.hot b{color:#ff6b6b;} #hazchip.hot #hazbar>i{background:#ff6b6b;}
   #teamhud{position:fixed;top:calc(12px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));z-index:6;pointer-events:none;display:none;flex-direction:column;gap:6px;font-family:"Courier New",monospace;}
   #teamhud.on{display:flex;}
   .tmcard{padding:5px 9px;border-radius:10px;min-width:118px;box-sizing:border-box;
@@ -57,6 +68,8 @@
     .stat b{font-size:13px;}
     #stamwrap{width:56px;}
     #progwrap{width:62px;}
+    #hazchip{font-size:9px;gap:6px;padding:4px 9px;}
+    #hazbar{width:42px;}
     #kittywarn{font-size:10px;letter-spacing:2px;padding:4px 11px;}
     #endbtn{width:22px;height:22px;font-size:12px;top:6px;right:7px;}
     #spdchip.zero{display:none;}
@@ -224,6 +237,7 @@
   .mode.grass:hover{border-color:#a8d84a;background:rgba(20,40,14,.6);box-shadow:0 0 24px rgba(124,194,74,.3);}
   .mode.grass::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(168,216,74,.22),transparent 70%);pointer-events:none;}
   .mode .badge3d{position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;letter-spacing:2px;color:#0d1a08;background:linear-gradient(135deg,#a8d84a,#5f9e3f);padding:3px 8px;border-radius:5px;box-shadow:0 0 14px rgba(124,194,74,.5);}
+  .mode.office .badge3d{color:#2a0d06;background:linear-gradient(135deg,#ffb84d,#ff5a35);box-shadow:0 0 14px rgba(255,102,68,.5);}
   .mode .cv.good{color:#8fe06a;text-shadow:0 0 10px rgba(120,220,90,.4);}
   .mode .cv.info{color:#7fc4ff;text-shadow:0 0 10px rgba(90,170,255,.35);}
   /* ---------- 草原 3D 全屏覆盖层 ---------- */
@@ -293,6 +307,55 @@
   #grass3d.touch #g3d-pillbtn span{display:none;}
   @media (prefers-reduced-motion:reduce){#g3d-hazard.pressed{animation:none}.g3d-promptcard .pulse{animation:none}}
   @media (max-width:560px){#g3d-hazard{left:10px;right:auto;width:min(244px,calc(100vw - 20px));top:calc(62px + env(safe-area-inset-top));bottom:auto}}
+  /* 幻境（精神危害越高越"美好"）+ 生命条 */
+  #g3d-bliss{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;
+    background:radial-gradient(ellipse at 50% 38%,rgba(255,250,224,.30) 6%,rgba(255,232,168,.10) 42%,rgba(255,206,126,.46) 100%);mix-blend-mode:screen;}
+  #g3d-hazard .hz-life{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;letter-spacing:1px;color:#c9a8f0;}
+  #g3d-hazard .hz-life b{font-size:14px;color:#ff8a8a;min-width:26px;}
+  #g3d-hazard .hz-life i{flex:1 1 auto;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;}
+  #g3d-hazard .hz-life i em{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff5b5b,#ffcf5a 55%,#8fe06a);}
+  /* 3D 模式终止面板（精神崩溃 / 被追上） */
+  #g3d-over{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:7;
+    background:radial-gradient(ellipse at center,rgba(42,4,9,.62),rgba(6,2,3,.9));}
+  #g3d-over .ocard{text-align:center;background:rgba(20,6,8,.84);border:1px solid rgba(255,107,107,.45);border-radius:18px;
+    padding:32px 42px;max-width:88vw;box-sizing:border-box;box-shadow:0 14px 60px rgba(0,0,0,.7);}
+  #g3d-over h2{margin:0 0 12px;font-size:26px;letter-spacing:7px;color:#ff6b6b;text-shadow:0 0 22px rgba(255,60,60,.5);}
+  #g3d-over p{margin:0 0 6px;font-size:13px;letter-spacing:1px;line-height:1.9;color:#e8c9c0;}
+  #g3d-over .ostat{font-size:12px;letter-spacing:2px;color:#c9a8f0;margin:4px 0 22px;}
+  #g3d-over .obtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  #g3d-over button{font-family:inherit;font-size:12px;letter-spacing:3px;color:#ffe1b0;cursor:pointer;padding:10px 18px;border-radius:10px;
+    background:rgba(60,20,14,.5);border:1px solid rgba(255,160,110,.5);transition:.15s;}
+  #g3d-over button:hover{border-color:#ffcf5a;color:#ffcf5a;box-shadow:0 0 16px rgba(255,207,90,.35);}
+  #g3d-over button:focus-visible{outline:2px solid #ffcf5a;outline-offset:2px;}
+  /* 快跑层 3D HUD */
+  #g3d-run{position:absolute;left:16px;bottom:calc(74px + env(safe-area-inset-bottom));width:252px;box-sizing:border-box;z-index:5;display:none;
+    background:rgba(26,14,10,.68);border:1px solid rgba(255,102,68,.45);border-radius:12px;padding:11px 14px 12px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 20px rgba(0,0,0,.45);}
+  #g3d-run .rn-head{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;letter-spacing:2px;color:#ffb894;}
+  #g3d-run .rn-head b{font-size:20px;letter-spacing:1px;color:#ffcf5a;}
+  #g3d-run .rn-bar{margin:8px 0 9px;height:9px;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.12);border:1px solid rgba(255,102,68,.25);}
+  #g3d-run .rn-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8fe06a,#ffcf5a 58%,#ff6b6b);}
+  #g3d-run .rn-row{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1px;color:#e8cbb8;}
+  #g3d-run .rn-row + .rn-row{margin-top:6px;}
+  #g3d-run .rn-row b{color:#ffd9a0;min-width:34px;}
+  #g3d-run .rn-meter{flex:1 1 auto;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;}
+  #g3d-run .rn-meter i{display:block;height:100%;width:100%;background:#8fe06a;}
+  #g3d-run .rn-meter.fuel i{background:#5bb8ff;}
+  #g3d-run .rn-meter.haz i{background:#b073ff;width:0;}
+  #g3d-run .rn-row.hazleft{font-size:10px;color:#c9a8ee;letter-spacing:1px;}
+  #g3d-run .rn-row.hazleft.safe{color:#8fe06a;}
+  #g3d-run .rn-row.hazleft.hot{color:#ff8a8a;}
+  #grass3d.run #g3d-run{display:block;}
+  #grass3d.run .g3d-title,#grass3d.run .g3d-suit,#grass3d.run .g3d-hint{background:rgba(26,14,10,.64);border-color:rgba(255,102,68,.42);}
+  #grass3d.run .g3d-title b,#grass3d.run .g3d-hint .k{color:#ffe1c8;}
+  #grass3d.run .g3d-title svg,#grass3d.run .g3d-title span,#grass3d.run .g3d-hint b,#grass3d.run .g3d-hint{color:#ffb894;}
+  #grass3d.run .g3d-hint .k{background:rgba(255,102,68,.18);border-color:rgba(255,102,68,.45);}
+  #grass3d.run #g3d-vignette{background:radial-gradient(ellipse at 50% 46%,transparent 44%,rgba(28,6,2,.66) 100%);}
+  @media (max-width:560px){#g3d-run{left:10px;width:min(250px,calc(100vw - 20px));bottom:calc(100px + env(safe-area-inset-bottom))}}
+  /* HUD 持枪小人 */
+  #gunstat{display:inline-flex;align-items:center;gap:4px;}
+  #gunstat[hidden]{display:none;}
+  #gunhud{width:72px;height:34px;vertical-align:middle;}
   /* 加载 / 错误 */
   #g3d-loading,#g3d-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:6;background:#0a1407;text-align:center;}
   #g3d-loading .spin{width:46px;height:46px;border:4px solid rgba(124,194,74,.25);border-top-color:#a8d84a;border-radius:50%;animation:g3dspin 1s linear infinite;margin:0 auto 18px;}
@@ -317,6 +380,7 @@
       <span class="stat">生命 <b id="lives">5</b></span>
       <span class="stat">防护 <b id="suit">×1</b></span>
       <span class="stat">杏仁水 <b id="water">0</b></span>
+      <span class="stat" id="gunstat" hidden><canvas id="gunhud" width="144" height="68" aria-label="持枪射击"></canvas><b id="gunname">G18</b></span>
       <span class="stat" id="smileywrap">追猎 <b id="cnt">0</b></span>
     </div>
     <div class="hudrow">
@@ -326,6 +390,7 @@
       <button id="endbtn" title="结束游戏" aria-label="结束游戏">✕</button>
     </div>
   </div>
+  <div id="hazchip"><span>精神危害 3级</span><i id="hazbar"><i id="hazfill"></i></i><b id="hazpct">0%</b><span id="hazleft">100s</span></div>
 </div>
 <div id="teamhud"></div>
 <div id="kittywarn">!! KITTY 在身后 !!</div>
@@ -399,17 +464,19 @@
       </div>
     </button>
     <button class="mode office" data-mode="5">
-      <span class="tag" style="color:#ff6644">LEVEL 5</span>
-      <h2>快跑层</h2>
-      <div class="classif unknown">
-        <div class="ustat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>未探查</span><em>UNEXPLORED</em></div>
+      <span class="badge3d">3D</span>
+      <span class="tag" style="color:#ff6644">LEVEL !</span>
+      <h2>跑命医院</h2>
+      <div class="classif">
         <div class="sd">
-          <div class="sd-left"><span class="sd-cap">生存难度</span><div class="sd-meter unk"><i></i><i></i><i></i><i></i><i></i></div></div>
-          <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">?</span></div>
+          <div class="sd-left"><span class="sd-cap">生存难度</span><div class="sd-meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+          <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">5</span></div>
         </div>
-        <div class="cstat"><span class="ck">实体</span><span class="cv unk">未知实体</span></div>
-        <div class="cstat"><span class="ck">宜居</span><span class="cv unk">未知</span></div>
+        <div class="cstat"><span class="ck">实体</span><span class="cv danger">实体横行</span></div>
+        <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">4 级</span></div>
+        <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
+      <p style="margin-top:10px">颠倒医院长廊 · 警报长鸣、红灯闪动 · 两侧病房门，病床与医废桶挡路（可跳可躲） · <b style="color:#ff8a8a">笑脸、细菌与死亡飞蛾</b>就在身后 · 跑满 <b style="color:#ffcf5a">750 米</b> 冲过<b style="color:#ffffff">白色发光门</b></p>
     </button>
     <button class="mode gray" data-mode="6">
       <span class="tag" style="color:#aaaaaa">LEVEL 6</span>
@@ -437,7 +504,7 @@
         <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">5 级</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
-      <p style="margin-top:10px">第三人称 3D · 看似草原实为<b style="color:#ff8a8a">死区</b> · 树木即实体 · 裸身只能撑 <b style="color:#ffcf5a">30 秒</b>，标准防护服拖延 <b style="color:#8fe06a">70%</b> · 视野随精神危害逐渐模糊</p>
+      <p style="margin-top:10px">第三人称 3D · 开局便看见<b style="color:#ff8a8a">死区真面目</b> · 树木即实体 · 精神危害越高越会看见<b style="color:#b073ff">美好的假象</b> · 裸身撑 30 秒，标准防护服拖延 <b style="color:#8fe06a">70%</b> · 危害满值必然崩溃致死</p>
     </button>
   </div>
   <div class="team-select" style="margin:20px 0;display:flex;gap:15px;justify-content:center;">
@@ -454,7 +521,6 @@
         <option value="2">LEVEL 2 · 蓝色长廊</option>
         <option value="3">LEVEL 3 · 管道长廊</option>
         <option value="4">LEVEL 4 · 泳池</option>
-        <option value="5">LEVEL 5 · 快跑</option>
         <option value="6">LEVEL 6 · 办公室</option>
       </select>
       <button id="netHost" class="netbtn host">创建房间</button>
@@ -565,11 +631,12 @@
   <div id="g3d-vignette"></div>
   <div id="g3d-grain"></div>
   <div id="g3d-dread"></div>
+  <div id="g3d-bliss"></div>
 
   <div class="g3d-top">
     <div class="g3d-title">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 13c0-3-2-5-5-5 0 3 2 5 5 5z"/></svg>
-      <b>草原</b><span>PRAIRIE · 3D</span>
+      <b id="g3d-titleb">草原</b><span id="g3d-titlespan">PRAIRIE · 3D</span>
     </div>
     <div class="g3d-topright">
       <div class="g3d-suit"><span class="g3d-swatch" id="g3d-swatch"></span><span id="g3d-suitname">防护服</span></div>
@@ -596,6 +663,17 @@
     <div class="hz-head"><span>精神危害 · 5 级</span><b id="g3d-hznum">0%</b></div>
     <div class="hz-bar"><i id="g3d-hzfill"></i></div>
     <div class="hz-foot"><span id="g3d-hzstate">危害累积中</span><button id="g3d-pillbtn" type="button">止晕药 <b id="g3d-pillcount">0</b><span>Q</span></button></div>
+    <div class="hz-life"><span>生命</span><b id="g3d-hzlife">5</b><i><em id="g3d-hzlifefill"></em></i></div>
+  </div>
+
+  <div id="g3d-run">
+    <div class="rn-head"><span>逃生距离 · 750m</span><b id="g3d-rdist">0m</b></div>
+    <div class="rn-bar"><i id="g3d-rprog"></i></div>
+    <div class="rn-row"><span>追兵</span><i class="rn-meter"><i id="g3d-rgapfill"></i></i><b id="g3d-rgap">20m</b></div>
+    <div class="rn-row"><span>生命</span><b id="g3d-rlife">5</b><span>防护</span><b id="g3d-rcharge">×1</b></div>
+    <div class="rn-row"><span>体力</span><i class="rn-meter fuel"><i id="g3d-rfuelfill"></i></i></div>
+    <div class="rn-row"><span>精神危害 4级</span><i class="rn-meter haz"><i id="g3d-rhazfill"></i></i><b id="g3d-rhaz">0%</b></div>
+    <div class="rn-row hazleft"><span id="g3d-rhazleft">裸装 60 秒满值</span></div>
   </div>
 
   <div id="g3d-touch">
@@ -608,7 +686,7 @@
     <div class="g3d-promptcard">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></svg>
       <h2 id="g3d-prompttitle">点击进入草原</h2>
-      <p id="g3d-prompttext">鼠标将锁定为视角 · 移动鼠标环顾四周<br>W A S D 奔跑 · <b style="color:#b073ff">Q</b> 吃止晕药压制精神危害 · 长按 E 键 2 秒随时退出</p>
+      <p id="g3d-prompttext">鼠标将锁定为视角 · 移动鼠标环顾四周<br>W A S D 奔跑 · <b style="color:#b073ff">Q</b> 吃止晕药逆转移害 · 危害满值必然精神崩溃 · 长按 E 键 2 秒随时退出</p>
       <span class="pulse" id="g3d-promptpulse">点击画面开始</span>
     </div>
   </div>
@@ -617,6 +695,18 @@
     <div class="g3d-ringwrap">
       <svg width="132" height="132" viewBox="0 0 132 132"><circle class="bg" cx="66" cy="66" r="54"/><circle class="fg" id="g3d-ringfg" cx="66" cy="66" r="54"/></svg>
       <div class="g3d-ringlabel"><b id="g3d-ringpct">0%</b><span>松开取消</span></div>
+    </div>
+  </div>
+
+  <div id="g3d-over">
+    <div class="ocard">
+      <h2 id="g3d-overtitle">精神崩溃</h2>
+      <p id="g3d-overtext">你的意识融进了幻境。</p>
+      <div class="ostat" id="g3d-overstat"></div>
+      <div class="obtns">
+        <button id="g3d-overagain">再 来 一 次</button>
+        <button id="g3d-overhome">返 回 首 页</button>
+      </div>
     </div>
   </div>
 
@@ -632,6 +722,10 @@ const alertEl=document.getElementById("alert"), distEl=document.getElementById("
       livesEl=document.getElementById("lives"), waterEl=document.getElementById("water"), spdEl=document.getElementById("spd"), suitEl=document.getElementById("suit"),
       progEl=document.getElementById("prog"), progNumEl=document.getElementById("prognum"),
       spdChipEl=document.getElementById("spdchip");
+const hazChipEl=document.getElementById("hazchip"), hazFillEl=document.getElementById("hazfill"),
+      hazPctEl=document.getElementById("hazpct"), hazLeftEl=document.getElementById("hazleft");
+const gunStatEl=document.getElementById("gunstat"), gunNameEl=document.getElementById("gunname"),
+      gunHudCtx=document.getElementById("gunhud").getContext("2d");
 const menuEl=document.getElementById("menu"), hudEl=document.getElementById("hud"), smileyWrapEl=document.getElementById("smileywrap");
 const teamHudEl=document.getElementById("teamhud");
 let tmCards=[];
@@ -696,20 +790,21 @@ const SPRINT_SPEED=10, SPRINT_FRAMES=240,                // 4秒 @60fps
 // ---------- 模式配置 ----------
 const MODES=[
   {name:"LEVEL 0", catSpeed:3, smileys:true, party:true, kitty:{speed:4,always:false},
-   doors:true, debris:true, winM:500, pal:"red", doorC:"#ffffff", doorFrame:"#3a0f0f"},
+   doors:true, debris:true, weapons:true, winM:500, pal:"red", doorC:"#ffffff", doorFrame:"#3a0f0f"},
   {name:"LEVEL 1 · 逃生", catSpeed:5, smileys:true, smileyCount:2, party:false, kitty:{speed:5,always:true},
-   doors:false, debris:false, winM:1000, pal:"yellow", doorC:"#ffffff", doorFrame:"#3a0f0f"},
+   doors:false, debris:false, weapons:true, winM:1000, pal:"yellow", doorC:"#ffffff", doorFrame:"#3a0f0f"},
   {name:"LEVEL 2 · 细菌", catSpeed:4, smileys:true, smileyCount:2, party:false, kitty:null,
-   doors:false, debris:false, bacteria:true, winM:250, pal:"blue", doorC:"#5bb8ff", doorFrame:"#081a2e"},
+   doors:false, debris:false, weapons:true, bacteria:true, winM:250, pal:"blue", doorC:"#5bb8ff", doorFrame:"#081a2e"},
   {name:"LEVEL 3 · 管道", catSpeed:4, smileys:true, smileyCount:6, party:false, kitty:null,
-   doors:false, debris:false, bacteria:false, pipes:true, fence:true, winM:500, pal:"pipe", doorC:"#c0c0c0", doorFrame:"#2a2a2a"},
+   doors:false, debris:false, weapons:true, bacteria:false, pipes:true, fence:true, winM:500, pal:"pipe", doorC:"#c0c0c0", doorFrame:"#2a2a2a"},
   {name:"LEVEL 4 · 泳池", catSpeed:4, smileys:true, smileyCount:3, party:false, kitty:null,
-   doors:false, debris:false, bacteria:false, pools:true, winM:500, pal:"pool", doorC:"#ffffff", doorFrame:"#888888"},
-  {name:"LEVEL 5 · 快跑", catSpeed:5, smileys:true, smileyCount:8, party:true, kitty:{speed:5,always:true},
-   doors:false, debris:false, bacteria:true, bacteriaSpeed:5, smileySpeed:5, partySpeed:5,
-   pipes:false, fence:false, cubicles:false, runDrain:true, winM:0, pal:"office", doorC:"#ff4444", doorFrame:"#222222"},
+   doors:false, debris:false, weapons:true, bacteria:false, pools:true, winM:500, pal:"pool", doorC:"#ffffff", doorFrame:"#888888"},
+  // LEVEL ! 跑命医院：第三人称 3D 追逐关（速度沿用 px/帧 单位，*1.5 换算成 m/s）
+  {name:"LEVEL ! · 跑命医院", runner3d:true, winM:750, catSpeed:7, sprintSpeed:12, smileySpeed:6.6, bacteriaSpeed:6.8, mothSpeed:6.4,
+   doors:false, debris:false, weapons:false, smileys:true, bacteria:true, moths:true, pal:"office", doorC:"#ff4444", doorFrame:"#222222"},
   {name:"LEVEL 6 · 办公室", catSpeed:4, smileys:true, smileyCount:4, party:false, kitty:null,
-   doors:false, debris:false, bacteria:false, pipes:false, fence:false, cubicles:false, offices:true, winM:500, pal:"gray", doorC:"#ffffff", doorFrame:"#666666"},
+   doors:false, debris:false, weapons:true, bacteria:false, pipes:false, fence:false, cubicles:false, offices:true,
+   moths:true, mothSpeed:3.4, winM:500, pal:"gray", doorC:"#ffffff", doorFrame:"#666666"},
 ];
 let CFG=MODES[0], WIN_X=MODES[0].winM*40, WIN_M=MODES[0].winM;
 const PALS={
@@ -771,6 +866,10 @@ function persist(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify(save)); }c
 function addPoints(n){ save.points+=n; persist(); ptsEl.textContent=String(save.points); }
 function logPoints(m,p){ save.history.unshift({m:m,p:p,t:Date.now()}); if(save.history.length>300)save.history.length=300; persist(); }
 function suitCharges(){ return SUITS[save.equipped].charges; }
+// 精神危害分级：裸装满值秒数 3 级=100 / 4 级=60 / 5 级=30；每级防护服削减 10%，十级完全抵御
+const HZ_BASE={3:100,4:60,5:30};
+function hazRate(level){ return Math.max(0,1-0.1*(save.equipped+1))/HZ_BASE[level]; }
+function haz3Rate(){ return hazRate(3); }
 ptsEl.textContent=String(save.points);
 
 // ---------- 状态 ----------
@@ -780,11 +879,11 @@ const S={over:false, t:0, flicker:0, shake:0, best:0, sprinting:false, fuel:SPRI
          deathBy:"", chaser:null, chaserTimer:0, party:null, partyTimer:0, blood:false, thud:false,
          lives:5, charges:0, spdBonus:0, inv:0, pickT:0, waterMax:0, manualEnd:false, win:false, exitDoor:null, menu:true, paused:true,
          inFence:false, fenceDist:0, fenceLength:0, fenceExitX:0, fenceX:0,
-         inPool:false, poolDepth:0, poolY:0, inWater:false, poolMax:0, inCubicle:false, cubicleX:0, cubicleExitX:0, cubicleDoorX:0, sprintStopTimer:0,
-         weapon:null, weaponAmmo:0, weaponPickT:0, officeMax:0, teamSize:1};
-let entities=[], debris=[], waters=[], waterCount=0, bacteria=[], bacMax=0;
+         inPool:false, poolDepth:0, poolY:0, inWater:false, poolMax:0, inCubicle:false, cubicleX:0, cubicleExitX:0, cubicleDoorX:0,
+         weapon:null, weaponAmmo:0, weaponPickT:0, weaponCd:0, officeMax:0, teamSize:1, muzzle:0, haz:0};
+let entities=[], debris=[], waters=[], waterCount=0, bacteria=[], bacMax=0, moths=[], mothMax=0;
 let teammates=[]; // AI 队友数组
-let grassActive=false; // 草原 3D 模式激活时暂停 2D 逻辑与输入
+let threeActive=false; // 3D 模式（草原 / 快跑层）激活时暂停 2D 逻辑与输入
 function openMenu(){
   S.menu=true;S.paused=true;
   victoryEl.style.display="none";shopEl.style.display="none";shareEl.style.display="none";histEl.style.display="none";signEl.style.display="none";
@@ -807,6 +906,7 @@ function startMode(i, teamSize=1){
   cv.style.display="block";hudEl.style.display="block";
   smileyWrapEl.style.display=CFG.smileys?"inline":"none";
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
+  if(CFG.runner3d){Runner3D.launch();return;} // 快跑层：第三人称 3D 追逐关
   reset();
   // 初始化 AI 队友
   teammates=[];
@@ -1137,7 +1237,7 @@ signClaimBtn.addEventListener("click",()=>{
 });
 updateSignDot();
 
-function spawnSmiley(){ entities.push({x:P.x+950+Math.random()*750, bob:Math.random()*6.28, hunt:false}); }
+function spawnSmiley(){ entities.push({x:P.x+950+Math.random()*750, bob:Math.random()*6.28, run:Math.random()*6.28, hunt:false}); }
 function ensureDebris(){
   let maxX=P.x-W*0.3;
   for(const d of debris)maxX=Math.max(maxX,d.x);
@@ -1147,7 +1247,7 @@ function ensureDebris(){
   }
   debris=debris.filter(d=>d.x>P.x-700);
 }
-// 细菌骷髅：沿长廊稀疏分布，每 620~1000px 一只
+// 细菌 Bacteria：沿长廊稀疏分布，每 620~1000px 一只
 function ensureBacteria(){
   if(!CFG.bacteria)return;
   while(bacMax<P.x+W+400){
@@ -1155,6 +1255,16 @@ function ensureBacteria(){
     bacteria.push({x:bacMax, swing:0});
   }
   bacteria=bacteria.filter(b=>b.x>P.x-700);
+}
+// 死亡飞蛾 Deathmoth：办公室层高空盘旋后俯冲扑人，同屏只放一只
+function ensureMoths(){
+  if(!CFG.moths)return;
+  // 间距大于屏宽：同屏至多一只死亡飞蛾，玩家才躲得开
+  while(mothMax<P.x+W+500){
+    mothMax+=Math.max(2600,W*1.6)+Math.random()*1000;
+    moths.push({x:mothMax, ph:Math.random()*6.28, wing:Math.random()*6.28, dive:0, hp:3});
+  }
+  moths=moths.filter(m=>m.x>P.x-800);
 }
 // 杏仁水：每 4m 段 1% 概率刷出
 function ensureWaters(){
@@ -1191,18 +1301,13 @@ function ensureCubicles(){
 }
 // 办公室关卡：办公室入口（每 15-25m 一个，长度 10m）
 let offices=[];
-let weapons=[];
+let weapons=[], weaponMax=420;
 let officeFurniture=[];
 function ensureOffices(){
   let mx=S.officeMax||400;
   while(mx<P.x+W+400){
     mx+=600+Math.random()*400; // 15-25m 间距
-    const hasWeapon=Math.random()<0.4; // 40% 概率刷武器
-    offices.push({x:mx, w:400, hasWeapon:hasWeapon}); // 10m = 400px
-    if(hasWeapon){
-      const weaponType=Math.random()<0.5?"pistol":"rifle";
-      weapons.push({x:mx+150+Math.random()*100, type:weaponType, picked:false});
-    }
+    offices.push({x:mx, w:400}); // 10m = 400px
     // 10% 概率刷杂物（桌椅板凳 + 电脑）
     if(Math.random()<0.1){
       const furnitureType=Math.random()<0.5?"desk":"chair";
@@ -1211,8 +1316,16 @@ function ensureOffices(){
   }
   S.officeMax=mx;
   offices=offices.filter(o=>o.x+o.w>P.x-400);
-  weapons=weapons.filter(w=>w.x>P.x-400&&!w.picked);
   officeFurniture=officeFurniture.filter(f=>f.x>P.x-400);
+}
+// 武器刷新：除草原与快跑层外所有层级每 13~26m 概率刷出
+function ensureWeapons(){
+  while(weaponMax<P.x+W){
+    if(WIN_X&&weaponMax>WIN_X-120)break;
+    weaponMax+=520+Math.random()*520;
+    if(Math.random()<0.45)weapons.push({x:weaponMax,type:Math.random()<0.5?"pistol":"rifle",picked:false});
+  }
+  weapons=weapons.filter(w=>w.x>P.x-400&&!w.picked);
 }
 function drink(){
   waterCount--;
@@ -1226,15 +1339,18 @@ function reset(){
   S.over=false;S.sprinting=false;S.fuel=SPRINT_FRAMES;S.chaser=null;S.chaserTimer=0;S.party=null;S.partyTimer=0;S.shake=0;S.blood=false;
   S.lives=5;S.charges=suitCharges();S.spdBonus=0;S.inv=0;S.pickT=0;S.waterMax=0;waterCount=0;S.manualEnd=false;S.win=false;S.exitDoor=null;
   S.inFence=false;S.fenceDist=0;S.fenceLength=0;S.fenceExitX=0;S.fenceX=P.x+200;
-  S.inPool=false;S.poolDepth=0;S.poolY=0;S.inWater=false;S.poolMax=0;S.inCubicle=false;S.cubicleX=0;S.cubicleExitX=0;S.cubicleDoorX=0;S.sprintStopTimer=0;
-  S.weapon=null;S.weaponAmmo=0;S.weaponPickT=0;S.officeMax=0;
+  S.inPool=false;S.poolDepth=0;S.poolY=0;S.inWater=false;S.poolMax=0;S.inCubicle=false;S.cubicleX=0;S.cubicleExitX=0;S.cubicleDoorX=0;
+  S.weapon=null;S.weaponAmmo=0;S.weaponPickT=0;S.weaponCd=0;S.officeMax=0;S.muzzle=0;S.haz=0;
+  weapons=[];weaponMax=420;
   entities=[];debris=[];waters=[];bacteria=[];bacMax=P.x+520+Math.random()*220;
+  moths=[];mothMax=P.x+700+Math.random()*400;
   for(let i=0;i<(CFG.smileys?(CFG.smileyCount||ENTITY_COUNT):0);i++)spawnSmiley();
   if(CFG.debris)ensureDebris();
   if(CFG.bacteria)ensureBacteria();
   if(CFG.pools)ensurePools();
   if(CFG.cubicles)ensureCubicles();
   if(CFG.offices){ensureOffices();}
+  if(CFG.weapons)ensureWeapons();
 }
 reset();
 
@@ -1290,7 +1406,7 @@ endBtn.addEventListener("click",()=>{
 addEventListener("blur",()=>{K.right=false;K.space=false;}); // 切窗/失焦时松开按键，防止右键卡住
 addEventListener("mousedown",e=>{
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
-  if(grassActive)return;
+  if(threeActive)return;
   if(S.paused||S.menu)return;
   if(S.over){if(S.t-(S.overAt||0)>50)reset();return;}
   if(e.button===2)K.right=true;
@@ -1298,7 +1414,7 @@ addEventListener("mousedown",e=>{
 addEventListener("mouseup",e=>{if(e.button===2)K.right=false;});
 addEventListener("keydown",e=>{
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
-  if(grassActive)return;
+  if(threeActive)return;
   if(S.paused||S.menu)return;
   if(S.over){if(e.code==="Space"&&S.t-(S.overAt||0)>50)reset();return;}
   if(e.code==="Space"||e.code==="ArrowUp"||e.code==="KeyW"){
@@ -1312,7 +1428,7 @@ addEventListener("keydown",e=>{
   if(e.code==="KeyE")K.e=true;
 });
 addEventListener("keyup",e=>{
-  if(grassActive)return;
+  if(threeActive)return;
   if(e.code==="Space"||e.code==="ArrowUp"||e.code==="KeyW")K.space=false;
   if(e.code==="ArrowRight"||e.code==="KeyD")K.right=false;
   if(e.code==="KeyE")K.e=false;
@@ -1339,9 +1455,85 @@ cv.addEventListener("touchcancel",e=>{updateTouch(e);e.preventDefault();},{passi
 
 // ---------- 绘制辅助 ----------
 function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function roundRectOn(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
 function circle(x,y,r){ctx.beginPath();ctx.arc(x,y,r,0,6.29);ctx.fill();}
 function tri(a,b,c,d,e,f){ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.lineTo(e,f);ctx.closePath();ctx.fill();}
 function hexA(h,a){const n=parseInt(h.slice(1),16);return "rgba("+(n>>16&255)+","+(n>>8&255)+","+(n&255)+","+a+")";}
+
+// ---------- 枪械（三角洲行动风格）：以握把处为原点，枪口朝 +x ----------
+function drawGun(c,sx,sy,type){
+  c.save();c.translate(sx,sy);
+  if(type==="pistol"){
+    c.fillStyle="#1a1a1a";
+    c.fillRect(0,-9,22,7);   // 套筒
+    c.fillRect(-1,-2,7,12);  // 握把
+    c.fillStyle="#333333";
+    c.fillRect(20,-8,5,5);   // 枪口
+    c.fillRect(17,-12,3,3);  // 准星
+    c.fillStyle="#444444";
+    c.fillRect(2,9,4,7);     // 弹匣底
+  }else{
+    c.fillStyle="#2a2a2a";
+    c.fillRect(-10,-9,44,7); // 机匣 + 护木
+    c.fillStyle="#6b4a26";
+    c.fillRect(20,-8,13,5);  // 木质护木
+    c.fillStyle="#2a2a2a";
+    c.fillRect(33,-7,12,3);  // 枪管
+    c.fillRect(-16,-6,7,6);  // 枪托
+    c.fillRect(1,-2,7,11);   // 握把
+    c.fillStyle="#4a3a2a";
+    c.beginPath();c.moveTo(8,0);c.lineTo(18,0);c.lineTo(14,13);c.lineTo(7,11);c.closePath();c.fill(); // 弯弹匣
+    c.fillStyle="#444444";
+    c.fillRect(43,-10,3,4);  // 准星
+    c.fillRect(10,-12,4,3);  // 照门
+  }
+  c.restore();
+}
+function drawFlash(c,x,y,r){
+  c.save();c.globalCompositeOperation="lighter";
+  c.fillStyle="rgba(255,214,120,.9)";c.beginPath();c.arc(x,y,r*.6,0,6.29);c.fill();
+  c.fillStyle="rgba(255,255,240,.95)";c.beginPath();c.arc(x,y,r*.3,0,6.29);c.fill();
+  c.strokeStyle="rgba(255,186,84,.85)";c.lineWidth=2;
+  for(let i=0;i<5;i++){const a=i*1.256+x*0.1;
+    c.beginPath();c.moveTo(x+Math.cos(a)*r*.35,y+Math.sin(a)*r*.35);c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r);c.stroke();}
+  c.restore();
+}
+// HUD 持枪小人（缩略版画面小人 + 开火火光）
+function drawGunHud(){
+  const c=gunHudCtx, SU=SUITS[save.equipped], bob=Math.sin(S.t*0.16)*1.2;
+  c.setTransform(2,0,0,2,0,0);
+  c.clearRect(0,0,72,34);
+  c.save();c.translate(21,32+bob*0.2);c.scale(0.44,0.44);
+  const walk=K.right&&P.onGround?Math.sin(P.stepPhase)*0.4:0;
+  c.fillStyle=SU.body;
+  c.save();c.translate(-9,-18);c.rotate(walk*0.5);roundRectOn(c,-6,0,12,26,6);c.fill();c.restore();
+  c.save();c.translate(9,-18);c.rotate(-walk*0.5);roundRectOn(c,-6,0,12,26,6);c.fill();c.restore();
+  c.fillStyle="#9aa0a6";roundRectOn(c,-34,-78,16,44,7);c.fill();          // 氧气背包
+  const gr=c.createLinearGradient(-30,0,30,0);
+  gr.addColorStop(0,SU.body2);gr.addColorStop(.5,SU.body);gr.addColorStop(1,SU.body2);
+  c.fillStyle=gr;roundRectOn(c,-26,-80,52,66,16);c.fill();                 // 身体
+  c.strokeStyle="rgba(240,240,255,.9)";c.lineWidth=5;
+  c.beginPath();c.moveTo(-24,-46);c.lineTo(24,-46);c.stroke();
+  c.strokeStyle=SU.body;c.lineWidth=13;c.lineCap="round";
+  c.beginPath();c.moveTo(17,-70);c.lineTo(35,-58);c.stroke();
+  c.beginPath();c.moveTo(-15,-69);c.lineTo(21,-54);c.stroke();
+  c.fillStyle="#4a4a4a";c.beginPath();c.arc(35,-58,7,0,6.29);c.fill();c.beginPath();c.arc(21,-54,7,0,6.29);c.fill();
+  drawGun(c,35,-58,S.weapon);
+  if(S.muzzle>0)drawFlash(c,35+(S.weapon==="pistol"?26:50),-64,S.weapon==="pistol"?11:15);
+  c.save();c.translate(2,-102);                                            // 头
+  c.fillStyle="#f7c15c";c.beginPath();c.arc(0,0,22,0,6.29);c.fill();
+  c.fillStyle="#3a2a12";c.beginPath();c.arc(-8,-4,3.2,0,6.29);c.fill();c.beginPath();c.arc(8,-4,3.2,0,6.29);c.fill();
+  const dome=c.createRadialGradient(-8,-10,4,0,0,30);
+  dome.addColorStop(0,"rgba(255,255,255,.55)");dome.addColorStop(.4,"rgba(190,230,255,.12)");dome.addColorStop(1,"rgba(140,200,255,.28)");
+  c.fillStyle=dome;c.beginPath();c.arc(0,0,28,0,6.29);c.fill();
+  c.strokeStyle="rgba(220,245,255,.8)";c.lineWidth=2;c.beginPath();c.arc(0,0,28,0,6.29);c.stroke();
+  if(SU.mask){c.fillStyle="#1c1c1f";roundRectOn(c,-17,0,34,22,8);c.fill();
+    c.fillStyle="#3a3a40";roundRectOn(c,-32,1,11,17,7);c.fill();}
+  if(SU.halo){c.shadowColor="rgba(200,240,255,.9)";c.shadowBlur=14;
+    c.strokeStyle="rgba(220,245,255,.6)";c.lineWidth=1.5;c.beginPath();c.arc(0,0,29,0,6.29);c.stroke();c.shadowBlur=0;}
+  c.restore();
+  c.restore();
+}
 
 // ---------- Scratch Cat · 防护服版 ----------
 function drawCat(sx,sy){
@@ -1374,9 +1566,19 @@ function drawCat(sx,sy){
   ctx.beginPath();ctx.moveTo(-24,-40);ctx.lineTo(24,-40);ctx.stroke();
   // 手臂
   ctx.strokeStyle=SU.body;ctx.lineWidth=13;ctx.lineCap="round";
+  if(S.weapon){ // 持枪：双手据枪瞄准前方
+    const gy=-58+Math.sin(S.t*0.09)*0.7-(P.onGround?0:3);
+    ctx.beginPath();ctx.moveTo(17,-70);ctx.lineTo(35,gy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-15,-69);ctx.lineTo(21,gy+4);ctx.stroke();
+    ctx.fillStyle="#4a4a4a";circle(35,gy,7);circle(21,gy+4,7);
+    const rec=S.muzzle>0?-2:0;
+    drawGun(ctx,35+rec,gy,S.weapon);
+    if(S.muzzle>0)drawFlash(ctx,35+rec+(S.weapon==="pistol"?26:50),gy-6,S.weapon==="pistol"?10:14);
+  }else{
   ctx.beginPath();ctx.moveTo(18,-70);ctx.lineTo(30,-46+walk*4);ctx.stroke();
   ctx.beginPath();ctx.moveTo(-16,-70);ctx.lineTo(-26,-48-walk*4);ctx.stroke();
   ctx.fillStyle="#4a4a4a";circle(31,-44+walk*4,7);circle(-27,-46-walk*4,7);
+  }
   // 头
   ctx.save();ctx.translate(2,-102);
   ctx.fillStyle="#f7c15c";circle(0,0,22);
@@ -1482,27 +1684,47 @@ function drawTeammate(sx,sy,suitLevel,tm){
   ctx.fillText(lbl,sx-Math.max(10,ctx.measureText(lbl).width/2),sy-130);
 }
 
-// ---------- 笑脸（派对客）----------
-function drawSmiley(en,sx,sy){
-  const wob=Math.sin(en.bob*2)*6;
-  ctx.save();ctx.translate(sx,sy+wob);
-  ctx.shadowColor="rgba(255,230,90,.7)";ctx.shadowBlur=30;
-  const g=ctx.createRadialGradient(-10,-12,6,0,0,42);
-  g.addColorStop(0,"#fff3a8");g.addColorStop(1,"#e9c421");
-  ctx.fillStyle=g;circle(0,0,40);
+// ---------- 笑脸 Smiler：后室原型 = 纯黑人形，只露发光白眼与笑口 ----------
+function drawSmiley(en,sx,gy){
+  const run=en.run||0, hunt=!!en.hunt;
+  const sw=hunt?Math.sin(run):Math.sin((en.bob||0)*1.5)*.22;
+  const bob=hunt?Math.abs(Math.sin(run))*4:Math.sin((en.bob||0)*2)*3;
+  const dir=(en.x!==undefined&&en.x<P.x)?1:-1;
+  ctx.save();ctx.translate(sx,gy);
+  ctx.fillStyle="rgba(0,0,0,.45)";
+  ctx.beginPath();ctx.ellipse(0,2,26,7,0,0,6.29);ctx.fill();
+  ctx.translate(0,-bob);ctx.scale(dir,1);
+  ctx.shadowColor="rgba(0,0,0,.85)";ctx.shadowBlur=16;
+  ctx.strokeStyle="#050506";ctx.fillStyle="#050506";ctx.lineCap="round";
+  // 腿：跑动时前后大幅摆动，膝盖折起
+  ctx.lineWidth=11;
+  [-1,1].forEach(s=>{
+    const k=sw*s, kneeX=k*13, footX=k*24, lift=Math.max(0,-k)*13;
+    ctx.beginPath();ctx.moveTo(s*5,-62);ctx.lineTo(kneeX,-32-lift*.4);ctx.lineTo(footX,-lift);ctx.stroke();
+  });
+  // 躯干：前倾的瘦长黑影
+  ctx.beginPath();
+  ctx.moveTo(-13,-60);ctx.quadraticCurveTo(-17,-96,-9,-120);
+  ctx.lineTo(15,-122);ctx.quadraticCurveTo(20,-92,13,-60);ctx.closePath();ctx.fill();
+  // 长臂：垂到膝下，随跑动反向摆
+  ctx.lineWidth=8;
+  [-1,1].forEach(s=>{
+    const a=-sw*s;
+    ctx.beginPath();ctx.moveTo(s*10+4,-116);
+    ctx.quadraticCurveTo(s*15+a*12,-88,s*11+a*22,-52+Math.abs(a)*6);ctx.stroke();
+  });
+  // 头：无五官的黑团
+  ctx.beginPath();ctx.ellipse(3,-136,16,18,-.12,0,6.29);ctx.fill();
   ctx.shadowBlur=0;
-  ctx.strokeStyle="#241a05";ctx.lineWidth=5;ctx.lineCap="round";
-  ctx.beginPath();ctx.arc(-14,-6,9,1.15*Math.PI,1.85*Math.PI);ctx.stroke();
-  ctx.beginPath();ctx.arc(14,-6,9,1.15*Math.PI,1.85*Math.PI);ctx.stroke();
-  ctx.beginPath();ctx.arc(0,6,24,0.15*Math.PI,0.85*Math.PI);ctx.stroke();
-  ctx.lineWidth=3;
-  ctx.beginPath();ctx.moveTo(-22,10);ctx.quadraticCurveTo(0,42,22,10);ctx.stroke();
-  ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(-23,10);ctx.lineTo(-30,4);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(23,10);ctx.lineTo(30,4);ctx.stroke();
+  // 唯一可见的东西：发光白眼 + 咧到耳根的笑口
+  ctx.shadowColor="rgba(255,255,255,.9)";ctx.shadowBlur=14;ctx.fillStyle="#fdfdff";
+  ctx.beginPath();ctx.ellipse(-4,-141,4.1,5.4,-.22,0,6.29);ctx.fill();
+  ctx.beginPath();ctx.ellipse(10,-141,4.1,5.4,.22,0,6.29);ctx.fill();
+  ctx.strokeStyle="#fdfdff";ctx.lineWidth=3.4;
+  ctx.beginPath();ctx.arc(3,-133,12,.12*Math.PI,.88*Math.PI);ctx.stroke();
+  ctx.lineWidth=1.1;ctx.strokeStyle="rgba(10,10,12,.85)";
+  for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(3+i*4.4,-131);ctx.lineTo(3+i*4.4,-125);ctx.stroke();}
   ctx.restore();
-  ctx.save();ctx.globalAlpha=.25;ctx.fillStyle="#000";
-  ctx.beginPath();ctx.ellipse(sx,sy+wob+52,30,8,0,0,6.29);ctx.fill();ctx.restore();
 }
 
 // ---------- Kitty：黑色高大小人 ----------
@@ -1658,55 +1880,63 @@ function drawWater(w,sx,gy){
   ctx.restore();
 }
 
-// ---------- 细菌：黑色骷髅骨架（高 5 单位），边走边挥骨手拍人 ----------
+// ---------- 细菌：灰绿瘦长人形（高 6 单位），一直朝玩家跑并挥长臂拍人 ----------
 const BACT_H=6*UNIT; // 144px
+// ---------- 细菌 Bacteria：后室原型 = 灰绿瘦长人形，长臂垂膝、佝偻前冲 ----------
 function drawBacteria(b,sx,gy){
   const H=BACT_H, t=S.t*0.1;
   const dir=(b.x-P.x)<0?-1:1;
   const sw=b.swing>0?b.swing:0;
   const walk=(b.walkPhase||0);
-  const leg=Math.sin(walk)*15;
-  const arm=Math.sin(walk)*9;
-  const sway=Math.sin(walk)*2.2;
-  ctx.save();ctx.translate(sx,gy);ctx.scale(dir,1);
-  // 地面阴影
+  const leg=Math.sin(walk)*18, arm=Math.sin(walk)*13;
+  const bob=Math.abs(Math.sin(walk))*3.5;
+  const lean=6+Math.sin(walk)*1.6;
+  ctx.save();ctx.translate(sx,gy);
   ctx.fillStyle="rgba(0,0,0,.5)";
-  ctx.beginPath();ctx.ellipse(0,2,30,7,0,0,6.29);ctx.fill();
-  ctx.shadowColor="rgba(140,205,255,.45)";ctx.shadowBlur=10;
-  ctx.strokeStyle="#0b0b0d";ctx.lineCap="round";
-  // 腿：行走摆动
-  ctx.lineWidth=5;
-  ctx.beginPath();ctx.moveTo(-7,-H*0.42);ctx.lineTo(-13+leg,-2);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(7,-H*0.42);ctx.lineTo(13-leg,-2);ctx.stroke();
-  // 骨盆
-  ctx.lineWidth=3.5;
-  ctx.beginPath();ctx.moveTo(-11,-H*0.44);ctx.quadraticCurveTo(0,-H*0.36,11,-H*0.44);ctx.stroke();
-  // 脊柱：随步伐轻微左右 sway
-  ctx.lineWidth=5;
-  ctx.beginPath();ctx.moveTo(0,-H*0.42);ctx.quadraticCurveTo(sway,-H*0.62,-sway*0.6,-H*0.8);ctx.stroke();
-  // 肋骨（4 条，上窄下宽）
-  ctx.lineWidth=2.5;
-  for(let i=0;i<4;i++){
-    const y=-H*0.75+i*7.5;
-    const rw=13+i*1.5;
-    ctx.beginPath();ctx.moveTo(-rw,y);ctx.quadraticCurveTo(0,y+4,rw,y);ctx.stroke();
-  }
-  // 右臂（下垂摆动）
-  ctx.lineWidth=4;
-  ctx.beginPath();ctx.moveTo(11,-H*0.78);ctx.lineTo(17+arm,-H*0.52);ctx.lineTo(15+arm,-H*0.36);ctx.stroke();
-  // 头骨 + 下颌
-  ctx.fillStyle="#0b0b0d";
-  ctx.beginPath();ctx.arc(0,-H*0.89,16,0,6.29);ctx.fill();
-  ctx.fillRect(-11,-H*0.89+6,22,12);
-  // 牙齿
-  ctx.fillStyle="#0b0b0d";
-  for(let i=-8;i<=8;i+=4){ctx.fillRect(i,-H*0.89+16,2,4);}
-  ctx.shadowBlur=0;
-  // 红眼窝
-  ctx.shadowColor="#ff3b3b";ctx.shadowBlur=13;ctx.fillStyle="#ff4646";
-  ctx.beginPath();ctx.ellipse(-6,-H*0.91,4,4.2,0,0,6.29);ctx.fill();
-  ctx.beginPath();ctx.ellipse(5,-H*0.91,3.5,3.8,0,0,6.29);ctx.fill();
-  ctx.shadowBlur=0;
+  ctx.beginPath();ctx.ellipse(0,2,26,7,0,0,6.29);ctx.fill();
+  ctx.translate(0,-bob);ctx.scale(dir,1);
+  const skin=ctx.createLinearGradient(-16,-H,18,0);
+  skin.addColorStop(0,"#7d8f63");skin.addColorStop(.55,"#5d6e49");skin.addColorStop(1,"#39452e");
+  ctx.lineCap="round";ctx.lineJoin="round";
+  // 腿：细长两节，跑动时大幅前后摆 + 提膝
+  ctx.strokeStyle="#414f34";
+  [-1,1].forEach(s=>{
+    const k=leg*s/18, kneeX=k*14+lean*.3, footX=k*26, lift=Math.max(0,-k)*16;
+    ctx.lineWidth=7.5;
+    ctx.beginPath();ctx.moveTo(s*5+lean*.4,-H*.44);ctx.lineTo(kneeX,-H*.24-lift*.35);ctx.stroke();
+    ctx.lineWidth=5.5;
+    ctx.beginPath();ctx.moveTo(kneeX,-H*.24-lift*.35);ctx.lineTo(footX,-lift);ctx.stroke();
+    ctx.fillStyle="#2f3a26";ctx.beginPath();ctx.ellipse(footX+3,-lift+1,7,3.4,0,0,6.29);ctx.fill();
+  });
+  // 躯干：佝偻的窄长胸腹，表面菌斑
+  ctx.fillStyle=skin;
+  ctx.beginPath();
+  ctx.moveTo(-10+lean*.4,-H*.44);
+  ctx.quadraticCurveTo(-15+lean*.7,-H*.66,-8+lean,-H*.82);
+  ctx.lineTo(12+lean,-H*.84);
+  ctx.quadraticCurveTo(17+lean*.6,-H*.62,10+lean*.4,-H*.44);
+  ctx.closePath();ctx.fill();
+  ctx.fillStyle="rgba(38,48,30,.55)";
+  [[-2,-H*.72,5],[6,-H*.6,4],[-4,-H*.52,3.4],[8,-H*.76,3]].forEach(p=>{
+    ctx.beginPath();ctx.ellipse(p[0]+lean*.6,p[1],p[2],p[2]*.72,.4,0,6.29);ctx.fill();});
+  ctx.strokeStyle="rgba(198,214,160,.22)";ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-6+lean*.8,-H*.8);ctx.quadraticCurveTo(-11+lean*.6,-H*.62,-7+lean*.4,-H*.46);ctx.stroke();
+  // 右臂：长过膝盖，随跑动反向摆
+  ctx.strokeStyle="#4d5c3c";ctx.lineWidth=6;
+  ctx.beginPath();ctx.moveTo(10+lean,-H*.8);
+  ctx.quadraticCurveTo(19+lean-arm*.5,-H*.55,15+lean-arm,-H*.26);ctx.stroke();
+  ctx.fillStyle="#333f28";ctx.beginPath();ctx.ellipse(15+lean-arm,-H*.25,4.6,6.4,.2,0,6.29);ctx.fill();
+  // 头：前伸的长椭球，只有两个凹陷眼窝与一道竖口
+  ctx.fillStyle=skin;
+  ctx.beginPath();ctx.ellipse(7+lean,-H*.93,12.5,16.5,-.28,0,6.29);ctx.fill();
+  ctx.fillStyle="rgba(24,30,19,.9)";
+  ctx.beginPath();ctx.ellipse(3+lean,-H*.95,3.5,4.6,-.2,0,6.29);ctx.fill();
+  ctx.beginPath();ctx.ellipse(12+lean,-H*.95,3.2,4.3,-.2,0,6.29);ctx.fill();
+  ctx.strokeStyle="rgba(20,26,16,.85)";ctx.lineWidth=1.8;
+  ctx.beginPath();ctx.moveTo(8+lean,-H*.88);ctx.lineTo(9+lean,-H*.83);ctx.stroke();
+  ctx.fillStyle="rgba(206,222,168,.3)";
+  ctx.beginPath();ctx.ellipse(2+lean,-H*.96,1.5,2,-.2,0,6.29);ctx.fill();
+  ctx.beginPath();ctx.ellipse(11+lean,-H*.96,1.4,1.9,-.2,0,6.29);ctx.fill();
   // 挥击左臂：抬手 → 下劈 → 收回（挥击时腿停摆）
   let hx=-20,hy=-H*0.4+Math.sin(t*3)*2;
   if(sw>0){
@@ -1714,11 +1944,82 @@ function drawBacteria(b,sx,gy){
     else if(sw<17){const k=(sw-10)/7;hx=-12+(-H*0.72+12)*k;hy=-H*1.15+(-H*0.5+H*1.15)*k;}
     else {const k=Math.min(1,(sw-17)/17);hx=-H*0.72+(20-H*0.72)*k;hy=-H*0.5+(-H*0.4+H*0.5)*k;}
   }
-  ctx.strokeStyle="#0b0b0d";ctx.lineWidth=4.2;
-  ctx.beginPath();ctx.moveTo(-11,-H*0.78);ctx.lineTo(hx,hy);ctx.stroke();
-  ctx.fillStyle="#0b0b0d";circle(hx,hy,4.5);
-  ctx.strokeStyle="rgba(150,215,255,.65)";ctx.lineWidth=1.4;ctx.shadowBlur=10;
-  ctx.beginPath();ctx.arc(hx,hy,4.5,0,6.29);ctx.stroke();
+  ctx.strokeStyle="#4d5c3c";ctx.lineWidth=6.4;
+  ctx.beginPath();ctx.moveTo(-6+lean,-H*.8);ctx.quadraticCurveTo((-6+lean+hx)/2-6,(-H*.8+hy)/2,hx,hy);ctx.stroke();
+  ctx.fillStyle="#333f28";ctx.beginPath();ctx.ellipse(hx,hy,5.4,7.2,.3,0,6.29);ctx.fill();
+  ctx.strokeStyle="rgba(198,214,160,.4)";ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.ellipse(hx,hy,5.4,7.2,.3,0,6.29);ctx.stroke();
+  ctx.restore();
+}
+
+// ---------- 死亡飞蛾 Deathmoth：巨蛾，扑翼盘旋后俯冲扑脸 ----------
+function drawMoth(m,sx,my){
+  const dir=(m.x<P.x)?1:-1;
+  const flap=Math.sin(m.wing);
+  const dive=m.dive>0;
+  ctx.save();ctx.translate(sx,my);ctx.scale(dir,1);
+  if(dive)ctx.rotate(.22);
+  // 翅：上下拍动 = 纵向压缩 + 轻微转角
+  const wing=(sgn)=>{
+    ctx.save();
+    ctx.translate(-2,-4);ctx.rotate(sgn*flap*.16);ctx.scale(1,.42+.58*Math.abs(Math.cos(m.wing)));
+    const g=ctx.createLinearGradient(0,0,sgn*70,-30);
+    g.addColorStop(0,"#6d5c45");g.addColorStop(.6,"#4a3f31");g.addColorStop(1,"#2b251d");
+    ctx.fillStyle=g;
+    ctx.beginPath();ctx.moveTo(0,0);
+    ctx.bezierCurveTo(sgn*26,-34,sgn*62,-40,sgn*74,-16);
+    ctx.bezierCurveTo(sgn*80,-2,sgn*52,10,sgn*20,8);
+    ctx.closePath();ctx.fill();
+    // 后翅（小一片）
+    ctx.fillStyle="rgba(58,49,38,.92)";
+    ctx.beginPath();ctx.moveTo(sgn*6,4);
+    ctx.bezierCurveTo(sgn*30,10,sgn*48,22,sgn*38,32);
+    ctx.bezierCurveTo(sgn*24,38,sgn*8,22,sgn*2,10);
+    ctx.closePath();ctx.fill();
+    // 翅脉 + 眼斑
+    ctx.strokeStyle="rgba(24,20,15,.5)";ctx.lineWidth=1.2;
+    for(let i=1;i<=3;i++){ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(sgn*30,-14+i*7,sgn*(60-i*6),-16+i*9);ctx.stroke();}
+    ctx.fillStyle="rgba(206,186,140,.85)";
+    ctx.beginPath();ctx.ellipse(sgn*48,-16,8.5,6.2,sgn*.3,0,6.29);ctx.fill();
+    ctx.fillStyle="#1d1811";
+    ctx.beginPath();ctx.ellipse(sgn*48,-16,4.2,3.2,sgn*.3,0,6.29);ctx.fill();
+    ctx.fillStyle="rgba(240,232,206,.7)";
+    ctx.beginPath();ctx.ellipse(sgn*46,-18,1.6,1.2,0,0,6.29);ctx.fill();
+    ctx.restore();
+  };
+  wing(-1);wing(1);
+  // 腹部：分节绒毛
+  const bg=ctx.createLinearGradient(0,-8,0,10);
+  bg.addColorStop(0,"#5b4c3a");bg.addColorStop(1,"#2e261d");
+  ctx.fillStyle=bg;
+  ctx.beginPath();ctx.ellipse(-16,2,22,9,0,0,6.29);ctx.fill();
+  ctx.strokeStyle="rgba(20,16,12,.55)";ctx.lineWidth=1.4;
+  for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-30+i*8,-5);ctx.lineTo(-30+i*8,9);ctx.stroke();}
+  // 胸部绒毛
+  ctx.fillStyle="#6a5943";
+  ctx.beginPath();ctx.ellipse(4,0,13,11,0,0,6.29);ctx.fill();
+  ctx.fillStyle="rgba(214,196,152,.28)";
+  ctx.beginPath();ctx.ellipse(2,-4,9,5,0,0,6.29);ctx.fill();
+  // 头 + 复眼
+  ctx.fillStyle="#3b3227";
+  ctx.beginPath();ctx.ellipse(16,-1,7.5,7,0,0,6.29);ctx.fill();
+  ctx.fillStyle=dive?"#ff6a4d":"#1a1510";
+  ctx.beginPath();ctx.ellipse(19,-3,3.4,3.8,0,0,6.29);ctx.fill();
+  ctx.fillStyle="rgba(255,240,220,.5)";
+  ctx.beginPath();ctx.ellipse(18,-4.4,1.2,1.4,0,0,6.29);ctx.fill();
+  // 羽状触角
+  ctx.strokeStyle="#4a3f31";ctx.lineWidth=1.8;
+  [-1,1].forEach(s=>{
+    ctx.beginPath();ctx.moveTo(18,-5);ctx.quadraticCurveTo(30,-16+s*3,40,-22+s*7);ctx.stroke();
+    ctx.lineWidth=1;
+    for(let i=1;i<=5;i++){const t=i/6,ax=18+(40-18)*t,ay=-5+(-22+s*7+5)*t*t;
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(ax+3,ay-4);ctx.stroke();}
+    ctx.lineWidth=1.8;
+  });
+  // 垂下的细足
+  ctx.strokeStyle="#2e261d";ctx.lineWidth=1.6;
+  for(let i=0;i<3;i++){const lx=-6+i*7;
+    ctx.beginPath();ctx.moveTo(lx,7);ctx.quadraticCurveTo(lx+3,16+flap*2,lx-2,22+flap*3);ctx.stroke();}
   ctx.restore();
 }
 
@@ -1956,35 +2257,19 @@ function drawCorridor(camX){
         }
       }
     }
+  }
+  // 武器拾取物：除草原与快跑层外的所有层级
+  if(CFG.weapons){
     // 武器绘制（参考三角洲行动样式）
     for(const w of weapons){
       if(w.picked)continue;
       const sx=w.x-camX;
       if(sx>-40 && sx<W+40){
-        if(w.type==="pistol"){
-          // G18 手枪（三角洲行动风格）
-          ctx.fillStyle="#1a1a1a";
-          ctx.fillRect(sx-10,GROUND-28,20,8); // 套筒
-          ctx.fillRect(sx-8,GROUND-20,6,10); // 握把
-          ctx.fillStyle="#333333";
-          ctx.fillRect(sx-12,GROUND-26,4,4); // 枪口
-          ctx.fillRect(sx+6,GROUND-24,4,6); // 击锤
-          ctx.fillStyle="#444444";
-          ctx.fillRect(sx-6,GROUND-18,4,8); // 弹匣
-        }else{
-          // AKM/AK47 步枪（三角洲行动风格）
-          ctx.fillStyle="#2a2a2a";
-          ctx.fillRect(sx-20,GROUND-32,40,6); // 机匣
-          ctx.fillRect(sx-18,GROUND-26,8,10); // 握把
-          ctx.fillRect(sx-25,GROUND-30,12,5); // 弹匣（弯曲）
-          ctx.fillStyle="#3a3a3a";
-          ctx.fillRect(sx-28,GROUND-30,15,3); // 枪管
-          ctx.fillRect(sx+15,GROUND-30,8,4); // 枪托
-          ctx.fillStyle="#444444";
-          ctx.fillRect(sx-10,GROUND-34,6,2); // 准星
-          ctx.fillRect(sx+10,GROUND-34,4,2); // 照门
-        }
-        // 武器名称标签
+        ctx.save();
+        ctx.fillStyle="rgba(255,235,170,.14)";
+        ctx.beginPath();ctx.ellipse(sx,GROUND-4,26,9,0,0,6.29);ctx.fill();
+        drawGun(ctx,sx-14,GROUND-20,w.type);
+        ctx.restore();
         ctx.fillStyle="rgba(255,255,255,.7)";
         ctx.font="9px monospace";
         ctx.fillText(w.type==="pistol"?"G18":"AKM",sx-8,GROUND-40);
@@ -2032,10 +2317,20 @@ function drawCorridor(camX){
 
 // ---------- 主循环 ----------
 let last=performance.now();
+function updateHazChip(){
+  const r=haz3Rate();
+  hazFillEl.style.width=(S.haz*100)+"%";
+  hazPctEl.textContent=Math.round(S.haz*100)+"%";
+  if(r<=0){ hazChipEl.className="safe"; hazLeftEl.textContent="十级防护服 · 完全抵御"; }
+  else{
+    hazChipEl.className=S.haz>=.75?"hot":"";
+    hazLeftEl.textContent="剩 "+Math.ceil((1-S.haz)/r)+"s";
+  }
+}
 function loop(now){
   const dt=Math.min(2.5,(now-last)/16.666);last=now;
   S.t+=dt;
-  if(grassActive||S.menu||S.paused){requestAnimationFrame(loop);return;}
+  if(threeActive||S.menu||S.paused){requestAnimationFrame(loop);return;}
   if(S.over&&S.win){progEl.style.width="100%";progNumEl.textContent=WIN_M+"/"+WIN_M+"m";distEl.textContent=String(Math.floor(P.x/40));}
   if(!S.over){
     // 冲刺：右键+空格，速度10，燃料4秒
@@ -2112,6 +2407,7 @@ function loop(now){
     // 杏仁水：刷出 + 0.5m 内自动拾取
     ensureWaters();
     if(S.inv>0)S.inv-=dt;
+    if(S.muzzle>0)S.muzzle-=dt;
     if(S.drunk>0)S.drunk-=dt;
     const nearW=waters.find(w=>Math.abs(w.x-P.x)<=20);
     if(nearW){
@@ -2156,9 +2452,12 @@ function loop(now){
         }
       }
     }
-    // 办公室关卡：武器拾取 + 自动射击
-    if(CFG.offices){
-      ensureOffices();
+    // 办公室关卡：办公室 + 桌椅杂物
+    if(CFG.offices)ensureOffices();
+    // 武器拾取 + 自动射击（草原与快跑层之外所有层级）
+    if(CFG.weapons){
+      ensureWeapons();
+      if(S.weaponCd>0)S.weaponCd-=dt;
       // 武器拾取：5m 内自动收集
       for(const w of weapons){
         if(w.picked)continue;
@@ -2170,9 +2469,10 @@ function loop(now){
           tone(880,1760,.3,.15,"sine");
         }
       }
-      // 自动射击：4m 内见到实体
-      if(S.weapon && S.weaponAmmo>0){
+      // 自动射击：4m 内见到实体，10 帧一发
+      if(S.weapon && S.weaponAmmo>0 && S.weaponCd<=0){
         const shootRange=160; // 4m = 160px
+        let fired=false;
         // 检查笑脸
         for(const en of entities){
           const d=en.x-P.x;
@@ -2185,11 +2485,12 @@ function loop(now){
               en.hp=3;
               en.bob=Math.random()*6.28;
             }
+            fired=true;
             break; // 每次只射一个
           }
         }
         // 检查细菌
-        if(S.weaponAmmo>0){
+        if(!fired){
           for(const b of bacteria){
             const d=b.x-P.x;
             if(d>0 && d<shootRange){
@@ -2201,10 +2502,29 @@ function loop(now){
                 b.hp=3;
                 b.swing=0;
               }
+              fired=true;
               break;
             }
           }
         }
+        // 检查死亡飞蛾
+        if(!fired){
+          for(const m of moths){
+            const d=m.x-P.x;
+            if(d>0 && d<shootRange){
+              S.weaponAmmo--;
+              m.hp=(m.hp||3)-1;
+              tone(200,100,.1,.2,"square");
+              if(m.hp<=0){
+                m.x=P.x+900+Math.random()*500;
+                m.hp=3;m.dive=0;
+              }
+              fired=true;
+              break;
+            }
+          }
+        }
+        if(fired){S.weaponCd=10;S.muzzle=6;}
         // 子弹空了自动丢弃
         if(S.weaponAmmo<=0){
           S.weapon=null;
@@ -2280,18 +2600,6 @@ function loop(now){
         }
       }
     }
-    // 快跑层特殊规则：必须一直跑，停下超过 2 秒扣血（帧率无关）
-    if(CFG.runDrain){
-      if(!K.right && !S.inCubicle){
-        S.sprintStopTimer+=dt;
-        if(S.sprintStopTimer>120){ // 停下超过 2 秒
-          S.lives=Math.max(0,S.lives-0.1*dt);
-          if(S.lives<=0)die("你停下了，被黑暗吞噬");
-        }
-      }else{
-        S.sprintStopTimer=0;
-      }
-    }
     // 出口：走到目标距离时前方出现发光白门，抵达即胜利（winM=0 时无出口，无限生存）
     if(WIN_M>0 && !S.exitDoor && P.x>=WIN_X)S.exitDoor={x:P.x+700};
     if(S.exitDoor && Math.abs(S.exitDoor.x-P.x)<36)win();
@@ -2300,12 +2608,13 @@ function loop(now){
     const progPct=WIN_M>0?Math.min(1,P.x/WIN_X):0;
     progEl.style.width=(progPct*100)+"%";
     progNumEl.textContent=WIN_M>0?Math.min(Math.floor(P.x/40),WIN_M)+"/"+WIN_M+"m":Math.floor(P.x/40)+"m";
-    // 笑脸：只追正在移动的玩家
+    // 笑脸 Smiler：一直朝玩家跑（玩家停下也照追，不再冻结）
     let danger=0,hunters=0;
     for(const en of entities){
       en.bob+=0.05*dt;
       const d=en.x-P.x;
-      en.hunt=Math.abs(d)<WARN&&moving;
+      en.hunt=Math.abs(d)<WARN;
+      en.run=(en.run||0)+dt*(en.hunt?0.42:0.1);
       if(en.hunt){
         danger=Math.max(danger,1-Math.abs(d)/WARN);hunters++;
         const smileySpd=CFG.smileySpeed||SMILEY_SPEED;
@@ -2328,20 +2637,19 @@ function loop(now){
         if(tm.alive&&(tm.inv||0)<=0&&tm.y>-58&&Math.abs(en.x-tm.x)<55)hurtTeammate(tm,en);
       }
     }
-    // 细菌骷髅：一直追踪玩家（速度=玩家速度）
+    // 细菌 Bacteria：一直朝玩家跑（玩家停下也照追），速度=玩家速度
     if(CFG.bacteria){
       ensureBacteria();
-      const bactSpd=CFG.bacteriaSpeed||(CFG.catSpeed+S.spdBonus); // 细菌速度=玩家速度
+      const bactSpd=CFG.bacteriaSpeed||(CFG.catSpeed+S.spdBonus);
       for(const b of bacteria){
         const d=b.x-P.x;
-        // 细菌一直向玩家走动（无论玩家是否移动）
-        if(d>60 && d<800){
+        if(d>40 && d<1400){
           b.x -= bactSpd*dt;
-          b.walkPhase=(b.walkPhase||0)+dt*0.38;
+          b.walkPhase=(b.walkPhase||0)+dt*0.62;
         }
         if(b.swing>0){
           b.swing+=dt;
-          if(b.swing>=12&&b.swing<19&&d>0&&d<110&&P.y>-(BACT_H-24))die("细菌的骨手把你拍倒在地");
+          if(b.swing>=12&&b.swing<19&&d>0&&d<110&&P.y>-(BACT_H-24))die("细菌的长臂把你拍倒在地");
           if(b.swing>34)b.swing=0;
         }else if(d>0&&d<130){
           b.swing=0.001;
@@ -2350,6 +2658,31 @@ function loop(now){
         if(d>0&&d<34&&P.y>-(BACT_H-12)){
           P.x=b.x-34;
           if(S.t-(S.bumpT||0)>20){S.bumpT=S.t;tone(120,50,.18,.1,"square");}
+        }
+      }
+    }
+    // 死亡飞蛾：高空盘旋 → 贴近后俯冲扑脸，跳起可躲过
+    if(CFG.moths){
+      ensureMoths();
+      const mothSpd=CFG.mothSpeed||3.4;
+      for(const m of moths){
+        const d=m.x-P.x;
+        m.ph+=dt*0.05; m.wing+=dt*(m.dive>0?0.9:0.55);
+        if(Math.abs(d)<1500)m.x-=Math.sign(d)*mothSpd*dt;
+        const hover=168+Math.sin(m.ph)*26;
+        if(m.dive>0){
+          m.dive+=dt;
+          const k=Math.min(1,m.dive/14);
+          m.alt=hover+(46-hover)*k;
+          if(m.dive>34){m.dive=0;m.x=P.x+Math.max(900,W)+Math.random()*500;m.ph=Math.random()*6.28;}
+        }else{
+          m.alt=hover;
+          if(d>0&&d<300){m.dive=0.001;tone(320,180,.22,.07,"sawtooth");}
+        }
+        danger=Math.max(danger,Math.abs(d)<420?(1-Math.abs(d)/420)*.85:0);
+        if(Math.abs(d)<46&&m.alt<112){
+          if(P.y<=-90){m.dive=0;m.x=P.x+Math.max(900,W)+Math.random()*500;tone(500,900,.15,.06,"sine");}
+          else die("死亡飞蛾扑到了你的脸上");
         }
       }
     }
@@ -2403,6 +2736,12 @@ function loop(now){
         }
       }
     }
+    // 三级精神危害：所有 2D 层级持续累积，满值精神崩溃（十级防护服完全抵御）
+    const hz3=haz3Rate();
+    if(hz3>0&&!S.over){
+      S.haz=Math.min(1,S.haz+dt/60*hz3);
+      if(S.haz>=1){S.lives=0;S.charges=0;die("精神危害满值 —— 你的意识在这片长廊里涣散了",true);}
+    }
     if(S.over){
       if(alarmGain)alarmGain.gain.value=0;
       alertEl.style.opacity=0;kittyEl.style.opacity=0;
@@ -2422,10 +2761,10 @@ function loop(now){
       waterEl.textContent=String(waterCount);
       spdEl.textContent=String(+(CFG.catSpeed+S.spdBonus).toFixed(1));
       spdChipEl.classList.toggle("zero",S.spdBonus<=0);
-      // 武器显示
-      if(S.weapon){
-        waterEl.textContent=S.weapon==="pistol"?"G18×"+S.weaponAmmo:"AK47×"+S.weaponAmmo;
-      }
+      // 武器显示：HUD 里的持枪小人 + 枪名弹药
+      gunStatEl.hidden=!S.weapon;
+      if(S.weapon){ gunNameEl.textContent=(S.weapon==="pistol"?"G18":"AKM")+"×"+S.weaponAmmo; drawGunHud(); }
+      updateHazChip();
     }
     updateTeamHud();
     netTick(dt);
@@ -2464,7 +2803,11 @@ function loop(now){
   }
   for(const en of entities){
     const sx=en.x-camX;
-    if(sx>-120&&sx<W+120)drawSmiley(en,sx,GROUND-108);
+    if(sx>-120&&sx<W+120)drawSmiley(en,sx,GROUND-4);
+  }
+  for(const m of moths){
+    const sx=m.x-camX;
+    if(sx>-140&&sx<W+140)drawMoth(m,sx,GROUND-(m.alt||168));
   }
   if(S.chaser){
     const sx=S.chaser.x-camX;
@@ -2507,14 +2850,15 @@ function loop(now){
 
   if(S.over&&!S.win){ // ===== 死亡/终止画面 =====
     if(!S.manualEnd&&!S.thud&&S.t-(S.overAt||0)>=25){S.thud=true;tone(80,32,.28,.22,"square");}
+    const mb=S.haz>=1;   // 精神危害满值 = 精神崩溃，不是被实体找到
     ctx.fillStyle="rgba(0,0,0,.55)";ctx.fillRect(0,0,W,H);
     ctx.textAlign="center";
-    ctx.fillStyle=S.manualEnd?"#e8d98a":"#ff4d4d";ctx.font="bold 64px Courier New";
+    ctx.fillStyle=S.manualEnd?"#e8d98a":(mb?"#b073ff":"#ff4d4d");ctx.font="bold 64px Courier New";
     ctx.shadowColor="#000";ctx.shadowBlur=16;
-    ctx.fillText(S.manualEnd?"探索终止":"GAME OVER",W/2,H/2-60);
+    ctx.fillText(S.manualEnd?"探索终止":(mb?"精神崩溃":"GAME OVER"),W/2,H/2-60);
     ctx.shadowBlur=0;
     ctx.fillStyle="#ffe14d";ctx.font="bold 22px Courier New";
-    ctx.fillText(S.manualEnd?"—— 你 主 动 离 开 了 这 里 ——":"—— 它 找 到 你 了 ——",W/2,H/2-16);
+    ctx.fillText(S.manualEnd?"—— 你 主 动 离 开 了 这 里 ——":(mb?"—— 意 识 融 进 了 长 廊 ——":"—— 它 找 到 你 了 ——"),W/2,H/2-16);
     ctx.font="18px Courier New";ctx.fillStyle="#e8d98a";
     ctx.fillText(S.deathBy,W/2,H/2+18);
     ctx.fillText("本次行进 "+Math.floor(P.x/40)+" m · 最远 "+S.best+" m",W/2,H/2+48);
@@ -2523,7 +2867,7 @@ function loop(now){
     }else{
       ctx.fillText("…",W/2,H/2+84);
     }
-    if(!S.manualEnd&&CFG.smileys)drawSmiley({bob:S.t*0.05},W/2,H/2-190);
+    if(!S.manualEnd&&!mb&&CFG.smileys)drawSmiley({bob:S.t*0.05,run:S.t*0.3,hunt:true,x:P.x+1},W/2,H/2-52);
   }
   requestAnimationFrame(loop);
 }
@@ -2553,10 +2897,10 @@ function hurtTeammate(tm,attacker){
   else if(attacker==="party"){S.party=null;S.partyTimer=0;}
   else if(attacker&&attacker.x!==undefined){attacker.x=P.x+950+Math.random()*750;attacker.bob=Math.random()*6.28;}
 }
-function die(msg){
-  if(S.over||S.inv>0)return;
+function die(msg,pierce){
+  if(S.over||(S.inv>0&&!pierce))return;
   // 防护服抵挡伤害：消耗一层（破裂）+ 推开实体 + 短暂无敌
-  if(S.charges>0){
+  if(!pierce&&S.charges>0){
     S.charges--;S.inv=150;
     tone(1400,180,.45,.22,"square");tone(900,120,.5,.15,"sawtooth",.08);
     for(const en of entities){en.x=P.x+950+Math.random()*750;en.bob=Math.random()*6.28;}
@@ -2565,7 +2909,7 @@ function die(msg){
     return;
   }
   // 有额外生命：消耗一条，实体被"推开"，短暂无敌闪烁
-  if(S.lives>1){
+  if(!pierce&&S.lives>1){
     S.lives--;S.inv=150;tone(500,120,.5,.15,"sine");
     for(const en of entities){en.x=P.x+950+Math.random()*750;en.bob=Math.random()*6.28;}
     for(const b of bacteria){if(Math.abs(b.x-P.x)<400){b.x=P.x+800+Math.random()*500;b.swing=0;}}
@@ -2578,6 +2922,91 @@ function die(msg){
   S.best=Math.max(S.best,Math.floor(P.x/40));
   deathSound();
 }
+// ================= 3D 流浪者模型（草原 / 快跑层共用 · 后室防护服造型） =================
+// 骨架枢轴与动画约定：腿 0.95 / 臂 1.78 / 头 2.16，整体高约 2.5
+function makeWanderer(su){
+  const M={
+    suit:new THREE.MeshStandardMaterial({color:new THREE.Color(su.body),roughness:.74,metalness:.05}),
+    suit2:new THREE.MeshStandardMaterial({color:new THREE.Color(su.body2||su.body),roughness:.8,metalness:.05}),
+    dark:new THREE.MeshStandardMaterial({color:0x1c1e22,roughness:.86}),
+    metal:new THREE.MeshStandardMaterial({color:0x8d949b,roughness:.42,metalness:.6}),
+    strap:new THREE.MeshStandardMaterial({color:0x25272c,roughness:.92}),
+    lens:new THREE.MeshStandardMaterial({color:0x0d1116,roughness:.22,metalness:.65,emissive:0x0b1a26,emissiveIntensity:.55}),
+    glow:new THREE.MeshStandardMaterial({color:0xffe14d,emissive:0xffe14d,emissiveIntensity:.85,roughness:.3}),
+  };
+  const g=new THREE.Group();
+  const cyl=(rt,rb,h,seg,m)=>new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||10),m);
+  const box=(w,h,g2,m)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,g2),m);
+  const sph=(r,m,sx,sy,sz)=>{const s=new THREE.Mesh(new THREE.SphereGeometry(r,12,10),m);if(sx)s.scale.set(sx,sy,sz);return s;};
+  // 腿
+  function makeLeg(sign){
+    const L=new THREE.Group();L.position.set(sign*.19,.95,0);
+    const th=cyl(.17,.15,.5,10,M.suit);th.position.y=-.25;L.add(th);
+    const knee=sph(.135,M.dark);knee.position.set(0,-.48,.03);L.add(knee);
+    const sh=cyl(.145,.13,.46,10,M.suit2);sh.position.y=-.71;L.add(sh);
+    const po1=box(.13,.16,.05,M.strap);po1.position.set(.16,-.6,.06);L.add(po1);
+    const bo=box(.27,.16,.44,M.dark);bo.position.set(0,-.94,.07);L.add(bo);
+    const sole=box(.29,.05,.46,M.strap);sole.position.set(0,-1.0,.07);L.add(sole);
+    return L;
+  }
+  const legL=makeLeg(-1),legR=makeLeg(1);g.add(legL,legR);
+  // 髋部 + 腰带
+  const hip=box(.72,.3,.46,M.suit2);hip.position.y=1.02;g.add(hip);
+  const belt=box(.78,.1,.5,M.dark);belt.position.y=1.14;g.add(belt);
+  const buckle=box(.12,.09,.05,M.metal);buckle.position.set(0,1.14,.26);g.add(buckle);
+  // 躯干（夹克）
+  const torso=box(.76,.86,.46,M.suit);torso.position.y=1.5;g.add(torso);
+  const chest=box(.5,.42,.06,M.suit2);chest.position.set(0,1.6,.24);g.add(chest);
+  const zip=box(.06,.8,.04,M.dark);zip.position.set(0,1.5,.25);g.add(zip);
+  [-1,1].forEach(sd=>{const st=box(.1,.62,.04,M.strap);st.position.set(sd*.17,1.56,.25);st.rotation.z=sd*.32;g.add(st);});
+  const pouch=box(.34,.2,.1,M.strap);pouch.position.set(-.14,1.26,.26);g.add(pouch);
+  const band=box(.79,.09,.49,M.glow);band.position.y=1.42;g.add(band);   // 反光条
+  [-1,1].forEach(sd=>{const pad=sph(.2,M.suit2,1,1,.8);pad.position.set(sd*.44,1.79,0);g.add(pad);});
+  // 氧气背包
+  const pack=box(.52,.68,.26,M.metal);pack.position.set(0,1.54,-.4);g.add(pack);
+  const tankGeo=new THREE.CylinderGeometry(.095,.095,.56,10);
+  [-.14,.14].forEach(x=>{const t=new THREE.Mesh(tankGeo,M.metal);t.position.set(x,1.54,-.58);g.add(t);
+    const cap=cyl(.045,.045,.08,8,M.dark);cap.position.set(x,1.85,-.58);g.add(cap);});
+  // 手臂
+  function makeArm(sign){
+    const A=new THREE.Group();A.position.set(sign*.48,1.78,0);
+    const up=cyl(.13,.12,.46,10,M.suit);up.position.y=-.23;A.add(up);
+    const fo=cyl(.12,.11,.42,10,M.suit2);fo.position.y=-.64;A.add(fo);
+    const cuff=cyl(.125,.125,.07,10,M.dark);cuff.position.y=-.83;A.add(cuff);
+    const gl=sph(.135,M.dark);gl.position.y=-.9;A.add(gl);
+    A.rotation.z=sign*.1;
+    return A;
+  }
+  const armL=makeArm(-1),armR=makeArm(1);g.add(armL,armR);
+  // 头（兜帽 + 护目镜 + 防毒面具）
+  const head=new THREE.Group();head.position.y=2.16;g.add(head);
+  const hood=sph(.315,M.suit,1,1.1,1.04);head.add(hood);
+  const brim=new THREE.Mesh(new THREE.TorusGeometry(.3,.045,8,18,Math.PI),M.suit2);
+  brim.position.set(0,.02,.06);brim.rotation.x=Math.PI/2+.25;brim.rotation.z=Math.PI;head.add(brim);
+  const face=sph(.26,M.dark,1,1,.6);face.position.set(0,-.02,.12);head.add(face);
+  const gog=box(.42,.15,.1,M.dark);gog.position.set(0,.05,.24);head.add(gog);
+  [-.1,.1].forEach(x=>{const l=cyl(.075,.075,.06,12,M.lens);l.rotation.x=Math.PI/2;l.position.set(x,.05,.3);head.add(l);});
+  if(su.visor){const v=new THREE.Mesh(new THREE.TorusGeometry(.19,.018,8,20),M.glow);v.position.set(0,.05,.29);head.add(v);}
+  if(su.mask){
+    const respirator=box(.3,.2,.16,M.dark);respirator.position.set(0,-.12,.24);head.add(respirator);
+    const valve=cyl(.05,.05,.06,10,M.metal);valve.rotation.x=Math.PI/2;valve.position.set(0,-.13,.34);head.add(valve);
+    [-.17,.17].forEach(x=>{const can=cyl(.075,.075,.1,12,M.metal);can.rotation.z=Math.PI/2;can.position.set(x,-.13,.26);head.add(can);
+      const grille=cyl(.05,.05,.02,10,M.dark);grille.rotation.z=Math.PI/2;grille.position.set(x*1.55,-.13,.26);head.add(grille);});
+  }else{
+    const scarf=box(.34,.13,.34,M.suit2);scarf.position.set(0,-.14,.05);head.add(scarf);   // 一级：临时围脸布
+    const eyeM=new THREE.MeshStandardMaterial({color:0x12151a,roughness:.4});
+    [-.09,.09].forEach(x=>{const e=sph(.035,eyeM);e.position.set(x,.02,.28);head.add(e);});
+  }
+  if(su.halo){const h=new THREE.Mesh(new THREE.TorusGeometry(.38,.016,8,26),
+    new THREE.MeshStandardMaterial({color:0xcfe8ff,emissive:0x9fd0ff,emissiveIntensity:1.1,roughness:.2}));
+    h.rotation.x=Math.PI/2;h.position.y=.34;head.add(h);}
+  const collar=new THREE.Mesh(new THREE.TorusGeometry(.21,.055,8,16),M.suit2);
+  collar.rotation.x=Math.PI/2;collar.position.y=2.0;g.add(collar);
+  g.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  return {g:g,armL:armL,armR:armR,legL:legL,legR:legR,head:head,mats:M};
+}
+// 当前激活的 3D 模式（草原 / 快跑层共用 #grass3d 面板），用于分派面板上的通用按钮
+const ThreeOver={mode:"grass"};
 // ================= 草原 3D 模式（Three.js · 第三人称鼠标视角） =================
 const Grassland3D=(function(){
   const mount=document.getElementById("g3d-mount"),
@@ -2601,14 +3030,25 @@ const Grassland3D=(function(){
         muteBtn=document.getElementById("g3d-mute"),
         muteLabel=document.getElementById("g3d-mutelabel"),
         dreadEl=document.getElementById("g3d-dread"),
+        blissEl=document.getElementById("g3d-bliss"),
         hzEl=document.getElementById("g3d-hazard"),
         hzNum=document.getElementById("g3d-hznum"),
         hzFill=document.getElementById("g3d-hzfill"),
         hzState=document.getElementById("g3d-hzstate"),
+        hzLife=document.getElementById("g3d-hzlife"),
+        hzLifeFill=document.getElementById("g3d-hzlifefill"),
         pillBtn=document.getElementById("g3d-pillbtn"),
-        pillCount=document.getElementById("g3d-pillcount");
+        pillCount=document.getElementById("g3d-pillcount"),
+        titleB=document.getElementById("g3d-titleb"),
+        titleSpan=document.getElementById("g3d-titlespan"),
+        exitBtn=document.getElementById("g3d-exitbtn"),
+        promptText=document.getElementById("g3d-prompttext"),
+        overEl=document.getElementById("g3d-over"),
+        overTitleEl=document.getElementById("g3d-overtitle"),
+        overTextEl=document.getElementById("g3d-overtext"),
+        overStatEl=document.getElementById("g3d-overstat");
   const RING_C=339.292, HALF=124, GSIZE=260;
-  const HZ_LEVEL=5, HZ_BARE=30, HZ_DELAY=0.7, PILL_SECONDS=4;
+  const HZ_BARE=30, HZ_DELAY=0.7, HZ_DELAY_HI=0.85, PILL_SECONDS=4;
   const LEAF_CALM=[0x3f7d33,0x4f9138,0x356b2b], LEAF_TRUE=[0x2b1f2a,0x382233,0x1c1218];
   let active=false, isTouch=false, renderer=null, scene=null, camera=null, char=null;
   let raf=0, last=0, gtime=0, suitColor="#f39b1f";
@@ -2620,8 +3060,8 @@ const Grassland3D=(function(){
   let sun=null, sunGlow=null, particles=null, pSeed=[], clouds=[];
   let skyMat=null, hemiLight=null, ambLight=null, fillLight=null, groundMat=null, tuftMat=null, flowerMat=null, rockMat=null, cloudMat=null, trunkMat=null;
   let leafMats=[], trees=[], eyeMat=null, scratch=null;
-  let strain=0, pillTimer=0, pills=save.pills, pillsUsed=0, resistCap=3, immune=false, hzRate=(1-HZ_DELAY)/HZ_BARE, hazTier=-1, visionKey="";
-  let armL,armR,legL,legR,head,torso;
+  let strain=0, pillTimer=0, pills=save.pills, pillsUsed=0, dead=false, hzRate=(1-HZ_DELAY)/HZ_BARE, hazTier=-1, visionKey="";
+  let armL,armR,legL,legR,head;
   let gMaster=null, windSrc=null, windLfo=null, muted=false;
   const dyn=[];
   const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
@@ -2738,46 +3178,17 @@ const Grassland3D=(function(){
   }
   function buildCharacter(){
     const SU=SUITS[save.equipped];suitColor=SU.body;
-    const suitMat=new THREE.MeshStandardMaterial({color:new THREE.Color(SU.body),roughness:.55,metalness:.12});
-    const suit2Mat=new THREE.MeshStandardMaterial({color:new THREE.Color(SU.body2||SU.body),roughness:.6,metalness:.1});
-    const darkMat=new THREE.MeshStandardMaterial({color:0x2a2a2e,roughness:.7});
-    const packMat=new THREE.MeshStandardMaterial({color:0x9aa0a6,roughness:.5,metalness:.3});
-    char=new THREE.Group();
-    function makeLeg(sign){ const g=new THREE.Group();g.position.set(sign*.18,.95,0);
-      const th=new THREE.Mesh(new THREE.CylinderGeometry(.16,.15,.5,8),suitMat);th.position.y=-.25;g.add(th);
-      const sh=new THREE.Mesh(new THREE.CylinderGeometry(.14,.13,.45,8),suit2Mat);sh.position.y=-.7;g.add(sh);
-      const bo=new THREE.Mesh(new THREE.BoxGeometry(.26,.16,.4),darkMat);bo.position.set(0,-.92,.06);g.add(bo);
-      g.traverse(o=>{if(o.isMesh)o.castShadow=true;});return g; }
-    legL=makeLeg(-1);legR=makeLeg(1);char.add(legL,legR);
-    torso=new THREE.Mesh(new THREE.CylinderGeometry(.4,.5,1.05,14),suitMat);torso.position.y=1.45;torso.castShadow=true;char.add(torso);
-    const stripe=new THREE.Mesh(new THREE.CylinderGeometry(.505,.505,.12,14),new THREE.MeshStandardMaterial({color:0xf0f4ff,roughness:.3,metalness:.2,emissive:0x223344,emissiveIntensity:.2}));stripe.position.y=1.4;char.add(stripe);
-    const pack=new THREE.Mesh(new THREE.BoxGeometry(.5,.7,.28),packMat);pack.position.set(0,1.5,-.42);pack.castShadow=true;char.add(pack);
-    const tankGeo=new THREE.CylinderGeometry(.1,.1,.55,8);
-    [-.14,.14].forEach(x=>{const t=new THREE.Mesh(tankGeo,packMat);t.position.set(x,1.5,-.58);char.add(t);});
-    function makeArm(sign){ const g=new THREE.Group();g.position.set(sign*.5,1.82,0);
-      const up=new THREE.Mesh(new THREE.CylinderGeometry(.13,.12,.46,8),suitMat);up.position.y=-.23;g.add(up);
-      const fo=new THREE.Mesh(new THREE.CylinderGeometry(.12,.11,.42,8),suitMat);fo.position.y=-.64;g.add(fo);
-      const gl=new THREE.Mesh(new THREE.SphereGeometry(.14,8,7),darkMat);gl.position.y=-.88;g.add(gl);
-      g.traverse(o=>{if(o.isMesh)o.castShadow=true;});g.rotation.z=sign*.1;return g; }
-    armL=makeArm(-1);armR=makeArm(1);char.add(armL,armR);
-    head=new THREE.Group();head.position.y=2.12;char.add(head);
-    const hood=new THREE.Mesh(new THREE.SphereGeometry(.3,16,14),suitMat);hood.castShadow=true;head.add(hood);
-    head.add(new THREE.Mesh(new THREE.SphereGeometry(.35,18,16),new THREE.MeshStandardMaterial({color:0xbfe6ff,transparent:true,opacity:.26,roughness:.08,metalness:0})));
-    const eyeMat=new THREE.MeshStandardMaterial({color:0x20242c,roughness:.4});
-    [-.1,.1].forEach(x=>{const e=new THREE.Mesh(new THREE.SphereGeometry(.045,8,7),eyeMat);e.position.set(x,.03,.27);head.add(e);});
-    if(SU.mask){ const mask=new THREE.Mesh(new THREE.BoxGeometry(.3,.18,.16),darkMat);mask.position.set(0,-.1,.24);head.add(mask);
-      [-.16,.16].forEach(x=>{const f=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.1,8),new THREE.MeshStandardMaterial({color:0x3a3a40,roughness:.6}));f.rotation.x=Math.PI/2;f.position.set(x,-.12,.3);head.add(f);}); }
-    if(SU.visor){ const v=new THREE.Mesh(new THREE.TorusGeometry(.3,.02,8,24,Math.PI),new THREE.MeshStandardMaterial({color:0xffe14d,emissive:0xffe14d,emissiveIntensity:.8,roughness:.3}));v.position.set(0,-.02,.02);v.rotation.x=Math.PI/2;v.rotation.z=Math.PI;head.add(v); }
-    if(SU.halo){ const h=new THREE.Mesh(new THREE.TorusGeometry(.37,.015,8,28),new THREE.MeshStandardMaterial({color:0xcfe8ff,emissive:0x9fd0ff,emissiveIntensity:1.1,roughness:.2}));h.rotation.x=Math.PI/2;h.position.y=.02;head.add(h); }
+    const w=makeWanderer(SU);
+    char=w.g;armL=w.armL;armR=w.armR;legL=w.legL;legR=w.legR;head=w.head;
     char.position.set(0,heightAt(0,0),0);char.rotation.y=Math.PI;scene.add(char);
   }
 
   function updateSuitHUD(){ const SU=SUITS[save.equipped];swatch.style.background=SU.body;swatch.style.color=SU.body;suitName.textContent=SU.name; }
 
-  // ---------- 精神危害：草原的真实样貌 ----------
+  // ---------- 精神危害：开局看见死区真面目，危害越高越沉入"美好幻境" ----------
   function applyReveal(){
     if(!scene||!scratch)return;
-    const s=clamp(strain,0,1), e=s*s*(3-2*s);
+    const s=clamp(strain,0,1), e=1-s*s*(3-2*s);   // e=真实度：0 危害 → 全开真实；1 危害 → 完全幻境
     mixc(scene.fog.color,0xcfe0ea,0x2b1017,e);scene.fog.density=0.0085+e*0.0245;
     if(skyMat){ mixc(skyMat.uniforms.top.value,0x2a63c8,0x160a14,e); mixc(skyMat.uniforms.mid.value,0x8fbded,0x6b2130,e); mixc(skyMat.uniforms.bot.value,0xdce9f2,0xb8452a,e); }
     if(hemiLight){ mixc(hemiLight.color,0xbfd9ff,0x54222e,e); mixc(hemiLight.groundColor,0x4a6b3a,0x1a0c07,e); hemiLight.intensity=0.78-e*0.46; }
@@ -2802,37 +3213,59 @@ const Grassland3D=(function(){
     }
   }
   function visionText(){
-    if(immune)return "防护服已屏蔽精神危害";
-    if(pillTimer>0)return "止晕药抑制中 "+pillTimer.toFixed(1)+" 秒";
+    if(dead)return "意识已崩解";
+    if(pillTimer>0)return "止晕药逆转移害 "+pillTimer.toFixed(1)+" 秒";
     const p=strain*100,left=Math.ceil((1-strain)/hzRate);
-    if(p<25)return "还能撑 "+left+" 秒";
-    if(p<55)return "视野模糊 · 剩"+left+"秒";
-    if(p<85)return "真面目 · 剩"+left+"秒";
-    return "已看清真实样貌";
+    if(p<20)return "真实样貌灼目 · 还能撑 "+left+" 秒";
+    if(p<50)return "幻境开始渗透 · 剩 "+left+" 秒";
+    if(p<80)return "假象愈发美丽 · 剩 "+left+" 秒";
+    if(p<100)return "意识即将崩解 · 剩 "+left+" 秒";
+    return "精神崩溃";
   }
   function updateVision(force){
-    const p=Math.round(strain*100);
-    const key=p+"|"+(pillTimer>0?Math.round(pillTimer*10):0)+"|"+(immune?1:0)+"|"+pills;
+    const p=Math.round(strain*100), lv=Math.round(S.lives*10);
+    const key=p+"|"+(pillTimer>0?Math.round(pillTimer*10):0)+"|"+pills+"|"+lv+"|"+(dead?1:0);
     if(!force&&key===visionKey)return;
     visionKey=key;
     const s=clamp(strain,0,1);
-    mount.style.filter="blur("+(s*s*4.6+s*2.6).toFixed(2)+"px) saturate("+(1-s*.5).toFixed(3)+") contrast("+(1+s*.2).toFixed(3)+")";
+    // 危害越高 → 幻境越美（柔光过曝）；危害越低 → 越贴近血腥的真实样貌
+    mount.style.filter="blur("+(s*s*2.4).toFixed(2)+"px) saturate("+(1+s*.55).toFixed(3)+") brightness("+(1+s*.14).toFixed(3)+") contrast("+(1-s*.12).toFixed(3)+")";
     hzFill.style.width=p+"%";hzNum.textContent=p+"%";hzState.textContent=visionText();
-    dreadEl.style.opacity=(s*s*.9).toFixed(3);
+    dreadEl.style.opacity=((1-s)*(1-s)*.95).toFixed(3);
+    blissEl.style.opacity=(s*s*.6).toFixed(3);
     hzEl.classList.toggle("crit",s>0.66);
-    pillBtn.disabled=immune||pills<=0||pillTimer>0;
+    hzLife.textContent=String(Math.round(S.lives*10)/10);
+    hzLifeFill.style.width=(clamp(S.lives/5,0,1)*100)+"%";
+    pillBtn.disabled=dead||pills<=0||pillTimer>0;
     pillCount.textContent=String(pills);
   }
   function updateHazard(dt){
-    if(immune){ strain=Math.max(0,strain-dt*0.4);pillTimer=0; }
-    else if(pillTimer>0){ pillTimer=Math.max(0,pillTimer-dt);strain=Math.max(0,strain-dt*hzRate*2.2); }
+    if(dead)return;
+    if(pillTimer>0){ const was=pillTimer;pillTimer=Math.max(0,pillTimer-dt);strain=Math.max(0,strain-dt*hzRate*2.2); if(pillTimer===0&&was>0)updateVision(true); }
     else strain=Math.min(1,strain+dt*hzRate);
+    // 精神危害侵蚀生命：超过 30% 后开始掉血，越深越快（系数随 hzRate 缩放，保证满值崩溃通常先于掉血死亡）
+    if(strain>0.3){
+      const over=(strain-0.3)/0.7;
+      S.lives=Math.max(0,S.lives-over*over*hzRate*15.9*dt);
+      if(S.lives<=0){collapse("危害压垮了意志 —— 你倒在了真实与幻境的夹缝里");return;}
+    }
     const tier=strain<0.34?0:(strain<0.67?1:2);
     if(tier!==hazTier){ if(tier>hazTier&&hazTier>=0)gTone(96,52,1.5,.15,"sine");hazTier=tier; }
+    if(strain>=1){collapse("危害满值 —— 你的意识融进了那片美好的假象里");return;}
     applyReveal();updateVision(false);
   }
+  function collapse(msg){
+    if(dead)return;
+    dead=true;
+    overTitleEl.textContent="精神崩溃";overTextEl.textContent=msg;
+    overStatEl.textContent="草原 LEVEL 7 · 精神危害 100% · 生命 "+(Math.round(S.lives*10)/10);
+    overEl.style.display="flex";
+    if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
+    gTone(220,42,1.5,.22,"sawtooth");
+    updateVision(true);
+  }
   function usePill(){
-    if(!active||immune||pillTimer>0||pills<=0)return;
+    if(!active||dead||pillTimer>0||pills<=0)return;
     pills--;pillsUsed++;pillTimer=PILL_SECONDS;
     gTone(560,980,.34,.13,"sine");
     hzEl.classList.remove("pressed");void hzEl.offsetWidth;hzEl.classList.add("pressed");
@@ -2869,7 +3302,7 @@ const Grassland3D=(function(){
   function update(dt){
     gtime+=dt;
     updateHazard(dt);
-    const canControl=active&&(locked||isTouch);
+    const canControl=active&&!dead&&(locked||isTouch);
     let ix=0,iz=0;
     if(canControl){
       if(keys["KeyW"]||keys["ArrowUp"])iz+=1;
@@ -2902,7 +3335,7 @@ const Grassland3D=(function(){
     const tx=charX,ty=charY0()+1.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
     let cx=tx+dist*Math.sin(yaw)*cp,cy=ty+dist*sp,cz=tz+dist*Math.cos(yaw)*cp;
     const cgh=heightAt(cx,cz)+.7;if(cy<cgh)cy=cgh;
-    const shk=strain*strain*0.38;
+    const shk=(1-clamp(strain,0,1))*0.10+Math.max(0,strain-0.8)*1.6;
     camera.position.set(cx+Math.sin(gtime*7.3)*shk,cy+Math.sin(gtime*5.1)*shk,cz+Math.cos(gtime*6.2)*shk);
     camera.lookAt(tx,ty+Math.sin(gtime*.8)*.03,tz);
     // 太阳与光晕跟随
@@ -2975,9 +3408,11 @@ const Grassland3D=(function(){
   }
   function hideOverlay(){ overlay.style.display="none"; }
   function exit(){
-    active=false;grassActive=false;
+    active=false;threeActive=false;
     save.pills=Math.max(0,save.pills-pillsUsed);pillsUsed=0;persist();
     mount.style.filter="none";hzEl.classList.remove("crit","pressed");visionKey="";
+    dreadEl.style.opacity="0";blissEl.style.opacity="0";
+    overEl.style.display="none";
     if(raf)cancelAnimationFrame(raf);raf=0;
     removeListeners();
     if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
@@ -2988,36 +3423,702 @@ const Grassland3D=(function(){
   function launch(){
     if(active)return;
     if(typeof THREE==="undefined"){ showError("3D 引擎（Three.js）加载失败，请检查网络后重试。");return; }
-    grassActive=true;active=true;
+    threeActive=true;active=true;ThreeOver.mode="grass";
     menuEl.style.display="none";cv.style.display="none";hudEl.style.display="none";
-    overlay.style.display="block";errorEl.style.display="none";loadingEl.style.display="flex";
+    overlay.style.display="block";overlay.classList.remove("run");
+    errorEl.style.display="none";loadingEl.style.display="flex";
+    titleB.textContent="草原";titleSpan.textContent="PRAIRIE · 3D";
+    hzEl.style.display="block";document.getElementById("g3d-run").style.display="none";
+    overEl.style.display="none";
+    promptTitle.textContent="点击进入草原";
+    promptText.innerHTML="鼠标将锁定为视角 · 移动鼠标环顾四周<br>W A S D 奔跑 · <b style=\"color:#b073ff\">Q</b> 吃止晕药逆转移害 · 危害满值必然精神崩溃 · 长按 E 键 2 秒随时退出";
     keys={};eHolding=false;jumpQueued=false;onGround=true;vy=0;jumpY=0;charX=0;charZ=0;heading=Math.PI;
     yaw=0;pitch=.34;dist=8;targetDist=8;runBlend=0;phase=0;stepTimer=0;gtime=0;muted=false;touchMove={x:0,y:0};touchSprint=false;
     muteBtn.classList.remove("off");muteLabel.textContent="声音";
     isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
     try{ buildRenderer();buildSky();buildLights();buildGround();buildVegetation();buildClouds();buildParticles();buildCharacter(); }
-    catch(err){ showError("初始化 3D 场景失败："+((err&&err.message)||err));active=false;grassActive=false;loadingEl.style.display="none";return; }
+    catch(err){ showError("初始化 3D 场景失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return; }
     initGrassAudio();updateSuitHUD();addListeners();loadingEl.style.display="none";
     overlay.classList.toggle("touch",isTouch);
-    // 精神危害抗性：1-4 级防护服拖延 70%（裸身 30 秒 → 100 秒），5-10 级挡 4 级以上全部危害
-    resistCap=(save.equipped+1)>=5?99:3;
-    immune=HZ_LEVEL<=resistCap;
-    hzRate=(1-HZ_DELAY)/HZ_BARE;
-    pills=save.pills;pillsUsed=0;pillTimer=0;strain=0;hazTier=-1;visionKey="";
-    updateVision(true);
+    // 精神危害：裸身 30 秒崩溃；1-4 级防护服拖延 70%（→100 秒），5-10 级拖延 85%（→200 秒）。
+    // 任何防护服都无法免疫：危害满值必然精神崩溃致死。
+    hzRate=(1-((save.equipped+1)>=5?HZ_DELAY_HI:HZ_DELAY))/HZ_BARE;
+    pills=save.pills;pillsUsed=0;pillTimer=0;strain=0;hazTier=-1;visionKey="";dead=false;
+    S.lives=5;S.over=false;
+    updateVision(true);applyReveal();
     if(isTouch){ touchLayer.style.display="block";hidePrompt();
       hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>右侧拖动</b> 视角</span><span><b>跳跃键</b> 跳</span><span><b>止晕药</b> 点面板按钮</span><span><b>右上退出</b> 离开</span>'; }
     else{ touchLayer.style.display="none";showPrompt("点击进入草原");
       hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>鼠标</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">Q</span> 止晕药</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
     onResize();last=performance.now();raf=requestAnimationFrame(frame);
   }
-  // 静态 UI 绑定（一次）
-  document.getElementById("g3d-exitbtn").addEventListener("click",exit);
-  muteBtn.addEventListener("click",toggleMute);
+  // 静态 UI 绑定（一次）· 退出/静音/终止面板按钮改由 3D 模式统一分派
   pillBtn.addEventListener("click",usePill);
-  document.getElementById("g3d-errback").addEventListener("click",exit);
   promptEl.addEventListener("click",onPromptClick);
-  return {launch:launch,exit:exit,isActive:function(){return active;}};
+  function restart(){ exit(); launch(); }
+  return {launch:launch,exit:exit,isActive:function(){return active;},
+          restart:restart,muteToggle:toggleMute,tag:"grass"};
+})();
+// ================= LEVEL ! 跑命医院 3D 追逐模式（Three.js · 取代 2D LEVEL 5 · 跑满 750 米） =================
+const Runner3D=(function(){
+  const gid=s=>document.getElementById(s);
+  const mount=gid("g3d-mount"),overlay=gid("grass3d"),promptEl=gid("g3d-prompt"),promptTitle=gid("g3d-prompttitle"),
+        promptText=gid("g3d-prompttext"),hintEl=gid("g3d-hint"),touchLayer=gid("g3d-touch"),stick=gid("g3d-stick"),
+        knob=gid("g3d-knob"),lookArea=gid("g3d-look"),jumpBtnEl=gid("g3d-jumpbtn"),ringEl=gid("g3d-exitring"),
+        ringFg=gid("g3d-ringfg"),ringPct=gid("g3d-ringpct"),titleB=gid("g3d-titleb"),titleSpan=gid("g3d-titlespan"),
+        hzEl=gid("g3d-hazard"),runEl=gid("g3d-run"),overEl=gid("g3d-over"),overTitleEl=gid("g3d-overtitle"),
+        overTextEl=gid("g3d-overtext"),overStatEl=gid("g3d-overstat"),loadingEl=gid("g3d-loading"),errorEl=gid("g3d-error"),
+        errTextEl=gid("g3d-errtext"),muteBtn=gid("g3d-mute"),muteLabel=gid("g3d-mutelabel"),swatch=gid("g3d-swatch"),
+        suitNameEl=gid("g3d-suitname"),rDist=gid("g3d-rdist"),rProg=gid("g3d-rprog"),rGap=gid("g3d-rgap"),
+        rGapFill=gid("g3d-rgapfill"),rLife=gid("g3d-rlife"),rCharge=gid("g3d-rcharge"),rFuelFill=gid("g3d-rfuelfill"),
+        rHazFill=gid("g3d-rhazfill"),rHaz=gid("g3d-rhaz"),rHazLeft=gid("g3d-rhazleft"),
+        menuEl=gid("menu"),cvEl=gid("game"),hudEl=gid("hud"),exitBtnEl=gid("g3d-exitbtn");
+  const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  const M2S=1.5;                          // MODES 的 px/帧 数值 → m/s
+  const WALL=4.2,CEIL=4.0,SEG=9;          // 走廊半宽 / 净高 / 灯位间距
+  const LANE=[-2.7,-1.35,0,1.35,2.7];     // 五条车道，任意时刻至少留两条通路
+  const PR=0.42;                          // 小人碰撞半径
+  const CATCH=1.4,PUSHBACK=9.5,GAPMAX=30;
+  const RING_C=339.292;
+  const OB={bed:{hw:.95,hd:.55,h:.62},bin:{hw:.34,hd:.34,h:.88},wheel:{hw:.42,hd:.45,h:.95},
+            iv:{hw:.22,hd:.22,h:1.8},cab:{hw:.5,hd:.42,h:1.85}};
+  const OBK=["bed","bin","wheel","iv","cab"];
+
+  let renderer=null,scene=null,camera=null,char=null,armL=null,armR=null,legL=null,legR=null,head=null;
+  let amb=null,hemi=null,dir=null,pl1=null,pl2=null,lampMat=null,lampGlowMat=null,beaconMat=null,beaconGlowMat=null;
+  const geoStore=[],matStore=new Set(),segs=[],obstacles=[],chasers=[];
+  let obMat=null,chMat=null;
+  let RUN_M=750,V_RUN=10,V_SPRINT=18,CHASE=[];
+  let active=false,locked=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="",fovNow=64;
+  let dist=0,laneX=0,jumpY=0,vy=0,onGround=true,jumpQueued=false,speed=V_RUN,stumble=0,cStep=-1;
+  let fuel=100,charges=0,lives=5,inv=0,dead=false,won=false,hitFx=0,minGap=30,haz=0;
+  let camYaw=0,camPitch=.2,camDist=6.8,camDistT=6.8,yawAuto=0,yawOff=0,swingLock=0;
+  let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0;
+  let rMaster=null,noiseBuf=null,whoosh=null,whooshGain=null,sirenOsc=null,sirenOsc2=null,sirenGain=null;
+  const dyn=[];
+
+  // ---------- 材质 / 几何 / 贴图 ----------
+  const geoCache={};
+  function boxG(w,h,d){const k="B"+w+"|"+h+"|"+d;let g=geoCache[k];if(!g){g=new THREE.BoxGeometry(w,h,d);geoStore.push(g);geoCache[k]=g;}return g;}
+  function cylG(rt,rb,h,s){const k="C"+rt+"|"+rb+"|"+h+"|"+(s||10);let g=geoCache[k];if(!g){g=new THREE.CylinderGeometry(rt,rb,h,s||10);geoStore.push(g);geoCache[k]=g;}return g;}
+  function sphG(r){const k="S"+r;let g=geoCache[k];if(!g){g=new THREE.SphereGeometry(r,10,8);geoStore.push(g);geoCache[k]=g;}return g;}
+  function planeG(w,h){const k="P"+w+"|"+h;let g=geoCache[k];if(!g){g=new THREE.PlaneGeometry(w,h);geoStore.push(g);geoCache[k]=g;}return g;}
+  function mat(hex,o){ const m=new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(hex),roughness:.85,metalness:.05},o||{}));matStore.add(m);return m; }
+  function tex(c,rx,ry){ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);
+    if(renderer)t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t; }
+  function floorTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.fillStyle="#b7c0b2";g.fillRect(0,0,128,128);
+    for(let i=0;i<900;i++){const l=Math.random();g.fillStyle="rgba("+(150+l*40|0)+","+(158+l*38|0)+","+(146+l*36|0)+",.5)";g.fillRect(Math.random()*128,Math.random()*128,2,2);}
+    g.strokeStyle="rgba(96,106,94,.7)";g.lineWidth=2;
+    for(let i=0;i<=128;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,128);g.stroke();g.beginPath();g.moveTo(0,i);g.lineTo(128,i);g.stroke();}
+    g.strokeStyle="rgba(70,80,70,.35)";g.lineWidth=1;
+    for(let i=0;i<14;i++){g.beginPath();g.moveTo(Math.random()*128,Math.random()*128);g.lineTo(Math.random()*128,Math.random()*128);g.stroke();}
+    return c; }
+  function wallTex(){ const c=document.createElement("canvas");c.width=256;c.height=128;const g=c.getContext("2d");
+    g.fillStyle="#dde4d6";g.fillRect(0,0,256,128);
+    g.fillStyle="#8fa38c";g.fillRect(0,78,256,50);
+    g.fillStyle="#5f7260";g.fillRect(0,74,256,5);
+    g.fillStyle="#c8d2c2";g.fillRect(0,60,256,3);
+    for(let i=0;i<260;i++){const l=Math.random();g.fillStyle="rgba("+(120+l*50|0)+","+(132+l*46|0)+","+(118+l*44|0)+",.35)";g.fillRect(Math.random()*256,Math.random()*128,3+l*6,2+l*4);}
+    g.strokeStyle="rgba(90,102,88,.4)";g.lineWidth=2;
+    for(let x=0;x<256;x+=64){g.beginPath();g.moveTo(x,0);g.lineTo(x,74);g.stroke();}
+    const gr=g.createLinearGradient(0,96,0,128);gr.addColorStop(0,"rgba(40,46,40,0)");gr.addColorStop(1,"rgba(30,36,30,.75)");
+    g.fillStyle=gr;g.fillRect(0,96,256,32);
+    return c; }
+  function levelSignTex(){ const c=document.createElement("canvas");c.width=256;c.height=96;const g=c.getContext("2d");
+    g.fillStyle="#2a0705";g.fillRect(0,0,256,96);g.strokeStyle="#ff3b2a";g.lineWidth=5;g.strokeRect(5,5,246,86);
+    g.fillStyle="#ff5b45";g.font="bold 52px Courier New";g.textAlign="center";g.fillText("LEVEL !",128,66);
+    return c; }
+  function exitSignTex(){ const c=document.createElement("canvas");c.width=256;c.height=96;const g=c.getContext("2d");
+    g.fillStyle="#06281a";g.fillRect(0,0,256,96);g.strokeStyle="#7dffb0";g.lineWidth=4;g.strokeRect(5,5,246,86);
+    g.fillStyle="#c9ffe0";g.font="bold 40px Courier New";g.textAlign="center";g.fillText("EXIT 出口",128,60);
+    return c; }
+  function smilerFaceTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.shadowColor="rgba(255,255,255,.95)";g.shadowBlur=15;g.fillStyle="#fdfdff";
+    g.beginPath();g.ellipse(44,48,8.5,12.5,-.2,0,6.29);g.fill();
+    g.beginPath();g.ellipse(84,48,8.5,12.5,.2,0,6.29);g.fill();
+    g.strokeStyle="#fdfdff";g.lineWidth=7;g.lineCap="round";
+    g.beginPath();g.arc(64,60,33,.17*Math.PI,.83*Math.PI);g.stroke();
+    g.shadowBlur=0;g.strokeStyle="rgba(8,8,10,.9)";g.lineWidth=3;
+    for(let i=-3;i<=3;i++){const dx=i*8.4,yy=60+Math.sqrt(Math.max(0,33*33-dx*dx));
+      g.beginPath();g.moveTo(64+dx,yy-7);g.lineTo(64+dx,yy+7);g.stroke();}
+    return c; }
+  function mothWingTex(){ const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");
+    const gr=g.createLinearGradient(0,40,240,220);
+    gr.addColorStop(0,"#7a6749");gr.addColorStop(.5,"#4e4130");gr.addColorStop(1,"#2b251d");
+    g.fillStyle=gr;
+    g.beginPath();g.moveTo(8,122);g.bezierCurveTo(66,50,166,24,242,56);
+    g.bezierCurveTo(250,94,212,122,148,130);g.bezierCurveTo(94,136,42,134,8,122);g.closePath();g.fill();
+    g.beginPath();g.moveTo(10,130);g.bezierCurveTo(68,138,138,156,174,194);
+    g.bezierCurveTo(148,222,94,220,56,194);g.bezierCurveTo(28,174,12,150,10,130);g.closePath();g.fill();
+    g.strokeStyle="rgba(22,17,11,.5)";g.lineWidth=2.4;
+    [[236,60],[224,92],[196,116],[168,190],[110,206],[62,186]].forEach(p=>{
+      g.beginPath();g.moveTo(14,126);g.quadraticCurveTo((14+p[0])*.5,(126+p[1])*.5-14,p[0],p[1]);g.stroke();});
+    g.strokeStyle="rgba(206,186,140,.75)";g.lineWidth=4;
+    g.beginPath();g.arc(190,80,17,0,6.29);g.stroke();
+    g.fillStyle="#1d1811";g.beginPath();g.arc(190,80,10,0,6.29);g.fill();
+    g.fillStyle="rgba(240,232,208,.8)";g.beginPath();g.arc(186,76,3.2,0,6.29);g.fill();
+    g.strokeStyle="rgba(20,15,10,.45)";g.lineWidth=6;
+    g.beginPath();g.moveTo(60,66);g.quadraticCurveTo(140,44,232,66);g.stroke();
+    return c; }
+  function buildRenderer(){
+    renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.setSize(innerWidth,innerHeight);
+    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
+    mount.appendChild(renderer.domElement);
+    camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,320);
+    scene=new THREE.Scene();scene.background=new THREE.Color(0x140b0a);scene.fog=new THREE.Fog(0x1c1210,9,86);
+  }
+  // ---------- 走廊 ----------
+  function buildCorridor(){
+    const ZT=30,ZB=-(RUN_M+40),FL=ZT-ZB,ZC=(ZT+ZB)/2;
+    const mFloor=mat("#ffffff",{roughness:1,metalness:0,map:tex(floorTex(),2*WALL/1.7,FL/1.7)});
+    const mWall=mat("#ffffff",{roughness:.95,metalness:0,map:tex(wallTex(),FL/3,1)});
+    const mCeil=mat("#cfd6c9",{roughness:1});
+    const f=new THREE.Mesh(planeG(2*WALL,FL),mFloor);f.rotation.x=-Math.PI/2;f.position.set(0,0,ZC);scene.add(f);
+    const ce=new THREE.Mesh(planeG(2*WALL,FL),mCeil);ce.rotation.x=Math.PI/2;ce.position.set(0,CEIL,ZC);scene.add(ce);
+    [[-1,Math.PI/2],[1,-Math.PI/2]].forEach(a=>{
+      const w=new THREE.Mesh(planeG(FL,CEIL),mWall);w.rotation.y=a[1];w.position.set(a[0]*WALL,CEIL/2,ZC);scene.add(w); });
+    const back=new THREE.Mesh(boxG(2*WALL+.4,CEIL+.4,.6),mat("#8fa38c",{roughness:.95}));
+    back.position.set(0,CEIL/2,ZB-.2);scene.add(back);
+  }
+  function buildSegments(){
+    lampMat=mat("#eef4ea",{roughness:.4,emissive:new THREE.Color(0xdfe8da),emissiveIntensity:.8});
+    lampGlowMat=new THREE.MeshBasicMaterial({color:0xdfe8da,transparent:true,opacity:.22,blending:THREE.AdditiveBlending,depthWrite:false});
+    matStore.add(lampGlowMat);
+    beaconMat=mat("#5a0d08",{roughness:.4,emissive:new THREE.Color(0xff2418),emissiveIntensity:1.4});
+    beaconGlowMat=new THREE.MeshBasicMaterial({color:0xff2418,transparent:true,opacity:.3,blending:THREE.AdditiveBlending,depthWrite:false});
+    matStore.add(beaconGlowMat);
+    const mFrame=mat("#6f8270",{roughness:.85}),mDoor=mat("#a9bda6",{roughness:.8}),mKick=mat("#8d949b",{roughness:.4,metalness:.6}),
+          mGlass=mat("#101c18",{roughness:.2,metalness:.4}),
+          mSignR=new THREE.MeshBasicMaterial({map:tex(levelSignTex(),1,1),transparent:true}),
+          mSignG=new THREE.MeshBasicMaterial({map:tex(exitSignTex(),1,1),transparent:true});
+    matStore.add(mSignR);matStore.add(mSignG);
+    const gLamp=boxG(1.3,.1,.55),gGlow=boxG(1.7,.03,.9),
+          gDoor=boxG(.78,2.2,.1),gWin=cylG(.16,.16,.12,12),gKick=boxG(.78,.34,.12),
+          gFrame=boxG(.16,2.4,.16),gTop=boxG(1.8,.16,.16),
+          gBeacon=sphG(.14),gBeaconGlow=sphG(.3),gSign=planeG(1.6,.6),gRod=cylG(.02,.02,.4,5);
+    let i=0;
+    for(let z=26;z>-(RUN_M+22);z-=SEG,i++){
+      const grp=new THREE.Group();grp.position.z=z;
+      const fix=new THREE.Mesh(gLamp,lampMat);fix.position.y=CEIL-.12;grp.add(fix);
+      const gl=new THREE.Mesh(gGlow,lampGlowMat);gl.position.y=CEIL-.2;grp.add(gl);
+      // 两侧成排病房门：双开 + 圆窗 + 金属踢脚板
+      [-1,1].forEach(s=>{
+        const door=new THREE.Group();door.position.set(s*(WALL-.1),0,s<0?0:SEG*.5);door.rotation.y=-s*Math.PI/2;grp.add(door);
+        [-1,1].forEach(k=>{
+          const leaf=new THREE.Mesh(gDoor,mDoor);leaf.position.set(k*.4,1.1,0);door.add(leaf);
+          const win=new THREE.Mesh(gWin,mGlass);win.rotation.x=Math.PI/2;win.position.set(k*.4,1.55,.06);door.add(win);
+          const kick=new THREE.Mesh(gKick,mKick);kick.position.set(k*.4,.28,.02);door.add(kick);
+        });
+        const fL=new THREE.Mesh(gFrame,mFrame);fL.position.set(-.86,1.2,0);door.add(fL);
+        const fR=new THREE.Mesh(gFrame,mFrame);fR.position.set(.86,1.2,0);door.add(fR);
+        const fT=new THREE.Mesh(gTop,mFrame);fT.position.set(0,2.36,0);door.add(fT);
+      });
+      if(i%2===0&&z>-(RUN_M-14)){ const b=new THREE.Mesh(gBeacon,beaconMat);b.position.set(0,CEIL-.3,SEG*.25);grp.add(b);
+        const bg=new THREE.Mesh(gBeaconGlow,beaconGlowMat);bg.position.copy(b.position);grp.add(bg); }
+      // 终点前 26 米不挂牌，保证白色发光门与出口标识不被遮挡
+      if(i%3===1&&z>-(RUN_M-26)){ const sg=new THREE.Mesh(gSign,(i%6===1)?mSignR:mSignG);sg.position.set(0,CEIL-.62,0);grp.add(sg);
+        [-1,1].forEach(k=>{const rod=new THREE.Mesh(gRod,mFrame);rod.position.set(k*.66,CEIL-.22,0);grp.add(rod);}); }
+      scene.add(grp);segs.push({z:z,grp:grp});
+    }
+    // 终点：白色发光门
+    const jm=mat("#ffffff",{roughness:.25,emissive:new THREE.Color(0xffffff),emissiveIntensity:2.2});
+    const jf=mat("#e8efe6",{roughness:.6});
+    const gframe=new THREE.Group();gframe.position.set(0,0,-RUN_M);
+    [-1,1].forEach(s=>{const jam=new THREE.Mesh(boxG(.3,3.4,.4),jf);jam.position.set(s*1.5,1.7,0);gframe.add(jam);});
+    const jamT=new THREE.Mesh(boxG(3.3,.3,.4),jf);jamT.position.set(0,3.5,0);gframe.add(jamT);
+    const panel=new THREE.Mesh(planeG(2.7,3.2),jm);panel.position.set(0,1.6,.22);gframe.add(panel);
+    const haloM=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.28,blending:THREE.AdditiveBlending,depthWrite:false});
+    matStore.add(haloM);
+    const halo=new THREE.Mesh(planeG(4.6,4.4),haloM);halo.position.set(0,1.8,.1);gframe.add(halo);
+    const sign=new THREE.Mesh(planeG(2.2,.82),mSignG);sign.position.set(0,3.95,.25);gframe.add(sign);
+    const exitLight=new THREE.PointLight(0xffffff,2.2,26,2);exitLight.position.set(0,2.2,-RUN_M+2);scene.add(exitLight);
+    scene.add(gframe);
+  }
+  // ---------- 医院杂物（病床 / 医废桶 / 轮椅 / 输液架 / 药品柜） ----------
+  function buildObstacle(kind,x,z){
+    const M=obMat,g=new THREE.Group();g.position.set(x,0,z);
+    if(kind==="bed"){
+      const fr=new THREE.Mesh(boxG(1.9,.12,.95),M.frame);fr.position.y=.42;g.add(fr);
+      const mt=new THREE.Mesh(boxG(1.86,.2,.9),M.matt);mt.position.y=.56;g.add(mt);
+      const bl=new THREE.Mesh(boxG(1.1,.1,.92),M.blanket);bl.position.set(-.35,.66,0);g.add(bl);
+      const pw=new THREE.Mesh(boxG(.4,.12,.6),M.pillow);pw.position.set(.68,.68,0);g.add(pw);
+      const hb=new THREE.Mesh(boxG(.08,.5,.95),M.frame);hb.position.set(.95,.6,0);g.add(hb);
+      [-1,1].forEach(s=>[-1,1].forEach(t=>{const l=new THREE.Mesh(cylG(.04,.04,.4,6),M.frame);l.position.set(s*.85,.2,t*.4);g.add(l);}));
+    }else if(kind==="bin"){
+      const b=new THREE.Mesh(boxG(.62,.8,.62),M.binY);b.position.y=.4;g.add(b);
+      const lid=new THREE.Mesh(boxG(.66,.1,.66),M.binR);lid.position.y=.85;g.add(lid);
+      const lbl=new THREE.Mesh(boxG(.3,.3,.02),M.binR);lbl.position.set(0,.45,.32);g.add(lbl);
+      const pedal=new THREE.Mesh(boxG(.2,.06,.1),M.frame);pedal.position.set(0,.06,.36);g.add(pedal);
+    }else if(kind==="wheel"){
+      const st=new THREE.Mesh(boxG(.5,.08,.5),M.seat);st.position.y=.5;g.add(st);
+      const bk=new THREE.Mesh(boxG(.5,.55,.08),M.seat);bk.position.set(0,.8,-.24);g.add(bk);
+      [-1,1].forEach(s=>{const w=new THREE.Mesh(cylG(.3,.3,.05,14),M.wheelM);w.rotation.z=Math.PI/2;w.position.set(s*.32,.32,0);g.add(w);
+        const hnd=new THREE.Mesh(cylG(.02,.02,.3,5),M.frame);hnd.position.set(s*.24,1.05,-.28);hnd.rotation.x=.4;g.add(hnd);
+        const c=new THREE.Mesh(cylG(.09,.09,.04,10),M.wheelM);c.rotation.z=Math.PI/2;c.position.set(s*.2,.1,.3);g.add(c);});
+    }else if(kind==="iv"){
+      const pole=new THREE.Mesh(cylG(.03,.03,1.8,6),M.frame);pole.position.y=.9;g.add(pole);
+      const base=new THREE.Mesh(cylG(.26,.3,.06,10),M.frame);base.position.y=.03;g.add(base);
+      const hook=new THREE.Mesh(boxG(.4,.03,.03),M.frame);hook.position.y=1.78;g.add(hook);
+      const bag=new THREE.Mesh(boxG(.16,.26,.06),M.bag);bag.position.set(.14,1.6,0);g.add(bag);
+      const tube=new THREE.Mesh(cylG(.01,.01,.7,4),M.bag);tube.position.set(.14,1.1,0);g.add(tube);
+    }else{
+      const c=new THREE.Mesh(boxG(.92,1.85,.6),M.cabM);c.position.y=.92;g.add(c);
+      [-1,1].forEach(s=>{const dr=new THREE.Mesh(boxG(.4,1.5,.05),M.glass);dr.position.set(s*.22,1.05,.3);g.add(dr);
+        const h=new THREE.Mesh(boxG(.04,.2,.06),M.frame);h.position.set(s*.05,1.05,.34);g.add(h);});
+      const top=new THREE.Mesh(boxG(.92,.12,.6),M.frame);top.position.y=1.86;g.add(top);
+    }
+    scene.add(g);
+    obstacles.push({x:x,z:z,kind:kind,hw:OB[kind].hw,hd:OB[kind].hd,h:OB[kind].h,mesh:g,hit:false,tilt:0});
+  }
+  function buildObstacles(){
+    obstacles.length=0;
+    obMat={frame:mat("#8d949b",{roughness:.4,metalness:.6}),matt:mat("#e9efe6",{roughness:.9}),
+           blanket:mat("#7d907c",{roughness:.95}),pillow:mat("#f2f6ef",{roughness:.9}),
+           binY:mat("#d8b23a",{roughness:.8}),binR:mat("#c0392b",{roughness:.8}),
+           seat:mat("#3a4a44",{roughness:.85}),wheelM:mat("#22262a",{roughness:.7}),
+           bag:mat("#dfe8e2",{roughness:.5,transparent:true,opacity:.85}),cabM:mat("#cfd6cc",{roughness:.7}),
+           glass:mat("#182420",{roughness:.2,metalness:.4})};
+    let z=-16;
+    while(z>-(RUN_M-16)){
+      z-=rand(12,20);
+      if(z<-(RUN_M-10))break; // 门口留空，终点前不被杂物挡住
+      const lanes=[0,1,2,3,4];
+      for(let i=lanes.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=lanes[i];lanes[i]=lanes[j];lanes[j]=t;}
+      const n=1+Math.floor(Math.random()*2);
+      const picked=[];
+      for(let i=0;i<n;i++)picked.push(OBK[Math.floor(Math.random()*OBK.length)]);
+      let tall=0;
+      for(let i=0;i<picked.length;i++){
+        if(OB[picked[i]].h>1.2&&++tall>1)picked[i]=Math.random()<.5?"bin":"bed"; // 每组至多一个高杂物，保证始终有可绕的车道
+      }
+      for(let i=0;i<n;i++)buildObstacle(picked[i],LANE[lanes[i]]+rand(-.16,.16),z+rand(-.8,.8));
+    }
+  }
+  // ---------- 追兵（后室原型：Smiler 纯黑剪影 / 细菌 灰绿长臂人形 / 死亡飞蛾） ----------
+  function humanoid(o){
+    const g=new THREE.Group(),hip=o.hip,tor=o.torso;
+    function limb(len,r,m,foot){
+      const L=new THREE.Group();
+      const up=new THREE.Mesh(cylG(r,r*.88,len*.54,7),m);up.position.y=-len*.27;L.add(up);
+      const kn=new THREE.Mesh(sphG(r*.82),m);kn.position.y=-len*.54;L.add(kn);
+      const lo=new THREE.Mesh(cylG(r*.84,r*.66,len*.46,7),m);lo.position.y=-len*.77;L.add(lo);
+      if(foot){const f=new THREE.Mesh(boxG(r*2.5,.07,len*.3),m);f.position.set(0,-len+.03,len*.08);L.add(f);}
+      return L;
+    }
+    const legL=limb(hip,o.legR,o.skin,true),legR=limb(hip,o.legR,o.skin,true);
+    legL.position.set(-o.stance,hip,0);legR.position.set(o.stance,hip,0);g.add(legL,legR);
+    const body=new THREE.Group();body.position.y=hip;g.add(body);
+    const trunk=new THREE.Mesh(cylG(o.shoulder,o.waist,tor,9),o.skin);trunk.position.y=tor*.5;body.add(trunk);
+    const armL=limb(o.arm,o.armR,o.skin,false),armR=limb(o.arm,o.armR,o.skin,false);
+    armL.position.set(-(o.shoulder+.03),tor*.93,0);armR.position.set(o.shoulder+.03,tor*.93,0);
+    armL.rotation.z=.12;armR.rotation.z=-.12;body.add(armL,armR);
+    const head=new THREE.Group();head.position.y=tor+o.headR*.85;body.add(head);
+    const skull=new THREE.Mesh(sphG(o.headR),o.skin);skull.scale.set(o.headS[0],o.headS[1],o.headS[2]);head.add(skull);
+    body.rotation.x=o.lean;
+    g.userData.rig={legL:legL,legR:legR,armL:armL,armR:armR,body:body,head:head,lean:o.lean};
+    return g;
+  }
+  function buildSmiler(){
+    const g=humanoid({hip:.94,torso:.62,shoulder:.19,waist:.14,stance:.11,legR:.072,arm:.8,armR:.055,
+                      headR:.185,headS:[1,1.12,.98],lean:.1,skin:chMat.void});
+    const fm=new THREE.MeshBasicMaterial({map:tex(smilerFaceTex(),1,1),transparent:true,depthWrite:false});matStore.add(fm);
+    const face=new THREE.Mesh(planeG(.44,.44),fm);
+    face.position.set(0,.01,.185);g.userData.rig.head.add(face);
+    g.scale.setScalar(1.12);
+    return g;
+  }
+  function buildBacteria(){
+    const g=humanoid({hip:1.06,torso:.66,shoulder:.21,waist:.15,stance:.13,legR:.078,arm:1.0,armR:.058,
+                      headR:.19,headS:[.86,1.18,.92],lean:.26,skin:chMat.skin});
+    const rig=g.userData.rig;
+    for(let i=0;i<5;i++){const p=new THREE.Mesh(sphG(rand(.05,.09)),chMat.sore);
+      p.position.set(rand(-.16,.16),rand(.12,.6),rand(.1,.17));p.scale.set(1.4,1,.5);rig.body.add(p);}
+    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.052),chMat.socket);
+      e.scale.set(1,1.35,.6);e.position.set(s*.075,.03,.155);rig.head.add(e);});
+    const mouth=new THREE.Mesh(boxG(.035,.13,.03),chMat.socket);mouth.position.set(0,-.11,.16);rig.head.add(mouth);
+    rig.armL.rotation.x=1.15;rig.armR.rotation.x=1.25;
+    g.scale.setScalar(1.06);
+    return g;
+  }
+  function buildDeathmoth(){
+    const g=new THREE.Group();
+    const th=new THREE.Mesh(sphG(.17),chMat.mothBody);th.scale.set(1,1,1.5);g.add(th);
+    for(let i=0;i<4;i++){const ab=new THREE.Mesh(sphG(.14-i*.026),i%2?chMat.mothBody:chMat.mothDark);
+      ab.scale.set(1,.92,1.25);ab.position.set(0,-.01-i*.012,-.24-i*.15);g.add(ab);}
+    const hd=new THREE.Mesh(sphG(.105),chMat.mothDark);hd.position.set(0,.03,.26);g.add(hd);
+    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.062),chMat.mothEye);e.position.set(s*.068,.05,.31);g.add(e);
+      const an=new THREE.Group();an.position.set(s*.045,.1,.3);an.rotation.set(-.7,0,s*.5);g.add(an);
+      const st=new THREE.Mesh(cylG(.012,.006,.42,5),chMat.mothDark);st.position.y=.21;an.add(st);
+      for(let i=0;i<6;i++){const br=new THREE.Mesh(boxG(.075,.008,.008),chMat.mothDark);
+        br.position.set(s*.035,.06+i*.062,0);br.rotation.z=s*.3;an.add(br);}
+      for(let i=0;i<3;i++){const lg=new THREE.Mesh(cylG(.012,.008,.3,5),chMat.mothDark);
+        lg.position.set(s*.1,-.19,.1-i*.16);lg.rotation.set(.35,0,s*.45);g.add(lg);}});
+    const wings=[];
+    [-1,1].forEach(s=>{const w=new THREE.Group();w.position.set(s*.09,.09,.02);g.add(w);
+      const p=new THREE.Mesh(planeG(.95,.95),chMat.wing);p.position.set(s*.475,0,-.06);
+      if(s<0)p.scale.x=-1;w.add(p);wings.push(w);});
+    g.userData.wings=wings;
+    return g;
+  }
+  function buildChasers(){
+    chasers.length=0;
+    chMat={void:mat("#07070a",{roughness:.98,metalness:0}),
+           skin:mat("#7d8f63",{roughness:.84}),sore:mat("#39452e",{roughness:.92}),
+           socket:mat("#141a10",{roughness:.5}),
+           mothBody:mat("#5b4a35",{roughness:.96}),mothDark:mat("#2b251d",{roughness:.95}),
+           mothEye:mat("#3a1410",{roughness:.35,emissive:new THREE.Color(0x8c2a18),emissiveIntensity:.7}),
+           wing:new THREE.MeshStandardMaterial({map:tex(mothWingTex(),1,1),transparent:true,side:THREE.DoubleSide,roughness:.92,depthWrite:false})};
+    matStore.add(chMat.wing);
+    CHASE.forEach((c,i)=>{
+      const mesh=c.kind==="smiley"?buildSmiler():(c.kind==="bacteria"?buildBacteria():buildDeathmoth());
+      scene.add(mesh);
+      chasers.push({kind:c.kind,base:c.base,gap:c.gap,spd:c.base,laneX:LANE[c.lane],mesh:mesh,ph:i*2.1});
+    });
+  }
+  function buildCharacter(){
+    const SU=SUITS[save.equipped],w=makeWanderer(SU);
+    char=w.g;armL=w.armL;armR=w.armR;legL=w.legL;legR=w.legR;head=w.head;
+    char.rotation.y=Math.PI;char.position.set(0,0,0);scene.add(char);
+    swatch.style.background=SU.body;swatch.style.color=SU.body;suitNameEl.textContent=SU.name;
+  }
+  function buildLights(){
+    amb=new THREE.AmbientLight(0xc6d2c4,.2);scene.add(amb);
+    hemi=new THREE.HemisphereLight(0xb6c4b4,0x1b1614,.34);scene.add(hemi);
+    dir=new THREE.DirectionalLight(0xdfe8da,.22);dir.position.set(1.5,7,3);scene.add(dir);
+    pl1=new THREE.PointLight(0xff2418,2.2,20,2);scene.add(pl1);
+    pl2=new THREE.PointLight(0xff2418,1.8,20,2);scene.add(pl2);
+  }
+  // ---------- 声音 ----------
+  function initRunAudio(){
+    if(!AC)return;
+    rMaster=AC.createGain();rMaster.gain.value=muted?0:.9;rMaster.connect(AC.destination);
+    noiseBuf=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);
+    const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    whoosh=AC.createBufferSource();whoosh.buffer=noiseBuf;whoosh.loop=true;
+    const lp=AC.createBiquadFilter();lp.type="bandpass";lp.frequency.value=520;lp.Q.value=.7;
+    whooshGain=AC.createGain();whooshGain.gain.value=0;
+    whoosh.connect(lp).connect(whooshGain).connect(rMaster);whoosh.start();
+    // Level ! 长鸣警笛：连续起伏的哀鸣，不是断续的哒咚声
+    sirenGain=AC.createGain();sirenGain.gain.value=0;
+    const sf=AC.createBiquadFilter();sf.type="lowpass";sf.frequency.value=1600;sf.Q.value=.9;
+    sirenOsc=AC.createOscillator();sirenOsc.type="sawtooth";sirenOsc.frequency.value=430;
+    sirenOsc2=AC.createOscillator();sirenOsc2.type="square";sirenOsc2.frequency.value=433;
+    const g2=AC.createGain();g2.gain.value=.35;
+    sirenOsc.connect(sf);sirenOsc2.connect(g2).connect(sf);sf.connect(sirenGain).connect(rMaster);
+    sirenOsc.start();sirenOsc2.start();
+  }
+  function rTone(f0,f1,dur,vol,type,delay){ if(!AC||!rMaster)return;const t0=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();
+    o.type=type||"triangle";o.frequency.setValueAtTime(f0,t0);o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),t0+dur);
+    g.gain.setValueAtTime(vol,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);o.connect(g).connect(rMaster);o.start(t0);o.stop(t0+dur+.02); }
+  function rHit(){ if(!AC||!rMaster||!noiseBuf)return;const s=AC.createBufferSource();s.buffer=noiseBuf;
+    const lp=AC.createBiquadFilter();lp.type="lowpass";lp.frequency.value=260;
+    const g=AC.createGain();g.gain.setValueAtTime(.45,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.4);
+    s.connect(lp).connect(g).connect(rMaster);s.start();s.stop(AC.currentTime+.42); }
+  function toggleMute(){ muted=!muted;if(rMaster)rMaster.gain.value=muted?0:.9;muteBtn.classList.toggle("off",muted);muteLabel.textContent=muted?"静音":"声音"; }
+  function disposeAudio(){ try{if(whoosh)whoosh.stop();}catch(e){} try{if(sirenOsc)sirenOsc.stop();}catch(e){} try{if(sirenOsc2)sirenOsc2.stop();}catch(e){}
+    try{if(rMaster)rMaster.disconnect();}catch(e){} rMaster=null;whoosh=null;whooshGain=null;noiseBuf=null;sirenOsc=null;sirenOsc2=null;sirenGain=null; }
+
+  // ---------- 玩法 ----------
+  function hurt(msg){
+    if(inv>0||dead||won)return;
+    if(charges>0){ charges--;inv=1.6;rTone(1400,180,.45,.22,"square"); }
+    else if(lives>1){ lives--;inv=1.6;rTone(500,120,.5,.16,"sine"); }
+    else{ die(msg);return; }
+    rHit();hitFx=1;
+    // 受击后镜头立刻回正并锁住前视：把追兵推远，让玩家看清前方障碍
+    swingLock=2.4;yawAuto=0;
+    for(const c of chasers)c.gap=Math.max(c.gap,rand(12,17));
+    stumble=Math.max(stumble,.9);
+  }
+  function die(msg,mind){
+    if(dead||won)return;
+    dead=true;S.best=Math.max(S.best,Math.floor(dist));
+    overTitleEl.textContent=mind?"精神崩溃":"被追上了";overTextEl.textContent=msg;
+    overStatEl.textContent="逃生 "+Math.floor(dist)+" m / "+RUN_M+" m · 最远 "+S.best+" m · 积分 +0";
+    overEl.style.display="flex";
+    if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
+    rTone(260,40,1.2,.24,"sawtooth");rHit();
+  }
+  function finish(){
+    if(won||dead)return;
+    won=true;
+    rTone(520,1040,.5,.16,"triangle");rTone(780,1560,.6,.12,"sine",.12);
+    S.best=Math.max(S.best,Math.floor(RUN_M));
+    cleanup();
+    P.x=RUN_M*40;S.over=false;S.win=false;
+    win();
+  }
+  function update(dt){
+    gtime+=dt;
+    if(inv>0)inv-=dt;
+    if(hitFx>0)hitFx=Math.max(0,hitFx-dt*2.2);
+    if(stumble>0)stumble=Math.max(0,stumble-dt);
+    // 四级精神危害（Level ! 医院）：裸装 60 秒满值，每级防护服 -10%，十级完全抵御
+    const hz4=hazRate(4);
+    if(hz4>0&&!dead&&!won){
+      haz=Math.min(1,haz+dt*hz4);
+      if(haz>=1){lives=0;charges=0;die("精神危害满值 —— 警报声里你的意识涣散了",true);}
+    }
+    const canMove=active&&!dead&&!won&&(locked||isTouch);
+    // 横向
+    let ax=0;
+    if(canMove){ if(keys.KeyA||keys.ArrowLeft)ax-=1;if(keys.KeyD||keys.ArrowRight)ax+=1;ax=clamp(ax+touchMove.x,-1,1); }
+    const mirror=Math.cos(camYaw)<0?-1:1;   // 镜头转到身前时代码画面左右相反，输入同步镜像
+    laneX=clamp(laneX+ax*mirror*3.5*dt,-(WALL-.75),WALL-.75);
+    // 跳跃
+    if(jumpQueued&&onGround&&canMove){ vy=6.4;onGround=false;rTone(220,440,.16,.06); }
+    jumpQueued=false;
+    if(!onGround){ vy-=19*dt;jumpY+=vy*dt;if(jumpY<=0){jumpY=0;vy=0;onGround=true;rTone(120,50,.1,.05);} }
+    // 冲刺体力
+    const wantSprint=canMove&&(keys.ShiftLeft||keys.ShiftRight||touchSprint)&&fuel>1&&stumble<=0;
+    if(wantSprint)fuel=Math.max(0,fuel-40*dt);else fuel=Math.min(100,fuel+18*dt*(SUITS[save.equipped].regen||.5)*2);
+    // 前进：撞到挡住车道的杂物会被卡住，追兵趁机逼近
+    const pz=-dist,low=jumpY;
+    let blocked=false;
+    for(const o of obstacles){
+      if(Math.abs(o.z-pz)>6)continue;
+      const overlap=Math.abs(laneX-o.x)<o.hw+PR&&Math.abs(pz-o.z)<o.hd+PR*.8;
+      if(overlap&&low<o.h-.12){
+        blocked=true;
+        if(!o.hit){ o.hit=true;o.tilt=1;hitFx=Math.max(hitFx,.8);stumble=Math.max(stumble,1.1);rHit();rTone(180,60,.3,.18,"square"); }
+      }else if(o.hit&&Math.abs(pz-o.z)>o.hd+2)o.hit=false;
+    }
+    for(const o of obstacles)if(o.tilt>0)o.tilt=Math.max(0,o.tilt-dt*3);
+    const tgt=(canMove?1:0)*(wantSprint?V_SPRINT:V_RUN)*(stumble>0?.42:1)*(blocked?(mirror<0?.55:.25):1);
+    speed+=(tgt-speed)*Math.min(1,dt*(stumble>0||blocked?10:2.6));
+    if(canMove)dist+=speed*dt;
+    // 追兵
+    minGap=GAPMAX;
+    for(const c of chasers){
+      c.spd=c.base+dist*.0014+(dead?6:0);
+      if(canMove||dead)c.gap=clamp(c.gap+(speed-c.spd)*dt*(inv>0?.35:1),.5,GAPMAX);
+      if(c.kind==="bacteria")c.laneX+=(rand(-1,1)*.6-c.laneX*.4)*dt;
+      else c.laneX+=(laneX-c.laneX)*Math.min(1,dt*.9);
+      if(!dead&&!won&&c.gap<=CATCH&&inv<=0)hurt(c.kind==="smiley"?"笑脸贴上了你的后背":(c.kind==="bacteria"?"细菌的长臂把你拍倒在地":"死亡飞蛾扑到了你的脸上"));
+      if(!dead&&!won&&c.gap<=CATCH&&inv>0)c.gap=Math.max(c.gap,PUSHBACK*.6);
+      minGap=Math.min(minGap,c.gap);
+      const zz=-dist+c.gap,rp=gtime*(c.kind==="bacteria"?10.5:12)+c.ph,sw=Math.sin(rp);
+      if(c.kind==="deathmoth"){
+        const dive=c.gap<6?1:0;
+        c.mesh.position.set(c.laneX,1.42-dive*.42+Math.sin(gtime*2.3+c.ph)*.2,zz);
+        c.mesh.rotation.set(Math.sin(gtime*2.6+c.ph)*.12-dive*.22,Math.PI+Math.sin(gtime*1.7+c.ph)*.2,0);
+        const fl=.3+Math.sin(gtime*15+c.ph)*.75;
+        c.mesh.userData.wings[0].rotation.z=-fl;c.mesh.userData.wings[1].rotation.z=fl;
+      }else{
+        c.mesh.position.set(c.laneX,Math.abs(sw)*.06,zz);
+        c.mesh.rotation.y=Math.PI+Math.sin(gtime*3+c.ph)*.14;
+        const rig=c.mesh.userData.rig;
+        rig.legL.rotation.x=sw*.95;rig.legR.rotation.x=-sw*.95;
+        if(c.kind==="bacteria"){rig.armL.rotation.x=1.15+sw*.18;rig.armR.rotation.x=1.25-sw*.18;}
+        else{rig.armL.rotation.x=-sw*.8;rig.armR.rotation.x=sw*.8;}
+        rig.body.rotation.x=rig.lean+Math.sin(rp*2)*.04;
+        rig.head.rotation.x=-rig.lean*.6+Math.sin(rp*2)*.05;
+      }
+    }
+    // 危险度驱动镜头：追兵贴到 10m 内才转到身前；受击/无敌/前方有障碍时强制前视
+    if(swingLock>0)swingLock=Math.max(0,swingLock-dt);
+    const dang=clamp((26-minGap)/26,0,1);
+    let obsAhead=false;
+    for(const o of obstacles){ const d=-dist-o.z; if(d>-.5&&d<17){obsAhead=true;break;} }
+    const swing=(swingLock>0||inv>0||obsAhead)?0:clamp((10-minGap)/7,0,1),f=swing*swing*(3-2*swing);
+    const yT=f>.02?(2.28+.86*f):0;
+    yawAuto+=(yT-yawAuto)*Math.min(1,dt*(obsAhead?7:3.4));
+    // 小人跑动
+    const ph=dt*(9+(speed-V_RUN)*.9);
+    if(!dead){ stepT+=ph;const amp=(wantSprint?1.15:1)*(stumble>0?.4:1);
+      const sw=Math.sin(stepT)*amp;
+      armL.rotation.x=sw;armR.rotation.x=-sw;armL.rotation.z=-(.1+amp*.2);armR.rotation.z=(.1+amp*.2);
+      legL.rotation.x=-sw*.9;legR.rotation.x=sw*.9;
+      head.rotation.x=Math.sin(stepT*2)*.05;
+      char.rotation.z=-ax*.09;
+      if(onGround&&stepT>0){ const st=Math.floor(stepT/Math.PI); if(st!==cStep){cStep=st;rTone(70+Math.random()*24,45,.07,.045,"sine");} }
+    }
+    char.position.set(laneX,jumpY+Math.abs(Math.sin(stepT))*.05,-dist);
+    // 相机
+    camYaw=yawAuto+yawOff*(1-.55*f)+.05*f;
+    camDist+=(camDistT*(1-.3*f)-camDist)*Math.min(1,dt*6);
+    const tx=laneX,ty=1.35+jumpY*.5,tz=-dist,cp=Math.cos(camPitch),sp=Math.sin(camPitch);
+    let cx=tx+camDist*Math.sin(camYaw)*cp,cy=ty+camDist*sp,cz=tz+camDist*Math.cos(camYaw)*cp;
+    cx=clamp(cx,-(WALL-.45),WALL-.45);cy=clamp(cy,.6,CEIL-.35);cz=clamp(cz,-(RUN_M+34),34);
+    const shk=hitFx*.14+dang*.02;
+    camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
+    camera.lookAt(tx,ty+.5+Math.sin(gtime*1.3)*.02,tz+minGap*.34*f);
+    const fovT=64+clamp((speed-V_RUN)/(V_SPRINT-V_RUN),0,1)*9;
+    if(Math.abs(fovT-fovNow)>.2){ fovNow+=(fovT-fovNow)*Math.min(1,dt*5);camera.fov=fovNow;camera.updateProjectionMatrix(); }
+    // 灯光跟随与 Level ! 警报红闪
+    const alarm=.5+.5*Math.sin(gtime*5.2);
+    const pulse=.82+Math.sin(gtime*4.6)*.1+Math.random()*.04;
+    if(lampMat)lampMat.emissiveIntensity=(.62+.25*alarm)*pulse;
+    if(lampGlowMat)lampGlowMat.opacity=(.16+.1*alarm)*pulse;
+    if(beaconMat)beaconMat.emissiveIntensity=.5+2.4*alarm;
+    if(beaconGlowMat)beaconGlowMat.opacity=.1+.4*alarm;
+    if(amb)amb.intensity=.16+.1*alarm;
+    const nearZ=[];for(const s of segs){ if(Math.abs(s.z+dist)<34)nearZ.push(s.z); }
+    nearZ.sort((a,b)=>Math.abs(a+dist)-Math.abs(b+dist));
+    if(pl1){ pl1.position.set(0,CEIL-.5,nearZ[0]!==undefined?nearZ[0]:-dist);pl1.intensity=.4+2.1*alarm; }
+    if(pl2){ pl2.position.set(0,CEIL-.5,nearZ[1]!==undefined?nearZ[1]:(-dist-9));pl2.intensity=.3+1.7*alarm; }
+    if(dir){ dir.position.set(1.5,7,-dist+4);if(dir.target){dir.target.position.set(0,0,-dist);dir.target.updateMatrixWorld();} }
+    if(whooshGain)whooshGain.gain.value=clamp((speed-V_RUN)/(V_SPRINT-V_RUN),0,1)*.06+hitFx*.1;
+    // 可见性裁剪
+    for(const s of segs)s.grp.visible=Math.abs(s.z+dist)<58;
+    for(const o of obstacles){ o.mesh.visible=Math.abs(o.z+dist)<52;
+      if(o.tilt>0){o.mesh.rotation.z=o.tilt*.25;o.mesh.position.y=o.tilt*.05;} else if(o.mesh.rotation.z!==0){o.mesh.rotation.z=0;o.mesh.position.y=0;} }
+    for(const c of chasers)c.mesh.visible=c.gap<40&&c.gap>-2;
+    // Level ! 长鸣警笛：频率连续起伏 + 轻微颤音，随警报灯呼吸
+    if(sirenGain&&AC){
+      const t=AC.currentTime;
+      if(!dead&&!won){
+        const f=680+240*Math.sin(gtime*2.2)+16*Math.sin(gtime*11);
+        sirenOsc.frequency.setTargetAtTime(f,t,.05);
+        sirenOsc2.frequency.setTargetAtTime(f*1.007,t,.05);
+        sirenGain.gain.setTargetAtTime(.05+.025*alarm,t,.12);
+      }else sirenGain.gain.setTargetAtTime(0,t,.25);
+    }
+    if(eHolding){ const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;} }
+    if(dist>=RUN_M){finish();return;}
+    updateHUD(false);
+  }
+  function updateHUD(force){
+    const key=[Math.floor(dist),Math.round(minGap*5),Math.round(lives*10),charges,Math.round(fuel),dead?1:0,Math.round(haz*100)].join("|");
+    if(!force&&key===hudKey)return;hudKey=key;
+    rDist.textContent=Math.floor(dist)+"m";
+    rProg.style.width=(clamp(dist/RUN_M,0,1)*100)+"%";
+    rGap.textContent=Math.round(minGap)+"m";
+    rGapFill.style.width=(100-clamp(minGap,0,GAPMAX)/GAPMAX*100)+"%";
+    rGapFill.style.background=minGap<5?"#ff5b5b":(minGap<10?"#ffcf5a":"#8fe06a");
+    rLife.textContent=String(Math.round(lives*10)/10);
+    rCharge.textContent="×"+charges;
+    rFuelFill.style.width=fuel+"%";
+    const r=hazRate(4);
+    rHazFill.style.width=(haz*100)+"%";
+    rHaz.textContent=Math.round(haz*100)+"%";
+    rHazLeft.className="rn-row hazleft"+(r<=0?" safe":(haz>=.75?" hot":""));
+    rHazLeft.textContent=r<=0?"十级防护服 · 完全抵御精神危害":
+      ("剩 "+Math.ceil((1-haz)/r)+" 秒满值 · "+(save.equipped+1)+" 级防护服削减 "+((save.equipped+1)*10)+"%");
+  }
+  // ---------- 覆盖层 ----------
+  function showPrompt(t){ promptTitle.textContent=t;promptEl.style.display="flex"; }
+  function hidePrompt(){ promptEl.style.display="none"; }
+  function showRing(on){ ringEl.style.display=on?"flex":"none";if(!on)setRing(0); }
+  function setRing(p){ ringFg.style.strokeDashoffset=String(RING_C*(1-p));ringPct.textContent=Math.round(p*100)+"%"; }
+  function showError(msg){ overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errTextEl.textContent=msg; }
+  function requestLock(){ if(renderer&&renderer.domElement.requestPointerLock)renderer.domElement.requestPointerLock(); }
+  function onResize(){ if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight); }
+  function render(){ if(active&&renderer&&scene&&camera)renderer.render(scene,camera); }
+  function frame(now){ if(!active)return;const dt=Math.min(.05,(now-last)/1000);last=now;update(dt);render();raf=requestAnimationFrame(frame); }
+
+  function onKeyDown(e){ if(!active)return;const c=e.code;
+    if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
+    if(c==="KeyE"){ if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);} return; }
+    if(c==="Space"){ if(!e.repeat)jumpQueued=true;keys[c]=true;return; }
+    keys[c]=true; }
+  function onKeyUp(e){ if(!active)return;const c=e.code;
+    if(c==="KeyE"){eHolding=false;showRing(false);return;} keys[c]=false; }
+  function onMouseMove(e){ if(locked){ yawOff=clamp(yawOff-e.movementX*.0022,-1,1);camPitch=clamp(camPitch-e.movementY*.0022,.1,.85); } }
+  function onWheel(e){ if(!active)return;camDistT=clamp(camDistT+e.deltaY*.012,4.5,13);e.preventDefault(); }
+  function onPLC(){ locked=(document.pointerLockElement===(renderer&&renderer.domElement));
+    if(locked)hidePrompt();else if(active&&!isTouch&&!dead&&!won)showPrompt("点击继续奔跑"); }
+  function onCanvasClick(){ if(active&&!locked&&!isTouch)requestLock(); }
+  function onPromptClick(){ if(isTouch)hidePrompt();else requestLock(); }
+  let stickId=null,stickCx=0,stickCy=0,lookId=null,lookLx=0,lookLy=0;
+  function stickDown(e){ stickId=e.pointerId;const r=stick.getBoundingClientRect();stickCx=r.left+r.width/2;stickCy=r.top+r.height/2;try{stick.setPointerCapture(e.pointerId);}catch(_){}stickMove(e);e.preventDefault(); }
+  function stickMove(e){ if(e.pointerId!==stickId)return;let dx=e.clientX-stickCx,dy=e.clientY-stickCy;const max=50,d=Math.hypot(dx,dy);
+    if(d>max){dx=dx/d*max;dy=dy/d*max;}knob.style.transform="translate("+dx+"px,"+dy+"px)";touchMove.x=dx/max;touchSprint=Math.abs(dx)/max>.92;e.preventDefault(); }
+  function stickUp(e){ if(e.pointerId!==stickId)return;stickId=null;touchMove.x=0;touchSprint=false;knob.style.transform="translate(0,0)";e.preventDefault(); }
+  function lookDown(e){ lookId=e.pointerId;lookLx=e.clientX;lookLy=e.clientY;try{lookArea.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault(); }
+  function lookMove(e){ if(e.pointerId!==lookId)return;const dx=e.clientX-lookLx,dy=e.clientY-lookLy;lookLx=e.clientX;lookLy=e.clientY;
+    yawOff=clamp(yawOff-dx*.005,-1,1);camPitch=clamp(camPitch-dy*.005,.1,.85);e.preventDefault(); }
+  function lookUp(e){ if(e.pointerId!==lookId)return;lookId=null;e.preventDefault(); }
+  function jumpDown(e){ jumpQueued=true;e.preventDefault(); }
+  function addDyn(t,ev,fn,opts){ t.addEventListener(ev,fn,opts);dyn.push([t,ev,fn,opts]); }
+  function addListeners(){
+    addDyn(window,"resize",onResize);addDyn(window,"keydown",onKeyDown);addDyn(window,"keyup",onKeyUp);
+    addDyn(window,"mousemove",onMouseMove);addDyn(window,"wheel",onWheel,{passive:false});
+    addDyn(document,"pointerlockchange",onPLC);addDyn(renderer.domElement,"click",onCanvasClick);
+    if(isTouch){
+      addDyn(stick,"pointerdown",stickDown,{passive:false});addDyn(stick,"pointermove",stickMove,{passive:false});
+      addDyn(stick,"pointerup",stickUp);addDyn(stick,"pointercancel",stickUp);
+      addDyn(lookArea,"pointerdown",lookDown,{passive:false});addDyn(lookArea,"pointermove",lookMove,{passive:false});
+      addDyn(lookArea,"pointerup",lookUp);addDyn(lookArea,"pointercancel",lookUp);
+      addDyn(jumpBtnEl,"pointerdown",jumpDown,{passive:false});
+    }
+  }
+  function removeListeners(){ for(const a of dyn)a[0].removeEventListener(a[1],a[2],a[3]);dyn.length=0; }
+  function clearCaches(){ for(const g of geoStore){try{g.dispose();}catch(e){}}geoStore.length=0;
+    for(const m of matStore){try{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();}catch(e){}}matStore.clear();
+    for(const k in geoCache)delete geoCache[k];
+  }
+  function disposeScene(){
+    if(scene)scene.traverse(o=>{ if(o.geometry)o.geometry.dispose();
+      if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();});} });
+    clearCaches();
+    if(renderer){renderer.dispose();const el=renderer.domElement;if(el&&el.parentNode)el.parentNode.removeChild(el);}
+    scene=null;renderer=null;camera=null;char=null;armL=armR=legL=legR=head=null;
+    amb=hemi=dir=pl1=pl2=lampMat=lampGlowMat=beaconMat=beaconGlowMat=null;
+    segs.length=0;obstacles.length=0;chasers.length=0;
+  }
+  function cleanup(){
+    active=false;threeActive=false;
+    if(raf)cancelAnimationFrame(raf);raf=0;
+    removeListeners();
+    if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
+    disposeAudio();disposeScene();
+    keys={};eHolding=false;showRing(false);hidePrompt();touchMove.x=0;touchSprint=false;
+    mount.style.filter="none";gid("g3d-dread").style.opacity="0";gid("g3d-bliss").style.opacity="0";
+    overlay.classList.remove("run");hzEl.style.display="block";runEl.style.display="none";
+    overEl.style.display="none";loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
+    overlay.style.display="none";
+  }
+  function exit(){ cleanup();openMenu(); }
+  function restart(){ exit();launch(); }
+  function launch(){
+    if(active)return;
+    if(typeof THREE==="undefined"){ showError("3D 引擎（Three.js）加载失败，请检查网络后重试。");return; }
+    threeActive=true;active=true;ThreeOver.mode="run";
+    menuEl.style.display="none";cvEl.style.display="none";hudEl.style.display="none";
+    overlay.style.display="block";overlay.classList.add("run");
+    errorEl.style.display="none";loadingEl.style.display="flex";
+    titleB.textContent="跑命医院";titleSpan.textContent="LEVEL ! · 3D";
+    exitBtnEl.title="退出跑命医院";
+    hzEl.style.display="none";runEl.style.display="block";overEl.style.display="none";
+    RUN_M=CFG.winM;V_RUN=CFG.catSpeed*M2S;V_SPRINT=CFG.sprintSpeed*M2S;
+    CHASE=[{kind:"smiley",base:CFG.smileySpeed*M2S,gap:22,lane:2},
+           {kind:"bacteria",base:CFG.bacteriaSpeed*M2S,gap:26,lane:0},
+           {kind:"deathmoth",base:CFG.mothSpeed*M2S,gap:19,lane:4}];
+    dist=0;laneX=0;jumpY=0;vy=0;onGround=true;jumpQueued=false;speed=V_RUN;stumble=0;
+    fuel=100;lives=5;charges=SUITS[save.equipped].charges;inv=0;dead=false;won=false;hitFx=0;minGap=GAPMAX;haz=0;
+    camYaw=0;camPitch=.2;camDist=6.8;camDistT=6.8;yawAuto=0;yawOff=0;fovNow=64;swingLock=0;
+    gtime=0;stepT=0;cStep=-1;hudKey="";keys={};eHolding=false;
+    muted=false;muteBtn.classList.remove("off");muteLabel.textContent="声音";
+    S.lives=5;S.over=false;S.win=false;S.blood=false;S.deathBy="";
+    isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
+    try{ buildRenderer();buildLights();buildCorridor();buildSegments();buildObstacles();buildCharacter();buildChasers(); }
+    catch(err){ showError("初始化 3D 走廊失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return; }
+    initRunAudio();addListeners();loadingEl.style.display="none";
+    overlay.classList.toggle("touch",isTouch);
+    updateHUD(true);
+    if(isTouch){ touchLayer.style.display="block";hidePrompt();
+      hintEl.innerHTML='<span><b>左下摇杆</b> 左右闪避</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 越过杂物</span><span><b>右侧拖动</b> 视角</span><span><b>右上退出</b> 离开</span>'; }
+    else{ touchLayer.style.display="none";showPrompt("点击进入跑命医院");
+      promptText.innerHTML="自动向前狂奔 · 鼠标锁定为视角<br>A D 左右闪避 · <b style=\"color:#ffcf5a\">Shift</b> 冲刺 · <b style=\"color:#ffcf5a\">空格</b> 跳过病床医废桶 · 笑脸、细菌与死亡飞蛾就在身后 · <b style=\"color:#b073ff\">精神危害 4 级</b>满值即崩溃 · 长按 E 键 2 秒随时退出";
+      hintEl.innerHTML='<span><span class="k">A</span><span class="k">D</span> 闪避</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><b>鼠标</b> 视角</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
+    onResize();last=performance.now();raf=requestAnimationFrame(frame);
+  }
+  promptEl.addEventListener("click",onPromptClick);
+  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,tag:"run"};
+})();
+// 3D 面板通用按钮：按当前激活模式分派（草原 / 快跑层）
+(function(){
+  const cur=()=>ThreeOver.mode==="run"?Runner3D:Grassland3D;
+  document.getElementById("g3d-exitbtn").addEventListener("click",()=>cur().exit());
+  document.getElementById("g3d-errback").addEventListener("click",()=>cur().exit());
+  document.getElementById("g3d-mute").addEventListener("click",()=>cur().muteToggle());
+  document.getElementById("g3d-overagain").addEventListener("click",()=>cur().restart());
+  document.getElementById("g3d-overhome").addEventListener("click",()=>cur().exit());
 })();
 requestAnimationFrame(loop);
 </script>
