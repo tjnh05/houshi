@@ -368,6 +368,8 @@
   #g3d-stick{position:absolute;left:calc(26px + env(safe-area-inset-left));bottom:calc(80px + env(safe-area-inset-bottom));width:128px;height:128px;border-radius:50%;background:rgba(12,26,8,.4);border:2px solid rgba(124,194,74,.4);pointer-events:auto;touch-action:none;}
   #g3d-knob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#a8d84a,#5f9e3f);box-shadow:0 0 18px rgba(124,194,74,.5);}
   #g3d-jumpbtn{position:absolute;right:calc(30px + env(safe-area-inset-right));bottom:calc(96px + env(safe-area-inset-bottom));width:78px;height:78px;border-radius:50%;background:rgba(12,26,8,.5);border:2px solid rgba(255,207,90,.5);color:#ffcf5a;font-family:inherit;font-size:13px;letter-spacing:2px;pointer-events:auto;touch-action:none;}
+  #g3d-actbtn{position:absolute;right:calc(30px + env(safe-area-inset-right));bottom:calc(190px + env(safe-area-inset-bottom));width:78px;height:78px;border-radius:50%;background:rgba(8,22,12,.6);border:2px solid rgba(143,224,106,.6);color:#8fe06a;font-family:inherit;font-size:13px;letter-spacing:2px;pointer-events:auto;touch-action:none;}
+  #g3d-actbtn.on{background:rgba(143,224,106,.28);box-shadow:0 0 18px rgba(143,224,106,.5);}
   #g3d-look{position:absolute;right:0;top:0;width:55%;height:100%;pointer-events:auto;touch-action:none;}
 </style>
 </head>
@@ -402,6 +404,7 @@
   <div class="sub">THE BACKROOMS · 选择你的层级</div>
   <div class="modes">
     <button class="mode red" data-mode="0">
+      <span class="badge3d">3D</span>
       <span class="tag" style="color:#ff8a8a">LEVEL 0</span>
       <h2>红色长廊</h2>
       <div class="classif">
@@ -410,10 +413,13 @@
           <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">4</span></div>
         </div>
         <div class="cstat"><span class="ck">实体</span><span class="cv danger">实体横行</span></div>
+        <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">3 级</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
+      <p style="margin-top:10px">红色 3D 长廊 · <b style="color:#ff8a8a">石堆与椅子</b>挡路（可跳过） · 实体是<b style="color:#fff">只有一张咧嘴笑脸</b>的 Smiler 与<b style="color:#d9d2bd">骷髅细菌</b> · <b style="color:#ffcf5a">笑脸出没时长廊会陷入黑暗</b> · 自由移动，操控同草原</p>
     </button>
     <button class="mode gold" data-mode="1">
+      <span class="badge3d">3D</span>
       <span class="tag" style="color:#ffe14d">LEVEL 1</span>
       <h2>黄色走廊</h2>
       <div class="classif">
@@ -422,10 +428,13 @@
           <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">3</span></div>
         </div>
         <div class="cstat"><span class="ck">实体</span><span class="cv warn">中量实体</span></div>
+        <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">3 级</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
+      <p style="margin-top:10px">更简单的黄色 3D 走廊 · 身后 <b style="color:#ffe14d">Kitty</b> 一路追（受击镜头<b style="color:#8fe06a">不会往后转</b>） · 前方少量笑脸 · 走满 <b style="color:#ffcf5a">1000 米</b> 逃生</p>
     </button>
     <button class="mode blue" data-mode="2">
+      <span class="badge3d">3D</span>
       <span class="tag" style="color:#9cd0ff">LEVEL 2</span>
       <h2>蓝色长廊</h2>
       <div class="classif">
@@ -434,10 +443,13 @@
           <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">2</span></div>
         </div>
         <div class="cstat"><span class="ck">实体</span><span class="cv warn">中量实体</span></div>
+        <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">3 级</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
+      <p style="margin-top:10px">蓝色 3D 长廊 · <b style="color:#d9d2bd">骷髅细菌</b>一直朝你走（跳不过，只能绕开或冲刺） · 少量笑脸 · <b style="color:#5bb8ff">250 米</b>处蓝色发光门通关</p>
     </button>
     <button class="mode pipe" data-mode="3">
+      <span class="badge3d">3D</span>
       <span class="tag" style="color:#c0c0c0">LEVEL 3</span>
       <h2>管道长廊</h2>
       <div class="classif unknown">
@@ -449,8 +461,10 @@
         <div class="cstat"><span class="ck">实体</span><span class="cv unk">未知实体</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv unk">未知</span></div>
       </div>
+      <p style="margin-top:10px">灰色金属 3D 长廊 · 三层<b style="color:#cc4444">红色管道</b>密布两侧 · <b style="color:#fff">大量笑脸</b> · 途中可捡 <b style="color:#ffcf5a">G18 / AKM</b>，持枪靠近实体自动开枪</p>
     </button>
     <button class="mode pool" data-mode="4">
+      <span class="badge3d">3D</span>
       <span class="tag" style="color:#88ccff">LEVEL 4</span>
       <h2>泳池层</h2>
       <div class="classif unknown">
@@ -462,6 +476,7 @@
         <div class="cstat"><span class="ck">实体</span><span class="cv unk">未知实体</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv unk">未知</span></div>
       </div>
+      <p style="margin-top:10px">白瓷砖 3D 泳池层（后室 Poolrooms）· 长廊中间嵌<b style="color:#88ccff">水池</b>，跳入会沉底掉血 · 按<b style="color:#ffcf5a">空格</b>跳出，离水缓慢回血 · 不长，跟长廊一样</p>
     </button>
     <button class="mode office" data-mode="5">
       <span class="badge3d">3D</span>
@@ -479,6 +494,7 @@
       <p style="margin-top:10px">颠倒医院长廊 · 警报长鸣、红灯闪动 · 两侧病房门，病床与医废桶挡路（可跳可躲） · <b style="color:#ff8a8a">笑脸、细菌与死亡飞蛾</b>就在身后 · 跑满 <b style="color:#ffcf5a">750 米</b> 冲过<b style="color:#ffffff">白色发光门</b></p>
     </button>
     <button class="mode gray" data-mode="6">
+      <span class="badge3d">3D</span>
       <span class="tag" style="color:#aaaaaa">LEVEL 6</span>
       <h2>办公室</h2>
       <div class="classif unknown">
@@ -490,6 +506,7 @@
         <div class="cstat"><span class="ck">实体</span><span class="cv unk">未知实体</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv unk">未知</span></div>
       </div>
+      <p style="margin-top:10px">灰色 3D 办公室长廊 · 撞到门<b style="color:#8fe06a">自动打开</b>可进入 · 每间房<b style="color:#ffcf5a">两台电脑桌、每桌两台实心电脑</b>（撞不穿） · 死亡飞蛾俯冲，跳起可躲</p>
     </button>
     <button class="mode grass" id="grassCard" data-mode="grass">
       <span class="badge3d">3D</span>
@@ -504,7 +521,7 @@
         <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">5 级</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
-      <p style="margin-top:10px">第三人称 3D · 开局便看见<b style="color:#ff8a8a">死区真面目</b> · 树木即实体 · 精神危害越高越会看见<b style="color:#b073ff">美好的假象</b> · 裸身撑 30 秒，标准防护服拖延 <b style="color:#8fe06a">70%</b> · 危害满值必然崩溃致死</p>
+      <p style="margin-top:10px">第三人称 3D · 开局便看见<b style="color:#ff8a8a">死区真面目</b> · 树木即实体 · 精神危害越高越会看见<b style="color:#b073ff">美好的假象</b> · 场景中轴是<b style="color:#9aa0bd">公路</b>，路旁有<b style="color:#ffc24d">警示牌</b>与<b style="color:#dff3c8">房屋</b> · 逃生目标：从煤矿里<b style="color:#ffc24d">抛出铲子</b>并挥铲挖满 <b style="color:#ffc24d">2 处煤矿</b>（各 5 秒）→ 到<b style="color:#8fe06a">安全门</b>按住 F 开锁 10 秒逃离</p>
     </button>
   </div>
   <div class="team-select" style="margin:20px 0;display:flex;gap:15px;justify-content:center;">
@@ -529,7 +546,7 @@
     </div>
     <div id="netStatus"></div>
   </div>
-  <div class="foot">右键行进 · 空格跳跃 · 空格+右键冲刺 · E 拾取</div>
+  <div class="foot">全层级 3D · W A S D 移动 · 拖拽画面转视角 · Shift 冲刺 · 空格跳跃 · 捡到枪靠近实体自动开枪 · E 长按 2 秒退出</div>
   <div class="menu-actions">
     <button id="signbtn">
       <svg width="40" height="38" viewBox="0 0 40 38" aria-hidden="true">
@@ -666,20 +683,39 @@
     <div class="hz-life"><span>生命</span><b id="g3d-hzlife">5</b><i><em id="g3d-hzlifefill"></em></i></div>
   </div>
 
+  <div id="g3d-obj" style="display:none;position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:6;
+       background:rgba(10,14,12,.72);backdrop-filter:blur(8px);border:1px solid rgba(143,224,106,.35);border-radius:12px;
+       padding:10px 16px;min-width:230px;max-width:92vw;color:#e8f0e2;font-size:13px;line-height:1.5;box-shadow:0 6px 24px rgba(0,0,0,.4)">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+      <b id="g3d-objtitle" style="color:#8fe06a;letter-spacing:1px">逃离草原</b>
+      <span id="g3d-objstate" style="color:#ffc24d">煤矿 0 / 2</span>
+    </div>
+    <div id="g3d-objhint" style="margin-top:4px;color:#b9c4b0">找到两处煤矿，靠近按住 <b style="color:#fff">F</b> 各挖 5 秒</div>
+    <div style="margin-top:6px;height:6px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden">
+      <i id="g3d-objfill" style="display:block;height:100%;width:0%;background:linear-gradient(90deg,#8fe06a,#ffc24d);transition:width .1s"></i>
+    </div>
+  </div>
+
   <div id="g3d-run">
-    <div class="rn-head"><span>逃生距离 · 750m</span><b id="g3d-rdist">0m</b></div>
+    <div class="rn-head"><span id="g3d-rhead">逃生距离 · 750m</span><b id="g3d-rdist">0m</b></div>
     <div class="rn-bar"><i id="g3d-rprog"></i></div>
-    <div class="rn-row"><span>追兵</span><i class="rn-meter"><i id="g3d-rgapfill"></i></i><b id="g3d-rgap">20m</b></div>
+    <div class="rn-row"><span id="g3d-rgaplabel">追兵</span><i class="rn-meter"><i id="g3d-rgapfill"></i></i><b id="g3d-rgap">20m</b></div>
     <div class="rn-row"><span>生命</span><b id="g3d-rlife">5</b><span>防护</span><b id="g3d-rcharge">×1</b></div>
     <div class="rn-row"><span>体力</span><i class="rn-meter fuel"><i id="g3d-rfuelfill"></i></i></div>
-    <div class="rn-row"><span>精神危害 4级</span><i class="rn-meter haz"><i id="g3d-rhazfill"></i></i><b id="g3d-rhaz">0%</b></div>
+    <div class="rn-row"><span id="g3d-rhazlabel">精神危害 4级</span><i class="rn-meter haz"><i id="g3d-rhazfill"></i></i><b id="g3d-rhaz">0%</b></div>
     <div class="rn-row hazleft"><span id="g3d-rhazleft">裸装 60 秒满值</span></div>
+    <div class="rn-row" id="g3d-gunrow" style="display:none"><span>武器</span><b id="g3d-gunname" style="color:#ffcf5a">—</b></div>
   </div>
+
+  <div id="g3d-cortip" style="display:none;position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:6;
+       background:rgba(10,12,16,.7);backdrop-filter:blur(8px);border:1px solid rgba(127,196,255,.3);border-radius:10px;
+       padding:7px 14px;max-width:92vw;color:#cdd6e4;font-size:12.5px;line-height:1.45;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.4)"></div>
 
   <div id="g3d-touch">
     <div id="g3d-look"></div>
     <div id="g3d-stick"><div id="g3d-knob"></div></div>
     <button id="g3d-jumpbtn">跳跃</button>
+    <button id="g3d-actbtn" style="display:none">挖掘</button>
   </div>
 
   <div id="g3d-prompt">
@@ -789,20 +825,20 @@ const SPRINT_SPEED=10, SPRINT_FRAMES=240,                // 4秒 @60fps
 
 // ---------- 模式配置 ----------
 const MODES=[
-  {name:"LEVEL 0", catSpeed:3, smileys:true, party:true, kitty:{speed:4,always:false},
+  {name:"LEVEL 0", world:"red", catSpeed:3, sprintSpeed:7, smileys:true, party:true, kitty:{speed:4,always:false},
    doors:true, debris:true, weapons:true, winM:500, pal:"red", doorC:"#ffffff", doorFrame:"#3a0f0f"},
-  {name:"LEVEL 1 · 逃生", catSpeed:5, smileys:true, smileyCount:2, party:false, kitty:{speed:5,always:true},
+  {name:"LEVEL 1 · 逃生", world:"yellow", catSpeed:5, sprintSpeed:9, smileys:true, smileyCount:2, party:false, kitty:{speed:5,always:true},
    doors:false, debris:false, weapons:true, winM:1000, pal:"yellow", doorC:"#ffffff", doorFrame:"#3a0f0f"},
-  {name:"LEVEL 2 · 细菌", catSpeed:4, smileys:true, smileyCount:2, party:false, kitty:null,
+  {name:"LEVEL 2 · 细菌", world:"blue", catSpeed:4, sprintSpeed:8, smileys:true, smileyCount:2, party:false, kitty:null,
    doors:false, debris:false, weapons:true, bacteria:true, winM:250, pal:"blue", doorC:"#5bb8ff", doorFrame:"#081a2e"},
-  {name:"LEVEL 3 · 管道", catSpeed:4, smileys:true, smileyCount:6, party:false, kitty:null,
+  {name:"LEVEL 3 · 管道", world:"pipe", catSpeed:4, sprintSpeed:8, smileys:true, smileyCount:6, party:false, kitty:null,
    doors:false, debris:false, weapons:true, bacteria:false, pipes:true, fence:true, winM:500, pal:"pipe", doorC:"#c0c0c0", doorFrame:"#2a2a2a"},
-  {name:"LEVEL 4 · 泳池", catSpeed:4, smileys:true, smileyCount:3, party:false, kitty:null,
+  {name:"LEVEL 4 · 泳池", world:"pool", catSpeed:4, sprintSpeed:8, smileys:true, smileyCount:3, party:false, kitty:null,
    doors:false, debris:false, weapons:true, bacteria:false, pools:true, winM:500, pal:"pool", doorC:"#ffffff", doorFrame:"#888888"},
   // LEVEL ! 跑命医院：第三人称 3D 追逐关（速度沿用 px/帧 单位，*1.5 换算成 m/s）
   {name:"LEVEL ! · 跑命医院", runner3d:true, winM:750, catSpeed:7, sprintSpeed:12, smileySpeed:6.6, bacteriaSpeed:6.8, mothSpeed:6.4,
    doors:false, debris:false, weapons:false, smileys:true, bacteria:true, moths:true, pal:"office", doorC:"#ff4444", doorFrame:"#222222"},
-  {name:"LEVEL 6 · 办公室", catSpeed:4, smileys:true, smileyCount:4, party:false, kitty:null,
+  {name:"LEVEL 6 · 办公室", world:"office", catSpeed:4, sprintSpeed:8, smileys:true, smileyCount:4, party:false, kitty:null,
    doors:false, debris:false, weapons:true, bacteria:false, pipes:false, fence:false, cubicles:false, offices:true,
    moths:true, mothSpeed:3.4, winM:500, pal:"gray", doorC:"#ffffff", doorFrame:"#666666"},
 ];
@@ -907,6 +943,7 @@ function startMode(i, teamSize=1){
   smileyWrapEl.style.display=CFG.smileys?"inline":"none";
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
   if(CFG.runner3d){Runner3D.launch();return;} // 快跑层：第三人称 3D 追逐关
+  if(CFG.world){Corridor3D.launch();return;}  // 其余层级：通用 3D 长廊（自由移动）
   reset();
   // 初始化 AI 队友
   teammates=[];
@@ -1004,17 +1041,25 @@ function netCleanup(){
   Net.conns=[];Net.hostConn=null;Net.peer=null;Net.remotes={};
   if(netHostBtn){netHostBtn.disabled=false;netJoinBtn.disabled=false;netStatus("");}
 }
+// 3D 模式联机桥接：把 3D 状态写回 P/S 供 myState/netTick 复用，并检测是否有真人已胜利
+function net3DSync(dt,meters,jumpM,lives,charges,fuel,won,over){
+  if(!Net.active||!Net.started)return false;
+  P.x=meters*40;P.y=jumpM*40;S.lives=lives;S.charges=charges;S.fuel=fuel;S.win=won;S.over=over;
+  netTick(dt*60);
+  for(const id in Net.remotes){ if(Net.remotes[id].won)return true; }
+  return false;
+}
 netHostBtn.addEventListener("click",netHost);
 netJoinBtn.addEventListener("click",netJoin);
 
 // ---------- 胜利页（奖杯 + 彩蛋，不显示游戏画面） ----------
 let vparts=[], vLoopOn=false;
-function openVictory(){
+function openVictory(label){
   S.paused=true;
   victoryEl.style.display="flex";shopEl.style.display="none";
   cv.style.display="none";hudEl.style.display="none";
   vcv.width=innerWidth;vcv.height=innerHeight;
-  vsubEl.textContent=CFG.name+" · 行进 "+Math.floor(P.x/40)+" m · 最远 "+S.best+" m · 积分 +10（当前 "+save.points+"）";
+  vsubEl.textContent=(label||CFG.name)+" · 行进 "+Math.floor(P.x/40)+" m · 最远 "+S.best+" m · 积分 +10（当前 "+save.points+"）";
   vparts=[];
   burstV(innerWidth/2,innerHeight*0.56-50,170,10);
   vlast=performance.now();
@@ -2872,7 +2917,7 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 const CONF_COLORS=["#ff5b5b","#ffe14d","#59d67b","#5bb8ff","#d67bff","#ffffff","#ffb84d"];
-function win(){
+function win(label){
   if(S.over||S.win)return;
   S.over=true;S.win=true;S.deathBy="";S.overAt=S.t;
   S.best=Math.max(S.best,Math.floor(P.x/40));
@@ -2881,8 +2926,8 @@ function win(){
   tone(523,523,.15,.14);tone(659,659,.15,.14,"triangle",.15);
   tone(784,784,.15,.14,"triangle",.3);tone(1047,1047,.5,.16,"triangle",.45);
   addPoints(10);
-  logPoints(CFG.name,10);
-  openVictory();
+  logPoints(label||CFG.name,10);
+  openVictory(label);
 }
 function hurtTeammate(tm,attacker){
   if(!tm.alive||(tm.inv||0)>0)return;
@@ -3046,7 +3091,12 @@ const Grassland3D=(function(){
         overEl=document.getElementById("g3d-over"),
         overTitleEl=document.getElementById("g3d-overtitle"),
         overTextEl=document.getElementById("g3d-overtext"),
-        overStatEl=document.getElementById("g3d-overstat");
+        overStatEl=document.getElementById("g3d-overstat"),
+        objEl=document.getElementById("g3d-obj"),
+        objState=document.getElementById("g3d-objstate"),
+        objHint=document.getElementById("g3d-objhint"),
+        objFill=document.getElementById("g3d-objfill"),
+        actBtn=document.getElementById("g3d-actbtn");
   const RING_C=339.292, HALF=124, GSIZE=260;
   const HZ_BARE=30, HZ_DELAY=0.7, HZ_DELAY_HI=0.85, PILL_SECONDS=4;
   const LEAF_CALM=[0x3f7d33,0x4f9138,0x356b2b], LEAF_TRUE=[0x2b1f2a,0x382233,0x1c1218];
@@ -3063,6 +3113,17 @@ const Grassland3D=(function(){
   let strain=0, pillTimer=0, pills=save.pills, pillsUsed=0, dead=false, hzRate=(1-HZ_DELAY)/HZ_BARE, hazTier=-1, visionKey="";
   let armL,armR,legL,legR,head;
   let gMaster=null, windSrc=null, windLfo=null, muted=false;
+  // 草原逃生目标：两处煤矿（各长按 5 秒挖满，先从煤矿里拿起铲子）→ 安全门（长按 10 秒开锁）→ 逃离
+  const MINE_SECONDS=5, DOOR_SECONDS=10, MINE_R=3.6, DOOR_R=3.4;
+  const MINE_SPOTS=[{x:-46,z:-34},{x:50,z:40}];
+  // 草原中轴公路 + 两侧房屋 + 路边警示牌
+  const ROAD={x:0,w:10,z0:122,z1:-112};
+  const HOUSES=[{x:-17,z:76,r:.2},{x:18,z:48,r:-.3},{x:-19,z:18,r:.1},{x:17,z:-12,r:-.15},{x:-18,z:-44,r:.25},{x:19,z:-76,r:-.2},{x:-17,z:-104,r:.12}];
+  const SIGNS=[{x:-6.6,z:106},{x:6.6,z:82},{x:-6.6,z:56},{x:6.6,z:28},{x:-6.6,z:-4},{x:6.6,z:-34},{x:-6.6,z:-64},{x:6.6,z:-92},{x:-6.6,z:-108}];
+  let mines=[], door=null, actionHolding=false, won=false, objKey="";
+  let carry=null, tmpV=null;
+  const throwFrom={x:0,y:0,z:0}, returnFrom={x:0,y:0,z:0};
+  let coalMat=null, woodMat=null, doorMat=null, doorLightMat=null, mineRingMat=null;
   const dyn=[];
   const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
   const rand=(a,b)=>a+Math.random()*(b-a);
@@ -3118,13 +3179,100 @@ const Grassland3D=(function(){
     groundMat=new THREE.MeshStandardMaterial({map:makeGrassTex(),color:0xffffff,roughness:1,metalness:0});
     const ground=new THREE.Mesh(geo,groundMat);ground.receiveShadow=true;scene.add(ground);
   }
+  function freeSpot(x,z,pad){
+    if(Math.abs(x-ROAD.x)<ROAD.w/2+2+pad)return false;
+    for(const h of HOUSES)if(Math.abs(x-h.x)<7+pad&&Math.abs(z-h.z)<7+pad)return false;
+    for(const m of MINE_SPOTS)if(Math.abs(x-m.x)<4.5+pad&&Math.abs(z-m.z)<4.5+pad)return false;
+    return true;
+  }
+  function pickSpot(pad){ for(let i=0;i<60;i++){const x=rand(-HALF,HALF),z=rand(-HALF,HALF);
+      if(Math.hypot(x,z)<6+pad*2)continue;
+      if(freeSpot(x,z,pad))return{x:x,z:z};}
+    return {x:rand(-HALF,HALF),z:rand(-HALF,HALF)}; }
+  function drape(geo,off,zc){ const p=geo.attributes.position;
+    for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i)+zc;p.setY(i,heightAt(x,z)+off);} geo.computeVertexNormals(); }
+  function buildRoad(){
+    const len=ROAD.z0-ROAD.z1,zc=(ROAD.z0+ROAD.z1)/2;
+    const roadMat=new THREE.MeshStandardMaterial({color:0x34353b,roughness:.95});
+    const g=new THREE.PlaneGeometry(ROAD.w,len,2,72);g.rotateX(-Math.PI/2);drape(g,.06,zc);
+    const road=new THREE.Mesh(g,roadMat);road.position.z=zc;road.receiveShadow=true;scene.add(road);
+    const lineMat=new THREE.MeshStandardMaterial({color:0xe6e6dc,roughness:.9});
+    [-1,1].forEach(s=>{ const lg=new THREE.PlaneGeometry(.32,len,1,72);lg.rotateX(-Math.PI/2);
+      const p=lg.attributes.position;
+      for(let i=0;i<p.count;i++){const x=p.getX(i)+s*(ROAD.w/2-.5),z=p.getZ(i)+zc;p.setX(i,x);p.setY(i,heightAt(x,z)+.11);}
+      lg.computeVertexNormals();
+      const m=new THREE.Mesh(lg,lineMat);m.position.z=zc;scene.add(m); });
+    const dashMat=new THREE.MeshStandardMaterial({color:0xe6b93a,roughness:.9});
+    for(let z=ROAD.z0-4;z>ROAD.z1;z-=7.5){ const d=new THREE.Mesh(new THREE.BoxGeometry(.3,.08,3.2),dashMat);
+      d.position.set(ROAD.x,heightAt(ROAD.x,z)+.14,z);scene.add(d); }
+  }
+  function warnSignTex(){
+    const c=document.createElement("canvas");c.width=256;c.height=180;const g=c.getContext("2d");
+    g.fillStyle="#f2c318";g.fillRect(0,0,256,180);
+    g.strokeStyle="#1b1b1b";g.lineWidth=8;g.strokeRect(5,5,246,170);
+    g.beginPath();g.moveTo(128,24);g.lineTo(196,118);g.lineTo(60,118);g.closePath();
+    g.lineWidth=14;g.stroke();
+    g.fillStyle="#1b1b1b";g.font="bold 72px sans-serif";g.textAlign="center";g.fillText("!",128,108);
+    g.font="bold 32px sans-serif";g.fillText("危险",128,160);
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t;
+  }
+  function buildHouses(){
+    const wallPal=[0xd8cbb2,0xc9b9a2,0xbfae9c,0xd2c0a8,0xa9b3bf,0xc4b6a8,0xd6c2b0];
+    const roofPal=[0x7a3b32,0x4a5a6b,0x6b4a2f,0x8a5a3a];
+    const gableShape=new THREE.Shape();
+    gableShape.moveTo(-3.5,0);gableShape.lineTo(3.5,0);gableShape.lineTo(0,1.75);gableShape.closePath();
+    const gableGeo=new THREE.ShapeGeometry(gableShape);
+    HOUSES.forEach((h,i)=>{
+      const g=new THREE.Group();const gy=heightAt(h.x,h.z);g.position.set(h.x,gy,h.z);
+      g.rotation.y=(h.x<0?Math.PI/2:-Math.PI/2)+h.r;
+      const wallMat=new THREE.MeshStandardMaterial({color:wallPal[i%wallPal.length],roughness:.92});
+      const roofMat=new THREE.MeshStandardMaterial({color:roofPal[i%roofPal.length],roughness:.9});
+      const trimMat=new THREE.MeshStandardMaterial({color:0xf0ece2,roughness:.9});
+      const winMat=new THREE.MeshStandardMaterial({color:0x101c26,emissive:0xffd28a,emissiveIntensity:.4,roughness:.4});
+      const body=new THREE.Mesh(new THREE.BoxGeometry(7,4,6),wallMat);body.position.y=2;body.castShadow=true;body.receiveShadow=true;g.add(body);
+      const slope=Math.atan2(1.75,3.3),slabLen=Math.hypot(1.75,3.3)+.5;
+      [1,-1].forEach(s=>{ const sl=new THREE.Mesh(new THREE.BoxGeometry(7.8,.26,slabLen),roofMat);
+        sl.position.set(0,4.88,s*1.65);sl.rotation.x=s>0?slope:-slope;sl.castShadow=true;g.add(sl); });
+      [-1,1].forEach(s=>{ const gb=new THREE.Mesh(gableGeo,wallMat);gb.position.set(s*3.51,4,0);gb.rotation.y=s*Math.PI/2;g.add(gb); });
+      const door=new THREE.Mesh(new THREE.BoxGeometry(1.15,2.15,.14),new THREE.MeshStandardMaterial({color:0x5a3a26,roughness:.85}));
+      door.position.set(0,1.08,3.05);g.add(door);
+      const lamp=new THREE.Mesh(new THREE.BoxGeometry(.34,.2,.18),new THREE.MeshStandardMaterial({color:0xfff0c0,emissive:0xffd9a0,emissiveIntensity:1.3}));
+      lamp.position.set(0,2.5,3.12);g.add(lamp);
+      const pl=new THREE.PointLight(0xffd9a0,.55,8,2);pl.position.set(0,2.5,3.4);g.add(pl);
+      [-1,1].forEach(s=>{ const fr=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.35,.1),trimMat);fr.position.set(s*2.1,2.35,3.03);g.add(fr);
+        const w=new THREE.Mesh(new THREE.BoxGeometry(1.3,1.1,.1),winMat);w.position.set(s*2.1,2.35,3.08);g.add(w); });
+      scene.add(g);
+    });
+  }
+  function buildSigns(){
+    const postMat=new THREE.MeshStandardMaterial({color:0x6b6f74,roughness:.6,metalness:.4});
+    const boardMat=new THREE.MeshStandardMaterial({map:warnSignTex(),roughness:.85});
+    SIGNS.forEach(s=>{
+      const g=new THREE.Group();const gy=heightAt(s.x,s.z);g.position.set(s.x,gy,s.z);
+      g.rotation.y=s.x<0?Math.PI/2:-Math.PI/2;
+      const post=new THREE.Mesh(new THREE.CylinderGeometry(.07,.09,2.4,8),postMat);post.position.y=1.2;post.castShadow=true;g.add(post);
+      const board=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.05,.09),boardMat);board.position.y=2.45;board.castShadow=true;g.add(board);
+      scene.add(g);
+    });
+  }
+  function makeShovel(){
+    const g=new THREE.Group();
+    const wood=new THREE.MeshStandardMaterial({color:0xb0793f,roughness:.8});
+    const metal=new THREE.MeshStandardMaterial({color:0x9aa0a6,roughness:.7,metalness:.08});
+    const handle=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,1.15,8),wood);handle.position.y=.62;g.add(handle);
+    const grip=new THREE.Mesh(new THREE.TorusGeometry(.13,.035,6,14,Math.PI),wood);grip.position.y=1.19;grip.rotation.z=Math.PI;g.add(grip);
+    const blade=new THREE.Mesh(new THREE.BoxGeometry(.34,.3,.06),metal);blade.position.y=.06;g.add(blade);
+    const tip=new THREE.Mesh(new THREE.BoxGeometry(.34,.12,.05),metal);tip.position.set(0,-.11,.01);g.add(tip);
+    g.traverse(o=>{o.castShadow=true;});
+    return g;
+  }
   function buildVegetation(){
     const dummy=new THREE.Object3D();
     // 草丛（实例化）
     const tuftGeo=new THREE.ConeGeometry(0.14,0.78,4);tuftGeo.translate(0,0.39,0);
     tuftMat=new THREE.MeshStandardMaterial({color:0x5f9e3f,roughness:1,flatShading:true});
     const tufts=new THREE.InstancedMesh(tuftGeo,tuftMat,680);
-    for(let i=0;i<680;i++){ const x=rand(-HALF,HALF),z=rand(-HALF,HALF);
+    for(let i=0;i<680;i++){ const sp=pickSpot(0);const x=sp.x,z=sp.z;
       dummy.position.set(x,heightAt(x,z),z);dummy.rotation.set(rand(-.12,.12),rand(0,6.28),rand(-.12,.12));
       const s=rand(.7,1.5);dummy.scale.set(s,rand(.8,1.9),s);dummy.updateMatrix();tufts.setMatrixAt(i,dummy.matrix); }
     tufts.instanceMatrix.needsUpdate=true;scene.add(tufts);
@@ -3133,7 +3281,7 @@ const Grassland3D=(function(){
     flowerMat=new THREE.MeshStandardMaterial({roughness:.8});
     const flowers=new THREE.InstancedMesh(fGeo,flowerMat,160);
     const pal=[0xe8503a,0xffcf5a,0xe85a9c,0xffffff,0x9b6fe8,0xff8a3a];
-    for(let i=0;i<160;i++){ const x=rand(-HALF,HALF),z=rand(-HALF,HALF);
+    for(let i=0;i<160;i++){ const sp=pickSpot(0);const x=sp.x,z=sp.z;
       dummy.position.set(x,heightAt(x,z),z);dummy.rotation.set(0,rand(0,6.28),0);const s=rand(.7,1.3);dummy.scale.set(s,s,s);
       dummy.updateMatrix();flowers.setMatrixAt(i,dummy.matrix);flowers.setColorAt(i,new THREE.Color(pal[i%pal.length])); }
     flowers.instanceMatrix.needsUpdate=true;flowers.instanceColor.needsUpdate=true;scene.add(flowers);
@@ -3141,7 +3289,7 @@ const Grassland3D=(function(){
     const rGeo=new THREE.DodecahedronGeometry(0.7,0);
     rockMat=new THREE.MeshStandardMaterial({color:0x8b8f96,roughness:1,flatShading:true});
     const rocks=new THREE.InstancedMesh(rGeo,rockMat,24);
-    for(let i=0;i<24;i++){ let x,z;do{x=rand(-HALF,HALF);z=rand(-HALF,HALF);}while(Math.hypot(x,z)<7);
+    for(let i=0;i<24;i++){ const sp=pickSpot(1);const x=sp.x,z=sp.z;
       dummy.position.set(x,heightAt(x,z)+0.1,z);dummy.rotation.set(rand(0,6.28),rand(0,6.28),rand(0,6.28));
       const s=rand(.5,1.4);dummy.scale.set(s,s*rand(.6,1),s);dummy.updateMatrix();rocks.setMatrixAt(i,dummy.matrix); }
     rocks.instanceMatrix.needsUpdate=true;rocks.castShadow=true;rocks.receiveShadow=true;scene.add(rocks);
@@ -3153,7 +3301,7 @@ const Grassland3D=(function(){
     leafMats=LEAF_CALM.map(c=>new THREE.MeshStandardMaterial({color:c,roughness:1,flatShading:true}));
     eyeMat=new THREE.MeshStandardMaterial({color:0x140305,emissive:0xff2a14,emissiveIntensity:.2,roughness:.45});
     const eyeGeo=new THREE.SphereGeometry(0.12,8,7);
-    for(let i=0;i<34;i++){ let x,z;do{x=rand(-HALF,HALF);z=rand(-HALF,HALF);}while(Math.hypot(x,z)<9);
+    for(let i=0;i<34;i++){ const sp=pickSpot(2);const x=sp.x,z=sp.z;
       const g=new THREE.Group();const tr=new THREE.Mesh(trunkGeo,trunkMat);tr.castShadow=true;g.add(tr);
       for(let k=0;k<3;k++){const lf=new THREE.Mesh(leafGeos[k],leafMats[k]);lf.castShadow=true;g.add(lf);}
       const eyes=new THREE.Group();eyes.position.y=1.95;eyes.scale.setScalar(.02);
@@ -3184,6 +3332,147 @@ const Grassland3D=(function(){
   }
 
   function updateSuitHUD(){ const SU=SUITS[save.equipped];swatch.style.background=SU.body;swatch.style.color=SU.body;suitName.textContent=SU.name; }
+
+  // ---------- 煤矿与安全门（草原逃生目标） ----------
+  function makeLabel(text,color){ const c=document.createElement("canvas");c.width=256;c.height=96;const g=c.getContext("2d");
+    g.fillStyle="rgba(8,12,9,.82)";g.fillRect(0,0,256,96);g.strokeStyle=color;g.lineWidth=5;g.strokeRect(4,4,248,88);
+    g.fillStyle=color;g.font="bold 46px sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(text,128,50);
+    const t=new THREE.CanvasTexture(c);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthWrite:false}));
+    s.scale.set(3.2,1.2,1);return s; }
+  function buildMines(){
+    mines=[];
+    coalMat=new THREE.MeshStandardMaterial({color:0x14110f,roughness:.95,metalness:.05});
+    woodMat=new THREE.MeshStandardMaterial({color:0x6b4a26,roughness:.9});
+    mineRingMat=new THREE.MeshStandardMaterial({color:0x8fe06a,emissive:0x8fe06a,emissiveIntensity:.4,roughness:.4});
+    const spots=MINE_SPOTS;
+    spots.forEach((p,i)=>{
+      const g=new THREE.Group();const gy=heightAt(p.x,p.z);g.position.set(p.x,gy,p.z);
+      const pit=new THREE.Mesh(new THREE.CylinderGeometry(2.1,2.5,.5,18),new THREE.MeshStandardMaterial({color:0x241c14,roughness:1}));
+      pit.position.y=.1;pit.receiveShadow=true;g.add(pit);
+      for(let k=0;k<9;k++){const coal=new THREE.Mesh(new THREE.IcosahedronGeometry(rand(.28,.5),0),coalMat);
+        const a=rand(0,6.28),r=rand(0,1.5);coal.position.set(Math.cos(a)*r,.4+rand(0,.3),Math.sin(a)*r);
+        coal.rotation.set(rand(0,3),rand(0,3),rand(0,3));coal.castShadow=true;g.add(coal);}
+      [-1,1].forEach(s=>{const post=new THREE.Mesh(new THREE.BoxGeometry(.22,2.6,.22),woodMat);post.position.set(s*1.7,1.3,0);post.castShadow=true;g.add(post);});
+      const beam=new THREE.Mesh(new THREE.BoxGeometry(3.8,.24,.24),woodMat);beam.position.set(0,2.6,0);beam.castShadow=true;g.add(beam);
+      const ring=new THREE.Mesh(new THREE.TorusGeometry(2.3,.07,8,32),mineRingMat.clone());ring.rotation.x=Math.PI/2;ring.position.y=.32;g.add(ring);
+      const label=makeLabel("煤矿 "+(i+1),"#ffc24d");label.position.set(0,3.3,0);g.add(label);
+      const shovel=makeShovel();shovel.position.set(1.15,.72,.5);shovel.rotation.set(.2,0,-.6);g.add(shovel);
+      const light=new THREE.PointLight(0xffa030,.0,9,2);light.position.set(0,1.4,0);g.add(light);
+      scene.add(g);
+      mines.push({x:p.x,z:p.z,progress:0,done:false,group:g,ring:ring,light:light,label:label,shovel:shovel,swing:0,shovelHome:new THREE.Vector3(1.15,.72,.5)});
+    });
+  }
+  function buildSafetyDoor(){
+    const dx=0,dz=-104,gy=heightAt(dx,dz);
+    const g=new THREE.Group();g.position.set(dx,gy,dz);
+    doorMat=new THREE.MeshStandardMaterial({color:0x9aa3ad,roughness:.5,metalness:.55});
+    const frameMat=new THREE.MeshStandardMaterial({color:0x3c444d,roughness:.7,metalness:.4});
+    [-1,1].forEach(s=>{const post=new THREE.Mesh(new THREE.BoxGeometry(.4,4.2,.5),frameMat);post.position.set(s*1.5,2.1,0);post.castShadow=true;g.add(post);});
+    const lintel=new THREE.Mesh(new THREE.BoxGeometry(3.4,.5,.5),frameMat);lintel.position.set(0,4.2,0);g.add(lintel);
+    const panel=new THREE.Mesh(new THREE.BoxGeometry(2.6,3.9,.22),doorMat);panel.position.set(0,1.95,0);panel.castShadow=true;g.add(panel);
+    const handle=new THREE.Mesh(new THREE.BoxGeometry(.5,.12,.16),frameMat);handle.position.set(.8,1.9,.18);g.add(handle);
+    doorLightMat=new THREE.MeshStandardMaterial({color:0xff4444,emissive:0xff2222,emissiveIntensity:1.4,roughness:.3});
+    const lamp=new THREE.Mesh(new THREE.SphereGeometry(.16,12,10),doorLightMat);lamp.position.set(0,3.5,.3);g.add(lamp);
+    const exit=makeLabel("安全门","#8fe06a");exit.position.set(0,4.9,0);g.add(exit);
+    const glow=new THREE.PointLight(0x8fe06a,0,12,2);glow.position.set(0,2.4,1.2);g.add(glow);
+    scene.add(g);
+    door={x:dx,z:dz,progress:0,unlocked:false,group:g,panel:panel,glow:glow};
+  }
+  function minesDone(){ return mines.length>0&&mines.every(m=>m.done); }
+  function startReturn(m){ const sh=m.shovel;carry.phase="return";carry.t=0;char.rotation.x=0;
+    sh.getWorldPosition(tmpV||(tmpV=new THREE.Vector3()));scene.attach(sh);
+    returnFrom.x=tmpV.x;returnFrom.y=tmpV.y;returnFrom.z=tmpV.z; }
+  function handPoint(){ const v=new THREE.Vector3(.52,1.02,.3);char.updateMatrixWorld(true);return char.localToWorld(v); }
+  // 铲子状态机：煤矿抛出 → 小人握住 → 挥铲挖掘 → 送回煤矿
+  function updateShovel(dt,nearMine){
+    if(!carry){
+      if(nearMine&&actionHolding&&!nearMine.done){
+        const sh=nearMine.shovel;sh.getWorldPosition(tmpV||(tmpV=new THREE.Vector3()));
+        scene.attach(sh);
+        throwFrom.x=tmpV.x;throwFrom.y=tmpV.y;throwFrom.z=tmpV.z;
+        carry={mine:nearMine,phase:"throw",t:0};
+        gTone(520,780,.18,.1,"square");
+      }
+      return;
+    }
+    const m=carry.mine,sh=m.shovel;
+    if(carry.phase==="throw"){
+      carry.t+=dt/0.55;const t=Math.min(1,carry.t);
+      const to=handPoint();
+      sh.position.set(throwFrom.x+(to.x-throwFrom.x)*t,throwFrom.y+(to.y-throwFrom.y)*t+Math.sin(t*Math.PI)*1.8,throwFrom.z+(to.z-throwFrom.z)*t);
+      sh.rotation.x+=dt*9;sh.rotation.z+=dt*7;
+      if(t>=1){ carry.phase="hold";char.attach(sh);sh.position.set(.52,1.02,.3);sh.rotation.set(.25,0,-.22);gTone(700,1000,.16,.1,"triangle"); }
+    }else if(carry.phase==="hold"){
+      if(!actionHolding||nearMine!==m){ startReturn(m); }
+      else{
+        m.swing+=dt*7.5;const sw=Math.sin(m.swing);
+        sh.rotation.set(.25-sw*.4,0,-.22+sw*.5);
+        sh.position.set(.52,1.02+.06*Math.abs(sw),.3);
+        armR.rotation.x=-.9+sw*.85;armR.rotation.z=.25;
+        armL.rotation.x=-.5-sw*.4;
+        char.rotation.x=.12;
+      }
+    }else if(carry.phase==="return"){
+      carry.t+=dt/0.45;const t=Math.min(1,carry.t);
+      m.group.updateMatrixWorld(true);
+      const tgt=m.shovelHome.clone().applyMatrix4(m.group.matrixWorld);
+      sh.position.set(returnFrom.x+(tgt.x-returnFrom.x)*t,returnFrom.y+(tgt.y-returnFrom.y)*t+Math.sin(t*Math.PI)*1.2,returnFrom.z+(tgt.z-returnFrom.z)*t);
+      sh.rotation.x+=dt*7;
+      if(t>=1){ m.group.attach(sh);sh.position.set(1.15,.72,.5);sh.rotation.set(.2,0,-.6);carry=null;char.rotation.x=0; }
+    }
+  }
+  function updateObjective(dt){
+    if(won||dead)return;
+    // 靠近判定
+    let nearMine=null,nearDoor=false;
+    for(const m of mines){ if(!m.done&&Math.hypot(charX-m.x,charZ-m.z)<MINE_R){nearMine=m;break;} }
+    if(door&&Math.hypot(charX-door.x,charZ-door.z)<DOOR_R)nearDoor=true;
+    const unlocked=minesDone();
+    if(door&&unlocked!==door.unlocked){ door.unlocked=unlocked;
+      doorLightMat.color.setHex(unlocked?0x66ff88:0xff4444);doorLightMat.emissive.setHex(unlocked?0x22ff55:0xff2222);
+      door.glow.intensity=unlocked?1.6:0;
+      if(unlocked)gTone(440,880,.4,.14,"triangle"); }
+    updateShovel(dt,nearMine);
+    let prog=0,hint="",state="煤矿 "+mines.filter(m=>m.done).length+" / 2";
+    if(nearMine){
+      if(carry&&carry.mine===nearMine&&carry.phase==="hold"){
+        if(actionHolding){ nearMine.progress=Math.min(1,nearMine.progress+dt/MINE_SECONDS);
+          if(nearMine.progress>=1&&!nearMine.done){nearMine.done=true;nearMine.light.intensity=1.8;nearMine.light.color.setHex(0x8fe06a);
+            nearMine.ring.material.emissiveIntensity=1.4;gTone(660,1320,.4,.15,"triangle");
+            carry.phase="return";carry.t=0;startReturn(nearMine);} }
+        prog=nearMine.progress;hint=nearMine.done?"这处煤矿已挖满":"挥铲挖掘中 · "+Math.ceil((1-nearMine.progress)*MINE_SECONDS)+" 秒";
+      }else if(carry&&carry.mine===nearMine){
+        prog=0;hint="煤矿里抛出铲子…";
+      }else{
+        prog=nearMine.progress;hint=nearMine.done?"这处煤矿已挖满":"按住 F 从煤矿里拿起铲子";
+      }
+    }else if(nearDoor){
+      if(!unlocked){hint="安全门已锁 · 先挖满两处煤矿";prog=0;}
+      else{ if(actionHolding){ door.progress=Math.min(1,door.progress+dt/DOOR_SECONDS);
+          if(door.progress>=1){grassWin();return;} }
+        prog=door.progress;hint="按住 F 开锁 · "+Math.ceil((1-door.progress)*DOOR_SECONDS)+" 秒";state="安全门 · 可开锁"; }
+    }else{
+      hint=unlocked?"两处煤矿已满 · 前往北端安全门开锁":"找到两处煤矿，靠近按住 F 拿起铲子各挖 5 秒";
+      prog=unlocked?(door?door.progress:0):(mines.reduce((a,m)=>a+m.progress,0)/2);
+    }
+    // 煤矿视觉反馈
+    for(const m of mines){ m.ring.material.emissiveIntensity=m.done?1.4:(.3+m.progress*1.1);
+      m.light.intensity=m.done?1.8:m.progress*1.2; m.light.color.setHex(m.done?0x8fe06a:0xffa030); }
+    if(door&&door.unlocked)door.panel.position.x=door.progress*1.4;
+    const key=state+"|"+hint+"|"+Math.round(prog*100);
+    if(key!==objKey){ objKey=key;objState.textContent=state;objHint.innerHTML=hint.replace(/F/g,'<b style="color:#fff">F</b>');objFill.style.width=(prog*100)+"%"; }
+    // 触屏动作按钮：靠近目标时显示
+    if(isTouch){ const show=!!nearMine||(nearDoor&&unlocked);
+      actBtn.style.display=show?"block":"none";actBtn.textContent=nearDoor?"开锁":"挖掘";actBtn.classList.toggle("on",actionHolding&&show); }
+  }
+  function grassWin(){
+    if(won||dead)return;won=true;
+    gTone(523,1046,.5,.16,"triangle");gTone(784,1568,.6,.12,"sine",.12);
+    S.best=Math.max(S.best,104);
+    teardown();
+    P.x=104*40;S.over=false;S.win=false;
+    win("草原 LEVEL 7");
+  }
 
   // ---------- 精神危害：开局看见死区真面目，危害越高越沉入"美好幻境" ----------
   function applyReveal(){
@@ -3297,12 +3586,11 @@ const Grassland3D=(function(){
   function showRing(on){ ringEl.style.display=on?"flex":"none";if(!on)setRing(0); }
   function setRing(p){ ringFg.style.strokeDashoffset=String(RING_C*(1-p));ringPct.textContent=Math.round(p*100)+"%"; }
   function showError(msg){ overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errText.textContent=msg; }
-  function requestLock(){ if(renderer&&renderer.domElement.requestPointerLock)renderer.domElement.requestPointerLock(); }
 
   function update(dt){
     gtime+=dt;
     updateHazard(dt);
-    const canControl=active&&!dead&&(locked||isTouch);
+    const canControl=active&&!dead&&!won;
     let ix=0,iz=0;
     if(canControl){
       if(keys["KeyW"]||keys["ArrowUp"])iz+=1;
@@ -3347,6 +3635,8 @@ const Grassland3D=(function(){
       for(let i=0;i<pSeed.length;i++){ let y=pa.getY(i)+pSeed[i].sp*dt;let x=pa.getX(i)+Math.sin(gtime+pSeed[i].ph)*.01;
         if(y>15){y=.5;x=rand(-42,42);pa.setZ(i,rand(-42,42));} pa.setY(i,y);pa.setX(i,x); }
       pa.needsUpdate=true; }
+    // 煤矿 / 安全门目标
+    updateObjective(dt);
     // 长按 E 退出
     if(eHolding){ const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;} }
   }
@@ -3359,16 +3649,20 @@ const Grassland3D=(function(){
     if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
     if(c==="KeyE"){ if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);} return; }
     if(c==="KeyQ"){ if(!e.repeat)usePill(); return; }
+    if(c==="KeyF"){ actionHolding=true; return; }
     if(c==="Space"){ if(!e.repeat)jumpQueued=true;keys[c]=true;return; }
     keys[c]=true; }
   function onKeyUp(e){ if(!active)return;const c=e.code;
-    if(c==="KeyE"){eHolding=false;showRing(false);return;} keys[c]=false; }
-  function onMouseMove(e){ if(locked){ yaw-=e.movementX*.0026;pitch=clamp(pitch-e.movementY*.0026,.06,1.25); } }
+    if(c==="KeyE"){eHolding=false;showRing(false);return;}
+    if(c==="KeyF"){actionHolding=false;return;}
+    keys[c]=false; }
   function onWheel(e){ if(!active)return;targetDist=clamp(targetDist+e.deltaY*.012,3.5,16);e.preventDefault(); }
-  function onPLC(){ locked=(document.pointerLockElement===(renderer&&renderer.domElement));
-    if(locked)hidePrompt();else if(active&&!isTouch)showPrompt("点击继续"); }
-  function onCanvasClick(){ if(active&&!locked&&!isTouch)requestLock(); }
-  function onPromptClick(){ if(isTouch)hidePrompt();else requestLock(); }
+  // 桌面拖拽视角（免指针锁定）
+  let dragId=null,dragLx=0,dragLy=0;
+  function dragDown(e){ if(isTouch)return;dragId=e.pointerId;dragLx=e.clientX;dragLy=e.clientY;try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault(); }
+  function dragMove(e){ if(e.pointerId!==dragId)return;const dx=e.clientX-dragLx,dy=e.clientY-dragLy;dragLx=e.clientX;dragLy=e.clientY;
+    yaw-=dx*.005;pitch=clamp(pitch-dy*.005,.06,1.25);e.preventDefault(); }
+  function dragUp(e){ if(e.pointerId!==dragId)return;dragId=null;e.preventDefault(); }
   // 触屏
   let stickId=null,stickCx=0,stickCy=0,lookId=null,lookLx=0,lookLy=0;
   function stickDown(e){ stickId=e.pointerId;const r=stick.getBoundingClientRect();stickCx=r.left+r.width/2;stickCy=r.top+r.height/2;try{stick.setPointerCapture(e.pointerId);}catch(_){}stickMove(e);e.preventDefault(); }
@@ -3385,10 +3679,13 @@ const Grassland3D=(function(){
     addDyn(window,"resize",onResize);
     addDyn(window,"keydown",onKeyDown);
     addDyn(window,"keyup",onKeyUp);
-    addDyn(window,"mousemove",onMouseMove);
     addDyn(window,"wheel",onWheel,{passive:false});
-    addDyn(document,"pointerlockchange",onPLC);
-    addDyn(renderer.domElement,"click",onCanvasClick);
+    addDyn(renderer.domElement,"pointerdown",dragDown,{passive:false});
+    addDyn(renderer.domElement,"pointermove",dragMove,{passive:false});
+    addDyn(renderer.domElement,"pointerup",dragUp);addDyn(renderer.domElement,"pointercancel",dragUp);
+    addDyn(actBtn,"pointerdown",e=>{actionHolding=true;e.preventDefault();},{passive:false});
+    addDyn(actBtn,"pointerup",e=>{actionHolding=false;e.preventDefault();});
+    addDyn(actBtn,"pointercancel",()=>{actionHolding=false;});
     if(isTouch){
       addDyn(stick,"pointerdown",stickDown,{passive:false});addDyn(stick,"pointermove",stickMove,{passive:false});
       addDyn(stick,"pointerup",stickUp);addDyn(stick,"pointercancel",stickUp);
@@ -3405,21 +3702,23 @@ const Grassland3D=(function(){
     scene=null;renderer=null;camera=null;char=null;sun=null;sunGlow=null;particles=null;clouds=[];pSeed=[];
     skyMat=null;hemiLight=null;ambLight=null;fillLight=null;groundMat=null;tuftMat=null;flowerMat=null;rockMat=null;cloudMat=null;trunkMat=null;
     leafMats=[];trees=[];eyeMat=null;scratch=null;
+    mines=[];door=null;coalMat=woodMat=doorMat=doorLightMat=mineRingMat=null;won=false;objKey="";carry=null;tmpV=null;
   }
   function hideOverlay(){ overlay.style.display="none"; }
-  function exit(){
+  function teardown(){
     active=false;threeActive=false;
     save.pills=Math.max(0,save.pills-pillsUsed);pillsUsed=0;persist();
     mount.style.filter="none";hzEl.classList.remove("crit","pressed");visionKey="";
     dreadEl.style.opacity="0";blissEl.style.opacity="0";
-    overEl.style.display="none";
+    overEl.style.display="none";objEl.style.display="none";actBtn.style.display="none";
     if(raf)cancelAnimationFrame(raf);raf=0;
     removeListeners();
     if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
     disposeAudio();disposeScene();
-    keys={};eHolding=false;showRing(false);hidePrompt();loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
-    hideOverlay();openMenu();
+    keys={};eHolding=false;actionHolding=false;showRing(false);hidePrompt();loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
+    hideOverlay();
   }
+  function exit(){ teardown();openMenu(); }
   function launch(){
     if(active)return;
     if(typeof THREE==="undefined"){ showError("3D 引擎（Three.js）加载失败，请检查网络后重试。");return; }
@@ -3430,31 +3729,30 @@ const Grassland3D=(function(){
     titleB.textContent="草原";titleSpan.textContent="PRAIRIE · 3D";
     hzEl.style.display="block";document.getElementById("g3d-run").style.display="none";
     overEl.style.display="none";
-    promptTitle.textContent="点击进入草原";
-    promptText.innerHTML="鼠标将锁定为视角 · 移动鼠标环顾四周<br>W A S D 奔跑 · <b style=\"color:#b073ff\">Q</b> 吃止晕药逆转移害 · 危害满值必然精神崩溃 · 长按 E 键 2 秒随时退出";
-    keys={};eHolding=false;jumpQueued=false;onGround=true;vy=0;jumpY=0;charX=0;charZ=0;heading=Math.PI;
+    keys={};eHolding=false;actionHolding=false;jumpQueued=false;onGround=true;vy=0;jumpY=0;charX=0;charZ=0;heading=Math.PI;
     yaw=0;pitch=.34;dist=8;targetDist=8;runBlend=0;phase=0;stepTimer=0;gtime=0;muted=false;touchMove={x:0,y:0};touchSprint=false;
+    won=false;objKey="";carry=null;
     muteBtn.classList.remove("off");muteLabel.textContent="声音";
     isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
-    try{ buildRenderer();buildSky();buildLights();buildGround();buildVegetation();buildClouds();buildParticles();buildCharacter(); }
+    try{ buildRenderer();buildSky();buildLights();buildGround();buildRoad();buildHouses();buildSigns();buildVegetation();buildClouds();buildParticles();buildCharacter();buildMines();buildSafetyDoor(); }
     catch(err){ showError("初始化 3D 场景失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return; }
     initGrassAudio();updateSuitHUD();addListeners();loadingEl.style.display="none";
     overlay.classList.toggle("touch",isTouch);
+    locked=true;hidePrompt();objEl.style.display="block";   // 免点击：进入即可移动，拖拽画面转视角
     // 精神危害：裸身 30 秒崩溃；1-4 级防护服拖延 70%（→100 秒），5-10 级拖延 85%（→200 秒）。
     // 任何防护服都无法免疫：危害满值必然精神崩溃致死。
     hzRate=(1-((save.equipped+1)>=5?HZ_DELAY_HI:HZ_DELAY))/HZ_BARE;
     pills=save.pills;pillsUsed=0;pillTimer=0;strain=0;hazTier=-1;visionKey="";dead=false;
     S.lives=5;S.over=false;
-    updateVision(true);applyReveal();
-    if(isTouch){ touchLayer.style.display="block";hidePrompt();
-      hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>右侧拖动</b> 视角</span><span><b>跳跃键</b> 跳</span><span><b>止晕药</b> 点面板按钮</span><span><b>右上退出</b> 离开</span>'; }
-    else{ touchLayer.style.display="none";showPrompt("点击进入草原");
-      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>鼠标</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">Q</span> 止晕药</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
+    updateVision(true);applyReveal();updateObjective(0);
+    if(isTouch){ touchLayer.style.display="block";
+      hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>右侧拖动</b> 视角</span><span><b>跳跃键</b> 跳</span><span><b>挖掘/开锁键</b> 靠近目标按住</span><span><b>右上退出</b> 离开</span>'; }
+    else{ touchLayer.style.display="none";
+      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">F</span> 挖掘/开锁</span><span><span class="k">Q</span> 止晕药</span><span><span class="k">E</span> 长按退出</span>'; }
     onResize();last=performance.now();raf=requestAnimationFrame(frame);
   }
   // 静态 UI 绑定（一次）· 退出/静音/终止面板按钮改由 3D 模式统一分派
   pillBtn.addEventListener("click",usePill);
-  promptEl.addEventListener("click",onPromptClick);
   function restart(){ exit(); launch(); }
   return {launch:launch,exit:exit,isActive:function(){return active;},
           restart:restart,muteToggle:toggleMute,tag:"grass"};
@@ -3505,7 +3803,7 @@ const Runner3D=(function(){
   function sphG(r){const k="S"+r;let g=geoCache[k];if(!g){g=new THREE.SphereGeometry(r,10,8);geoStore.push(g);geoCache[k]=g;}return g;}
   function planeG(w,h){const k="P"+w+"|"+h;let g=geoCache[k];if(!g){g=new THREE.PlaneGeometry(w,h);geoStore.push(g);geoCache[k]=g;}return g;}
   function mat(hex,o){ const m=new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(hex),roughness:.85,metalness:.05},o||{}));matStore.add(m);return m; }
-  function tex(c,rx,ry){ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);
+  function tex(c,rx,ry){ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.encoding=THREE.sRGBEncoding;
     if(renderer)t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t; }
   function floorTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
     g.fillStyle="#b7c0b2";g.fillRect(0,0,128,128);
@@ -3534,6 +3832,9 @@ const Runner3D=(function(){
     g.fillStyle="#06281a";g.fillRect(0,0,256,96);g.strokeStyle="#7dffb0";g.lineWidth=4;g.strokeRect(5,5,246,86);
     g.fillStyle="#c9ffe0";g.font="bold 40px Courier New";g.textAlign="center";g.fillText("EXIT 出口",128,60);
     return c; }
+  function glowTex(){ const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");
+    const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,255,255,1)");gr.addColorStop(.35,"rgba(255,255,255,.5)");gr.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=gr;g.fillRect(0,0,64,64);return c; }
   function smilerFaceTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
     g.shadowColor="rgba(255,255,255,.95)";g.shadowBlur=15;g.fillStyle="#fdfdff";
     g.beginPath();g.ellipse(44,48,8.5,12.5,-.2,0,6.29);g.fill();
@@ -3722,26 +4023,35 @@ const Runner3D=(function(){
     g.userData.rig={legL:legL,legR:legR,armL:armL,armR:armR,body:body,head:head,lean:o.lean};
     return g;
   }
+  // Smiler = 只有一张悬浮的咧嘴笑脸，没有身体（后室原型：黑暗中的一双眼与一口牙）
   function buildSmiler(){
-    const g=humanoid({hip:.94,torso:.62,shoulder:.19,waist:.14,stance:.11,legR:.072,arm:.8,armR:.055,
-                      headR:.185,headS:[1,1.12,.98],lean:.1,skin:chMat.void});
-    const fm=new THREE.MeshBasicMaterial({map:tex(smilerFaceTex(),1,1),transparent:true,depthWrite:false});matStore.add(fm);
-    const face=new THREE.Mesh(planeG(.44,.44),fm);
-    face.position.set(0,.01,.185);g.userData.rig.head.add(face);
-    g.scale.setScalar(1.12);
+    const g=new THREE.Group();
+    const orb=new THREE.Mesh(sphG(.46),chMat.void);orb.scale.set(1,1.05,.78);g.add(orb);
+    const fm=new THREE.MeshBasicMaterial({map:tex(smilerFaceTex(),1,1),transparent:true,depthWrite:false,side:THREE.DoubleSide,fog:false});matStore.add(fm);
+    const face=new THREE.Mesh(planeG(.82,.82),fm);face.position.set(0,.02,.4);g.add(face);
+    const face2=new THREE.Mesh(planeG(.82,.82),fm);face2.position.set(0,.02,-.4);face2.rotation.y=Math.PI;g.add(face2);
+    const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xdfe6ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5,fog:false}));
+    glow.scale.set(1.7,1.7,1);glow.position.set(0,.02,.42);g.add(glow);
+    g.userData.smiler=true;g.userData.face=face;g.userData.glow=glow;
     return g;
   }
+  // 细菌 = 骷髅人：白骨骨架 + 肋骨 + 颅骨眼窝，长臂前伸拍人
   function buildBacteria(){
-    const g=humanoid({hip:1.06,torso:.66,shoulder:.21,waist:.15,stance:.13,legR:.078,arm:1.0,armR:.058,
-                      headR:.19,headS:[.86,1.18,.92],lean:.26,skin:chMat.skin});
+    const g=humanoid({hip:1.02,torso:.62,shoulder:.2,waist:.13,stance:.12,legR:.058,arm:1.05,armR:.045,
+                      headR:.18,headS:[.9,1.1,.95],lean:.18,skin:chMat.bone});
     const rig=g.userData.rig;
-    for(let i=0;i<5;i++){const p=new THREE.Mesh(sphG(rand(.05,.09)),chMat.sore);
-      p.position.set(rand(-.16,.16),rand(.12,.6),rand(.1,.17));p.scale.set(1.4,1,.5);rig.body.add(p);}
-    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.052),chMat.socket);
-      e.scale.set(1,1.35,.6);e.position.set(s*.075,.03,.155);rig.head.add(e);});
-    const mouth=new THREE.Mesh(boxG(.035,.13,.03),chMat.socket);mouth.position.set(0,-.11,.16);rig.head.add(mouth);
-    rig.armL.rotation.x=1.15;rig.armR.rotation.x=1.25;
-    g.scale.setScalar(1.06);
+    for(let i=0;i<4;i++){const rib=new THREE.Mesh(boxG(.36-i*.035,.035,.22),chMat.bone);
+      rib.position.set(0,.1+i*.13,.03);rig.body.add(rib);}
+    const sternum=new THREE.Mesh(boxG(.05,.5,.05),chMat.bone);sternum.position.set(0,.3,.13);rig.body.add(sternum);
+    const spine=new THREE.Mesh(boxG(.06,.6,.06),chMat.bone);spine.position.set(0,.3,-.12);rig.body.add(spine);
+    const pelvis=new THREE.Mesh(boxG(.3,.15,.2),chMat.bone);pelvis.position.set(0,-.02,0);rig.body.add(pelvis);
+    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.055),chMat.socket);
+      e.scale.set(1,1.3,.6);e.position.set(s*.072,.035,.15);rig.head.add(e);});
+    const nasal=new THREE.Mesh(boxG(.03,.05,.03),chMat.socket);nasal.position.set(0,-.03,.165);rig.head.add(nasal);
+    const jaw=new THREE.Mesh(boxG(.17,.06,.13),chMat.bone);jaw.position.set(0,-.12,.1);rig.head.add(jaw);
+    for(let i=-2;i<=2;i++){const t=new THREE.Mesh(boxG(.022,.04,.02),chMat.bone);t.position.set(i*.032,-.085,.16);rig.head.add(t);}
+    rig.armL.rotation.x=-1.0;rig.armR.rotation.x=-1.1;
+    g.scale.setScalar(1.05);
     return g;
   }
   function buildDeathmoth(){
@@ -3767,6 +4077,7 @@ const Runner3D=(function(){
   function buildChasers(){
     chasers.length=0;
     chMat={void:mat("#07070a",{roughness:.98,metalness:0}),
+           bone:mat("#d9d2bd",{roughness:.7,metalness:.02}),
            skin:mat("#7d8f63",{roughness:.84}),sore:mat("#39452e",{roughness:.92}),
            socket:mat("#141a10",{roughness:.5}),
            mothBody:mat("#5b4a35",{roughness:.96}),mothDark:mat("#2b251d",{roughness:.95}),
@@ -3863,7 +4174,7 @@ const Runner3D=(function(){
       haz=Math.min(1,haz+dt*hz4);
       if(haz>=1){lives=0;charges=0;die("精神危害满值 —— 警报声里你的意识涣散了",true);}
     }
-    const canMove=active&&!dead&&!won&&(locked||isTouch);
+    const canMove=active&&!dead&&!won;   // 进入即自动狂奔，无需点击/指针锁定
     // 横向
     let ax=0;
     if(canMove){ if(keys.KeyA||keys.ArrowLeft)ax-=1;if(keys.KeyD||keys.ArrowRight)ax+=1;ax=clamp(ax+touchMove.x,-1,1); }
@@ -3908,13 +4219,16 @@ const Runner3D=(function(){
         c.mesh.rotation.set(Math.sin(gtime*2.6+c.ph)*.12-dive*.22,Math.PI+Math.sin(gtime*1.7+c.ph)*.2,0);
         const fl=.3+Math.sin(gtime*15+c.ph)*.75;
         c.mesh.userData.wings[0].rotation.z=-fl;c.mesh.userData.wings[1].rotation.z=fl;
+      }else if(c.kind==="smiley"){
+        c.mesh.position.set(c.laneX,1.5+Math.sin(gtime*2.1+c.ph)*.16,zz);
+        c.mesh.rotation.y=Math.PI+Math.sin(gtime*1.6+c.ph)*.18;
+        c.mesh.userData.glow.material.opacity=.4+.2*Math.sin(gtime*3+c.ph);
       }else{
         c.mesh.position.set(c.laneX,Math.abs(sw)*.06,zz);
         c.mesh.rotation.y=Math.PI+Math.sin(gtime*3+c.ph)*.14;
         const rig=c.mesh.userData.rig;
         rig.legL.rotation.x=sw*.95;rig.legR.rotation.x=-sw*.95;
-        if(c.kind==="bacteria"){rig.armL.rotation.x=1.15+sw*.18;rig.armR.rotation.x=1.25-sw*.18;}
-        else{rig.armL.rotation.x=-sw*.8;rig.armR.rotation.x=sw*.8;}
+        rig.armL.rotation.x=-1.0+sw*.18;rig.armR.rotation.x=-1.1-sw*.18;
         rig.body.rotation.x=rig.lean+Math.sin(rp*2)*.04;
         rig.head.rotation.x=-rig.lean*.6+Math.sin(rp*2)*.05;
       }
@@ -4006,7 +4320,6 @@ const Runner3D=(function(){
   function showRing(on){ ringEl.style.display=on?"flex":"none";if(!on)setRing(0); }
   function setRing(p){ ringFg.style.strokeDashoffset=String(RING_C*(1-p));ringPct.textContent=Math.round(p*100)+"%"; }
   function showError(msg){ overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errTextEl.textContent=msg; }
-  function requestLock(){ if(renderer&&renderer.domElement.requestPointerLock)renderer.domElement.requestPointerLock(); }
   function onResize(){ if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight); }
   function render(){ if(active&&renderer&&scene&&camera)renderer.render(scene,camera); }
   function frame(now){ if(!active)return;const dt=Math.min(.05,(now-last)/1000);last=now;update(dt);render();raf=requestAnimationFrame(frame); }
@@ -4018,12 +4331,13 @@ const Runner3D=(function(){
     keys[c]=true; }
   function onKeyUp(e){ if(!active)return;const c=e.code;
     if(c==="KeyE"){eHolding=false;showRing(false);return;} keys[c]=false; }
-  function onMouseMove(e){ if(locked){ yawOff=clamp(yawOff-e.movementX*.0022,-1,1);camPitch=clamp(camPitch-e.movementY*.0022,.1,.85); } }
   function onWheel(e){ if(!active)return;camDistT=clamp(camDistT+e.deltaY*.012,4.5,13);e.preventDefault(); }
-  function onPLC(){ locked=(document.pointerLockElement===(renderer&&renderer.domElement));
-    if(locked)hidePrompt();else if(active&&!isTouch&&!dead&&!won)showPrompt("点击继续奔跑"); }
-  function onCanvasClick(){ if(active&&!locked&&!isTouch)requestLock(); }
-  function onPromptClick(){ if(isTouch)hidePrompt();else requestLock(); }
+  // 桌面拖拽视角（不用指针锁定，嵌入浏览器也能玩）：按住画面拖动即可环顾
+  let dragId=null,dragLx=0,dragLy=0;
+  function dragDown(e){ if(isTouch)return;dragId=e.pointerId;dragLx=e.clientX;dragLy=e.clientY;try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault(); }
+  function dragMove(e){ if(e.pointerId!==dragId)return;const dx=e.clientX-dragLx,dy=e.clientY-dragLy;dragLx=e.clientX;dragLy=e.clientY;
+    yawOff=clamp(yawOff-dx*.005,-1,1);camPitch=clamp(camPitch-dy*.005,.1,.85);e.preventDefault(); }
+  function dragUp(e){ if(e.pointerId!==dragId)return;dragId=null;e.preventDefault(); }
   let stickId=null,stickCx=0,stickCy=0,lookId=null,lookLx=0,lookLy=0;
   function stickDown(e){ stickId=e.pointerId;const r=stick.getBoundingClientRect();stickCx=r.left+r.width/2;stickCy=r.top+r.height/2;try{stick.setPointerCapture(e.pointerId);}catch(_){}stickMove(e);e.preventDefault(); }
   function stickMove(e){ if(e.pointerId!==stickId)return;let dx=e.clientX-stickCx,dy=e.clientY-stickCy;const max=50,d=Math.hypot(dx,dy);
@@ -4037,8 +4351,10 @@ const Runner3D=(function(){
   function addDyn(t,ev,fn,opts){ t.addEventListener(ev,fn,opts);dyn.push([t,ev,fn,opts]); }
   function addListeners(){
     addDyn(window,"resize",onResize);addDyn(window,"keydown",onKeyDown);addDyn(window,"keyup",onKeyUp);
-    addDyn(window,"mousemove",onMouseMove);addDyn(window,"wheel",onWheel,{passive:false});
-    addDyn(document,"pointerlockchange",onPLC);addDyn(renderer.domElement,"click",onCanvasClick);
+    addDyn(window,"wheel",onWheel,{passive:false});
+    addDyn(renderer.domElement,"pointerdown",dragDown,{passive:false});
+    addDyn(renderer.domElement,"pointermove",dragMove,{passive:false});
+    addDyn(renderer.domElement,"pointerup",dragUp);addDyn(renderer.domElement,"pointercancel",dragUp);
     if(isTouch){
       addDyn(stick,"pointerdown",stickDown,{passive:false});addDyn(stick,"pointermove",stickMove,{passive:false});
       addDyn(stick,"pointerup",stickUp);addDyn(stick,"pointercancel",stickUp);
@@ -4100,20 +4416,715 @@ const Runner3D=(function(){
     catch(err){ showError("初始化 3D 走廊失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return; }
     initRunAudio();addListeners();loadingEl.style.display="none";
     overlay.classList.toggle("touch",isTouch);
+    locked=true;hidePrompt();   // 免点击：进入即跑，拖拽画面转视角
     updateHUD(true);
-    if(isTouch){ touchLayer.style.display="block";hidePrompt();
+    if(isTouch){ touchLayer.style.display="block";
       hintEl.innerHTML='<span><b>左下摇杆</b> 左右闪避</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 越过杂物</span><span><b>右侧拖动</b> 视角</span><span><b>右上退出</b> 离开</span>'; }
-    else{ touchLayer.style.display="none";showPrompt("点击进入跑命医院");
-      promptText.innerHTML="自动向前狂奔 · 鼠标锁定为视角<br>A D 左右闪避 · <b style=\"color:#ffcf5a\">Shift</b> 冲刺 · <b style=\"color:#ffcf5a\">空格</b> 跳过病床医废桶 · 笑脸、细菌与死亡飞蛾就在身后 · <b style=\"color:#b073ff\">精神危害 4 级</b>满值即崩溃 · 长按 E 键 2 秒随时退出";
-      hintEl.innerHTML='<span><span class="k">A</span><span class="k">D</span> 闪避</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><b>鼠标</b> 视角</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
+    else{ touchLayer.style.display="none";
+      hintEl.innerHTML='<span><b>自动狂奔</b></span><span><span class="k">A</span><span class="k">D</span> 闪避</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><b>拖拽画面</b> 视角</span><span><span class="k">E</span> 长按 2 秒退出</span>'; }
     onResize();last=performance.now();raf=requestAnimationFrame(frame);
   }
-  promptEl.addEventListener("click",onPromptClick);
   return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,tag:"run"};
 })();
-// 3D 面板通用按钮：按当前激活模式分派（草原 / 快跑层）
+// ================= 通用 3D 长廊引擎（红/黄/蓝/管道/泳池/办公室 · 自由移动 + 拖拽视角 · 免点击） =================
+const Corridor3D=(function(){
+  const gid=s=>document.getElementById(s);
+  const mount=gid("g3d-mount"),overlay=gid("grass3d"),promptEl=gid("g3d-prompt"),
+        ringEl=gid("g3d-exitring"),ringFg=gid("g3d-ringfg"),ringPct=gid("g3d-ringpct"),
+        loadingEl=gid("g3d-loading"),errorEl=gid("g3d-error"),errText=gid("g3d-errtext"),
+        hintEl=gid("g3d-hint"),touchLayer=gid("g3d-touch"),stick=gid("g3d-stick"),knob=gid("g3d-knob"),
+        lookArea=gid("g3d-look"),jumpBtn=gid("g3d-jumpbtn"),swatch=gid("g3d-swatch"),suitName=gid("g3d-suitname"),
+        muteBtn=gid("g3d-mute"),muteLabel=gid("g3d-mutelabel"),titleB=gid("g3d-titleb"),titleSpan=gid("g3d-titlespan"),
+        overEl=gid("g3d-over"),overTitle=gid("g3d-overtitle"),overText=gid("g3d-overtext"),overStat=gid("g3d-overstat"),
+        hzEl=gid("g3d-hazard"),runEl=gid("g3d-run"),cortip=gid("g3d-cortip"),
+        rhead=gid("g3d-rhead"),rdist=gid("g3d-rdist"),rprog=gid("g3d-rprog"),rgaplabel=gid("g3d-rgaplabel"),
+        rgap=gid("g3d-rgap"),rgapfill=gid("g3d-rgapfill"),rlife=gid("g3d-rlife"),rcharge=gid("g3d-rcharge"),
+        rfuel=gid("g3d-rfuelfill"),rhazlabel=gid("g3d-rhazlabel"),rhaz=gid("g3d-rhaz"),rhazfill=gid("g3d-rhazfill"),
+        rhazleft=gid("g3d-rhazleft"),gunrow=gid("g3d-gunrow"),gunname=gid("g3d-gunname");
+  const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  const M2S=1.5, WALL=4.2, CEIL=4.0, SEG=9, PR=.42, RING_C=339.292;
+  const WORLD_PAL={
+    red:{wallT:"#7e2222",wallB:"#481111",floor:"#5a1c16",ceil:"#2a0b0b",lamp:"#ffc9a8",fog:"#1c0808",accent:"#ff6b6b",amb:.17,hemi:.24,dir:.16,exp:.95},
+    yellow:{wallT:"#c8a832",wallB:"#8a6d18",floor:"#9a7c26",ceil:"#4a3a0e",lamp:"#fff0b0",fog:"#241d07",accent:"#ffc24d",amb:.2,hemi:.28,dir:.18,exp:.97},
+    blue:{wallT:"#2c568c",wallB:"#16304f",floor:"#1d3a5c",ceil:"#081527",lamp:"#bfe0ff",fog:"#060f1e",accent:"#7fc4ff",amb:.17,hemi:.24,dir:.16,exp:.95},
+    pipe:{wallT:"#3c3c3c",wallB:"#222222",floor:"#2e2e2e",ceil:"#141414",lamp:"#d8d8d8",fog:"#0c0c0c",accent:"#c0c0c0",amb:.16,hemi:.22,dir:.15,exp:.95},
+    pool:{wallT:"#f4f4f4",wallB:"#c8c8c8",floor:"#d8d8d8",ceil:"#e0e0e0",lamp:"#ffffff",fog:"#b8c4c8",accent:"#8fe0ff",amb:.5,hemi:.6,dir:.4,exp:1.05},
+    office:{wallT:"#7a7a7a",wallB:"#525252",floor:"#5e5e5e",ceil:"#242424",lamp:"#f4f4f4",fog:"#161616",accent:"#8fe06a",amb:.2,hemi:.28,dir:.18,exp:.97}
+  };
+  const TIP={
+    red:"红色长廊 · 石堆与椅子可跳过 · 笑脸（只有一张脸）与骷髅细菌会追你 · 精神危害 3 级",
+    yellow:"黄色走廊 · 身后 Kitty 越追越近，冲刺甩开 · 受击镜头不会往后转 · 前方少量笑脸",
+    blue:"蓝色长廊 · 骷髅细菌一直朝你走，只能绕开或冲刺 · 少量笑脸",
+    pipe:"管道长廊 · 红色管道密布 · 大量笑脸 · 捡到枪后靠近实体会自动开枪",
+    pool:"泳池层 · 中间是水池，跳进去会沉底掉血，按空格跳出 · 离水缓慢回血",
+    office:"办公室 · 撞到门会自动打开 · 每间房两台电脑桌、每桌两台实心电脑（撞不穿）· 死亡飞蛾俯冲"
+  };
+  let renderer=null,scene=null,camera=null,char=null,armL=null,armR=null,legL=null,legR=null,head=null,gunMesh=null;
+  let amb=null,hemi=null,dir=null,pl1=null,pl2=null,lampMat=null;
+  const geoStore=[],matStore=new Set(),segs=[],obstacles=[],entities=[],basins=[],rooms=[],guns=[],remotes={};
+  const geoCache={};
+  let RUN_M=500,V_WALK=6,V_SPRINT=11,WORLD="red",PAL=WORLD_PAL.red;
+  let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="";
+  let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,dist=0;
+  let fuel=100,charges=0,lives=5,inv=0,dead=false,won=false,hitFx=0,haz=0,inWater=false;
+  let yaw=0,pitch=.24,camDist=6.8,camDistT=6.8;
+  let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0,cStep=-1;
+  let gunType=null,gunAmmo=0,gunCd=0,muzzle=0;
+  let darkAmt=0,darkTarget=0;
+  const BLACK_C=new THREE.Color(0x000000);
+  let cMaster=null;
+  const dyn=[];
+
+  function boxG(w,h,d){const k="B"+w+"|"+h+"|"+d;let g=geoCache[k];if(!g){g=new THREE.BoxGeometry(w,h,d);geoStore.push(g);geoCache[k]=g;}return g;}
+  function cylG(rt,rb,h,s){const k="C"+rt+"|"+rb+"|"+h+"|"+(s||10);let g=geoCache[k];if(!g){g=new THREE.CylinderGeometry(rt,rb,h,s||10);geoStore.push(g);geoCache[k]=g;}return g;}
+  function sphG(r){const k="S"+r;let g=geoCache[k];if(!g){g=new THREE.SphereGeometry(r,10,8);geoStore.push(g);geoCache[k]=g;}return g;}
+  function planeG(w,h){const k="P"+w+"|"+h;let g=geoCache[k];if(!g){g=new THREE.PlaneGeometry(w,h);geoStore.push(g);geoCache[k]=g;}return g;}
+  function mat(hex,o){const m=new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(hex),roughness:.85,metalness:.05},o||{}));matStore.add(m);return m;}
+  function tex(c,rx,ry){const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.encoding=THREE.sRGBEncoding;if(renderer)t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t;}
+  function glowTex(){const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");
+    const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,255,255,1)");gr.addColorStop(.35,"rgba(255,255,255,.5)");gr.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=gr;g.fillRect(0,0,64,64);return c;}
+  function smilerFaceTex(){const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.shadowColor="rgba(255,255,255,.95)";g.shadowBlur=15;g.fillStyle="#fdfdff";
+    g.beginPath();g.ellipse(44,48,8.5,12.5,-.2,0,6.29);g.fill();
+    g.beginPath();g.ellipse(84,48,8.5,12.5,.2,0,6.29);g.fill();
+    g.strokeStyle="#fdfdff";g.lineWidth=7;g.lineCap="round";g.beginPath();g.arc(64,60,33,.17*Math.PI,.83*Math.PI);g.stroke();
+    g.shadowBlur=0;g.strokeStyle="rgba(8,8,10,.9)";g.lineWidth=3;
+    for(let i=-3;i<=3;i++){const dx=i*8.4,yy=60+Math.sqrt(Math.max(0,33*33-dx*dx));g.beginPath();g.moveTo(64+dx,yy-7);g.lineTo(64+dx,yy+7);g.stroke();}
+    return c;}
+  function tileTex(base,line){const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.fillStyle=base;g.fillRect(0,0,128,128);
+    for(let i=0;i<700;i++){const l=Math.random();g.fillStyle="rgba(255,255,255,"+(l*.06)+")";g.fillRect(Math.random()*128,Math.random()*128,2,2);}
+    g.strokeStyle=line;g.lineWidth=2;for(let i=0;i<=128;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,128);g.stroke();g.beginPath();g.moveTo(0,i);g.lineTo(128,i);g.stroke();}
+    return c;}
+  function wallTex(top,bot){const c=document.createElement("canvas");c.width=256;c.height=128;const g=c.getContext("2d");
+    g.fillStyle=top;g.fillRect(0,0,256,128);g.fillStyle=bot;g.fillRect(0,80,256,48);
+    g.fillStyle="rgba(0,0,0,.25)";g.fillRect(0,76,256,5);
+    for(let i=0;i<240;i++){const l=Math.random();g.fillStyle="rgba(0,0,0,"+(l*.12)+")";g.fillRect(Math.random()*256,Math.random()*128,3+l*6,2+l*4);}
+    g.strokeStyle="rgba(0,0,0,.18)";g.lineWidth=2;for(let i=0;i<=256;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,128);g.stroke();}
+    return c;}
+
+  function buildRenderer(){
+    renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.setSize(innerWidth,innerHeight);
+    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=PAL.exp||.95;
+    mount.appendChild(renderer.domElement);
+    camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,400);
+    scene=new THREE.Scene();scene.fog=new THREE.FogExp2(new THREE.Color(PAL.fog),WORLD==="pool"?.018:.03);
+    scene.background=new THREE.Color(PAL.fog);
+  }
+  function buildLights(){
+    amb=new THREE.AmbientLight(new THREE.Color(PAL.lamp),PAL.amb||.2);scene.add(amb);
+    hemi=new THREE.HemisphereLight(new THREE.Color(PAL.lamp),new THREE.Color(PAL.floor),PAL.hemi||.28);scene.add(hemi);
+    dir=new THREE.DirectionalLight(new THREE.Color(PAL.lamp),PAL.dir||.18);dir.position.set(2,8,4);scene.add(dir);
+    pl1=new THREE.PointLight(new THREE.Color(PAL.lamp),1.6,26,2);scene.add(pl1);
+    pl2=new THREE.PointLight(new THREE.Color(PAL.lamp),1.2,26,2);scene.add(pl2);
+  }
+  function buildCorridor(){
+    const L=RUN_M+40, zc=-RUN_M/2;
+    function floorSpan(zA,zB){const len=zA-zB;if(len<=0)return;
+      const m=mat("#ffffff",{map:tex(tileTex(PAL.floor,"rgba(0,0,0,.28)"),6,len/4),roughness:.9});
+      const f=new THREE.Mesh(planeG(WALL*2,len),m);f.rotation.x=-Math.PI/2;f.position.set(0,0,(zA+zB)/2);scene.add(f);}
+    const floorGaps=WORLD==="pool"?basins.map(b=>[b.z-b.hd,b.z+b.hd]):[];
+    if(!floorGaps.length){floorSpan(20,-RUN_M-20);}
+    else{const gaps=floorGaps.slice().sort((a,b)=>b[1]-a[1]);let cur=20;
+      for(const [g0,g1] of gaps){floorSpan(cur,g1);cur=g0;}
+      floorSpan(cur,-RUN_M-20);}
+    const ceilM=mat(PAL.ceil,{roughness:.95});
+    const ceil=new THREE.Mesh(planeG(WALL*2,L),ceilM);ceil.rotation.x=Math.PI/2;ceil.position.set(0,CEIL,zc);scene.add(ceil);
+    const wallM=mat("#ffffff",{map:tex(wallTex(PAL.wallT,PAL.wallB),L/6,1),roughness:.88});
+    // 办公室：+X 墙留门洞；其余整面墙
+    const doorGaps = WORLD==="office" ? rooms.map(r=>[r.zc-1.2,r.zc+1.2]) : [];
+    function wallSide(sign){
+      const x=sign*WALL;
+      if(sign<0||!doorGaps.length){ const w=new THREE.Mesh(boxG(.3,CEIL,L),wallM);w.position.set(x,CEIL/2,zc);scene.add(w);return; }
+      const gaps=doorGaps.slice().sort((a,b)=>a[0]-b[0]);
+      let cursor=-RUN_M-20; const end=20;
+      for(const [g0,g1] of gaps){
+        if(g0>cursor){ const seg=new THREE.Mesh(boxG(.3,CEIL,g0-cursor),wallM);seg.position.set(x,CEIL/2,(cursor+g0)/2);scene.add(seg); }
+        const lintel=new THREE.Mesh(boxG(.3,CEIL-3,g1-g0),wallM);lintel.position.set(x,3+(CEIL-3)/2,(g0+g1)/2);scene.add(lintel);
+        cursor=g1;
+      }
+      if(end>cursor){ const seg=new THREE.Mesh(boxG(.3,CEIL,end-cursor),wallM);seg.position.set(x,CEIL/2,(cursor+end)/2);scene.add(seg); }
+    }
+    wallSide(-1);wallSide(1);
+    // 灯
+    lampMat=mat(PAL.lamp,{emissive:new THREE.Color(PAL.lamp),emissiveIntensity:.8,roughness:.4});
+    for(let z=-6;z>-RUN_M;z-=SEG){
+      const lamp=new THREE.Mesh(boxG(1.6,.06,.8),lampMat);lamp.position.set(0,CEIL-.04,z);scene.add(lamp);
+      segs.push({z:z});
+    }
+    // 终点发光门
+    const exitM=mat("#ffffff",{emissive:new THREE.Color("#ffffff"),emissiveIntensity:2.2,roughness:.3});
+    const door=new THREE.Mesh(planeG(WALL*1.6,CEIL*.9),exitM);door.position.set(0,CEIL*.45,-RUN_M);scene.add(door);
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffffff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.7}));
+    halo.scale.set(10,8,1);halo.position.set(0,2,-RUN_M+.3);scene.add(halo);
+    const el=new THREE.PointLight(0xffffff,2.4,30,2);el.position.set(0,2.4,-RUN_M+2);scene.add(el);
+    const sign=makeLabel("EXIT","#8fe06a");sign.position.set(0,CEIL-.7,-RUN_M+.4);scene.add(sign);
+  }
+  function makeLabel(text,color){const c=document.createElement("canvas");c.width=256;c.height=96;const g=c.getContext("2d");
+    g.fillStyle="rgba(8,12,9,.82)";g.fillRect(0,0,256,96);g.strokeStyle=color;g.lineWidth=5;g.strokeRect(4,4,248,88);
+    g.fillStyle=color;g.font="bold 46px sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(text,128,50);
+    const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false}));s.scale.set(2.6,1,1);return s;}
+
+  function buildRooms(){
+    rooms.length=0;
+    if(WORLD!=="office")return;
+    obstacles.length=0;
+    const deskM=mat("#6b4a26",{roughness:.8}),legM=mat("#2c2c2c",{roughness:.6,metalness:.4}),
+          monM=mat("#1a1a1a",{roughness:.5}),scrM=mat("#0a2a12",{emissive:new THREE.Color("#39ff6a"),emissiveIntensity:.9,roughness:.3}),
+          wallM=mat(PAL.wallB,{roughness:.9}),floorM=mat(PAL.floor,{roughness:.9});
+    for(let d=30;d<RUN_M-30;d+=45){
+      const zc=-d, z0=zc-4, z1=zc+4, x0=WALL, x1=WALL+5;
+      const g=new THREE.Group();scene.add(g);
+      const fp=new THREE.Mesh(planeG(5,8),floorM);fp.rotation.x=-Math.PI/2;fp.position.set((x0+x1)/2,.01,zc);g.add(fp);
+      const cp=new THREE.Mesh(planeG(5,8),mat(PAL.ceil,{roughness:.95}));cp.rotation.x=Math.PI/2;cp.position.set((x0+x1)/2,CEIL,zc);g.add(cp);
+      const back=new THREE.Mesh(boxG(.3,CEIL,8),wallM);back.position.set(x1,CEIL/2,zc);g.add(back);
+      [z0,z1].forEach(z=>{const sw=new THREE.Mesh(boxG(5,CEIL,.3),wallM);sw.position.set((x0+x1)/2,CEIL/2,z);g.add(sw);});
+      const rl=new THREE.PointLight(new THREE.Color(PAL.lamp),1.1,12,2);rl.position.set((x0+x1)/2,CEIL-.4,zc);g.add(rl);
+      // 自动门
+      const doorM=mat("#c8ccd4",{roughness:.5,metalness:.3});
+      const panel=new THREE.Mesh(boxG(.16,3,2.4),doorM);panel.position.set(x0,1.5,zc);g.add(panel);
+      const frame=makeLabel("办公室","#7fc4ff");frame.position.set(x0-.2,3.3,zc);frame.scale.set(2,0.75,1);g.add(frame);
+      const room={z0:z0,z1:z1,zc:zc,x0:x0,x1:x1,panel:panel,open:0};
+      rooms.push(room);
+      // 两台电脑桌，每桌两台实心电脑
+      [-1.9,1.9].forEach(off=>{
+        const dx=x0+2.4, dz=zc+off;
+        const desk=new THREE.Mesh(boxG(1.8,.12,1.1),deskM);desk.position.set(dx,.78,dz);g.add(desk);
+        [-.7,.7].forEach(lx=>{const lg=new THREE.Mesh(boxG(.1,.78,.1),legM);lg.position.set(dx+lx,.39,dz-.45);g.add(lg);
+          const lg2=new THREE.Mesh(boxG(.1,.78,.1),legM);lg2.position.set(dx+lx,.39,dz+.45);g.add(lg2);});
+        [-.45,.45].forEach(mx=>{
+          const stand=new THREE.Mesh(boxG(.16,.18,.16),legM);stand.position.set(dx+mx,.93,dz);g.add(stand);
+          const mon=new THREE.Mesh(boxG(.62,.42,.08),monM);mon.position.set(dx+mx,1.2,dz);g.add(mon);
+          const scr=new THREE.Mesh(planeG(.54,.34),scrM);scr.position.set(dx+mx,1.2,dz+.045);g.add(scr);
+        });
+        obstacles.push({x:dx,z:dz,hw:1.0,hd:.62,h:1.42,kind:"desk"});
+      });
+    }
+  }
+  function buildBasins(){
+    basins.length=0;
+    if(WORLD!=="pool")return;
+    obstacles.length=0;
+    const waterM=new THREE.MeshStandardMaterial({color:0x2f8fb8,transparent:true,opacity:.72,roughness:.15,metalness:.1,emissive:new THREE.Color(0x0a3a52),emissiveIntensity:.3});
+    matStore.add(waterM);
+    const rimM=mat("#ffffff",{roughness:.6});
+    for(let d=40;d<RUN_M-30;d+=70){
+      const zc=-d, hw=WALL-.7, hd=5;
+      const basinFloor=new THREE.Mesh(planeG(hw*2,hd*2),mat("#1f6f92",{roughness:.4}));basinFloor.rotation.x=-Math.PI/2;basinFloor.position.set(0,-.55,zc);scene.add(basinFloor);
+      const water=new THREE.Mesh(planeG(hw*2,hd*2),waterM);water.rotation.x=-Math.PI/2;water.position.set(0,-.12,zc);scene.add(water);
+      [-1,1].forEach(s=>{const rim=new THREE.Mesh(boxG(hw*2+.4,.18,.3),rimM);rim.position.set(0,.02,zc+s*hd);scene.add(rim);});
+      const pitM=mat("#cfe4ea",{roughness:.5});
+      [-1,1].forEach(s=>{const pw=new THREE.Mesh(boxG(.2,.55,hd*2),pitM);pw.position.set(s*hw,-.275,zc);scene.add(pw);});
+      [-1,1].forEach(s=>{const pw=new THREE.Mesh(boxG(hw*2,.55,.2),pitM);pw.position.set(0,-.275,zc+s*hd);scene.add(pw);});
+      basins.push({x:0,z:zc,hw:hw,hd:hd,water:water});
+    }
+  }
+  function buildPipes(){
+    if(WORLD!=="pipe")return;
+    const cols=["#cc2222","#aa1818","#991515"];
+    [1.0,2.0,3.0].forEach((h,i)=>{
+      const pm=mat(cols[i],{roughness:.5,metalness:.4});
+      [-1,1].forEach(s=>{
+        const pipe=new THREE.Mesh(cylG(.18,.18,RUN_M+30,10),pm);pipe.rotation.x=Math.PI/2;pipe.position.set(s*(WALL-.28),h,-RUN_M/2);scene.add(pipe);
+        for(let z=-8;z>-RUN_M;z-=SEG){const j=new THREE.Mesh(cylG(.24,.24,.3,10),pm);j.rotation.x=Math.PI/2;j.position.set(s*(WALL-.28),h,z);scene.add(j);}
+      });
+    });
+  }
+  function buildObstacles(){
+    if(WORLD==="office")return; // 办公室障碍已在房间里建
+    if(WORLD==="pool")return;
+    obstacles.length=0;
+    const rockM=mat("#5a4a42",{roughness:1,flatShading:true}),chairM=mat("#7a3b2e",{roughness:.8}),
+          crateM=mat("#8a6a3a",{roughness:.9}),barrelM=mat("#3a5a7a",{roughness:.6,metalness:.3});
+    let z=-22;
+    while(z>-(RUN_M-18)){
+      z-=rand(16,26);
+      if(z<-(RUN_M-12))break;
+      const x=rand(-(WALL-1.2),WALL-1.2);
+      if(WORLD==="red"){
+        if(Math.random()<.55){ const g=new THREE.Group();g.position.set(x,0,z);
+          for(let i=0;i<5;i++){const r=new THREE.Mesh(new THREE.IcosahedronGeometry(rand(.25,.5),0),rockM);
+            r.position.set(rand(-.5,.5),rand(.1,.5),rand(-.5,.5));r.rotation.set(rand(0,3),rand(0,3),rand(0,3));g.add(r);}
+          scene.add(g);obstacles.push({x:x,z:z,hw:.7,hd:.7,h:.9,kind:"rock"});
+        }else{ const g=new THREE.Group();g.position.set(x,0,z);
+          const seat=new THREE.Mesh(boxG(.6,.08,.6),chairM);seat.position.y=.5;g.add(seat);
+          const back=new THREE.Mesh(boxG(.6,.6,.08),chairM);back.position.set(0,.8,-.26);g.add(back);
+          [-.24,.24].forEach(lx=>[-.24,.24].forEach(lz=>{const lg=new THREE.Mesh(boxG(.07,.5,.07),chairM);lg.position.set(lx,.25,lz);g.add(lg);}));
+          scene.add(g);obstacles.push({x:x,z:z,hw:.4,hd:.4,h:.95,kind:"chair"}); }
+      }else{
+        const m=WORLD==="blue"?barrelM:crateM;
+        const h=WORLD==="blue"?.95:.8;
+        const b=new THREE.Mesh(WORLD==="blue"?cylG(.4,.4,h,12):boxG(.8,h,.8),m);b.position.set(x,h/2,z);scene.add(b);
+        obstacles.push({x:x,z:z,hw:.45,hd:.45,h:h,kind:"crate"});
+      }
+    }
+  }
+  // ---------- 实体 ----------
+  function humanoid(o){
+    const g=new THREE.Group(),hip=o.hip,tor=o.torso;
+    function limb(len,r,m,foot){const L=new THREE.Group();
+      const up=new THREE.Mesh(cylG(r,r*.88,len*.54,7),m);up.position.y=-len*.27;L.add(up);
+      const kn=new THREE.Mesh(sphG(r*.82),m);kn.position.y=-len*.54;L.add(kn);
+      const lo=new THREE.Mesh(cylG(r*.84,r*.66,len*.46,7),m);lo.position.y=-len*.77;L.add(lo);
+      if(foot){const f=new THREE.Mesh(boxG(r*2.5,.07,len*.3),m);f.position.set(0,-len+.03,len*.08);L.add(f);}return L;}
+    const legL=limb(hip,o.legR,o.skin,true),legR=limb(hip,o.legR,o.skin,true);
+    legL.position.set(-o.stance,hip,0);legR.position.set(o.stance,hip,0);g.add(legL,legR);
+    const body=new THREE.Group();body.position.y=hip;g.add(body);
+    const trunk=new THREE.Mesh(cylG(o.shoulder,o.waist,tor,9),o.skin);trunk.position.y=tor*.5;body.add(trunk);
+    const armL=limb(o.arm,o.armR,o.skin,false),armR=limb(o.arm,o.armR,o.skin,false);
+    armL.position.set(-(o.shoulder+.03),tor*.93,0);armR.position.set(o.shoulder+.03,tor*.93,0);
+    armL.rotation.z=.12;armR.rotation.z=-.12;body.add(armL,armR);
+    const head=new THREE.Group();head.position.y=tor+o.headR*.85;body.add(head);
+    const skull=new THREE.Mesh(sphG(o.headR),o.skin);skull.scale.set(o.headS[0],o.headS[1],o.headS[2]);head.add(skull);
+    body.rotation.x=o.lean;
+    g.userData.rig={legL:legL,legR:legR,armL:armL,armR:armR,body:body,head:head,lean:o.lean};
+    return g;
+  }
+  let eMat=null;
+  function initEntityMats(){
+    eMat={void:mat("#07070a",{roughness:.98}),bone:mat("#d9d2bd",{roughness:.7}),socket:mat("#141a10",{roughness:.5}),
+          kitty:mat("#2a2a30",{roughness:.9}),kittyEye:mat("#ffe14d",{emissive:new THREE.Color(0xffe14d),emissiveIntensity:1.2,roughness:.3}),
+          mothBody:mat("#5b4a35",{roughness:.96}),mothDark:mat("#2b251d",{roughness:.95}),
+          mothEye:mat("#3a1410",{emissive:new THREE.Color(0x8c2a18),emissiveIntensity:.7,roughness:.35}),
+          wing:new THREE.MeshStandardMaterial({color:0x6b5a45,transparent:true,opacity:.85,side:THREE.DoubleSide,roughness:.92,depthWrite:false})};
+    matStore.add(eMat.wing);
+  }
+  function buildSmiler(){
+    const g=new THREE.Group();
+    const orb=new THREE.Mesh(sphG(.46),eMat.void);orb.scale.set(1,1.05,.78);g.add(orb);
+    const fm=new THREE.MeshBasicMaterial({map:tex(smilerFaceTex(),1,1),transparent:true,depthWrite:false,side:THREE.DoubleSide,fog:false});matStore.add(fm);
+    const face=new THREE.Mesh(planeG(.82,.82),fm);face.position.set(0,.02,.4);g.add(face);
+    const face2=new THREE.Mesh(planeG(.82,.82),fm);face2.position.set(0,.02,-.4);face2.rotation.y=Math.PI;g.add(face2);
+    const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xdfe6ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5,fog:false}));
+    glow.scale.set(1.7,1.7,1);glow.position.set(0,.02,.42);g.add(glow);
+    g.userData.smiler=true;g.userData.glow=glow;return g;
+  }
+  function buildBacteria(){
+    const g=humanoid({hip:1.02,torso:.62,shoulder:.2,waist:.13,stance:.12,legR:.058,arm:1.05,armR:.045,headR:.18,headS:[.9,1.1,.95],lean:.18,skin:eMat.bone});
+    const rig=g.userData.rig;
+    for(let i=0;i<4;i++){const rib=new THREE.Mesh(boxG(.36-i*.035,.035,.22),eMat.bone);rib.position.set(0,.1+i*.13,.03);rig.body.add(rib);}
+    const sternum=new THREE.Mesh(boxG(.05,.5,.05),eMat.bone);sternum.position.set(0,.3,.13);rig.body.add(sternum);
+    const pelvis=new THREE.Mesh(boxG(.3,.15,.2),eMat.bone);pelvis.position.set(0,-.02,0);rig.body.add(pelvis);
+    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.055),eMat.socket);e.scale.set(1,1.3,.6);e.position.set(s*.072,.035,.15);rig.head.add(e);});
+    const jaw=new THREE.Mesh(boxG(.17,.06,.13),eMat.bone);jaw.position.set(0,-.12,.1);rig.head.add(jaw);
+    for(let i=-2;i<=2;i++){const t=new THREE.Mesh(boxG(.022,.04,.02),eMat.bone);t.position.set(i*.032,-.085,.16);rig.head.add(t);}
+    rig.armL.rotation.x=-1.0;rig.armR.rotation.x=-1.1;g.scale.setScalar(1.05);return g;
+  }
+  function buildKitty(){
+    const g=humanoid({hip:1.1,torso:.7,shoulder:.24,waist:.18,stance:.14,legR:.08,arm:1.0,armR:.06,headR:.22,headS:[1,1.05,.95],lean:.12,skin:eMat.kitty});
+    const rig=g.userData.rig;
+    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.05),eMat.kittyEye);e.position.set(s*.085,.04,.19);rig.head.add(e);
+      const ear=new THREE.Mesh(new THREE.ConeGeometry(.09,.22,4),eMat.kitty);ear.position.set(s*.14,.24,0);rig.head.add(ear);});
+    const grin=new THREE.Mesh(boxG(.2,.03,.03),eMat.kittyEye);grin.position.set(0,-.08,.2);rig.head.add(grin);
+    g.scale.setScalar(1.15);return g;
+  }
+  function buildMoth(){
+    const g=new THREE.Group();
+    const th=new THREE.Mesh(sphG(.17),eMat.mothBody);th.scale.set(1,1,1.5);g.add(th);
+    for(let i=0;i<4;i++){const ab=new THREE.Mesh(sphG(.14-i*.026),i%2?eMat.mothBody:eMat.mothDark);ab.scale.set(1,.92,1.25);ab.position.set(0,-.01-i*.012,-.24-i*.15);g.add(ab);}
+    const hd=new THREE.Mesh(sphG(.105),eMat.mothDark);hd.position.set(0,.03,.26);g.add(hd);
+    [-1,1].forEach(s=>{const e=new THREE.Mesh(sphG(.062),eMat.mothEye);e.position.set(s*.068,.05,.31);g.add(e);});
+    const wings=[];
+    [-1,1].forEach(s=>{const w=new THREE.Group();w.position.set(s*.09,.09,.02);g.add(w);
+      const p=new THREE.Mesh(planeG(.95,.95),eMat.wing);p.position.set(s*.475,0,-.06);if(s<0)p.scale.x=-1;w.add(p);wings.push(w);});
+    g.userData.wings=wings;return g;
+  }
+  function spawnEntity(kind,z,x){
+    const mesh=kind==="smiley"?buildSmiler():(kind==="bacteria"?buildBacteria():(kind==="kitty"?buildKitty():buildMoth()));
+    scene.add(mesh);
+    const e={kind:kind,x:x||0,z:z,hp:3,alive:true,ph:rand(0,6.28),mesh:mesh,respawn:0,
+             spd:V_WALK*(kind==="kitty"?1.12:(kind==="bacteria"?.86:(kind==="moth"?1.0:.92)))};
+    entities.push(e);return e;
+  }
+  function buildEntities(){
+    entities.length=0;initEntityMats();
+    const ahead=(n,kind,start,gap)=>{for(let i=0;i<n;i++)spawnEntity(kind,-(start+i*gap+rand(0,10)),rand(-2.5,2.5));};
+    if(WORLD==="red"){ahead(3,"smiley",40,70);spawnEntity("bacteria",14,1.5);}
+    else if(WORLD==="yellow"){ahead(2,"smiley",60,120);spawnEntity("kitty",16,0);}
+    else if(WORLD==="blue"){ahead(2,"smiley",40,80);spawnEntity("bacteria",16,-1.5);spawnEntity("bacteria",30,1.5);}
+    else if(WORLD==="pipe"){ahead(6,"smiley",35,60);}
+    else if(WORLD==="pool"){ahead(3,"smiley",50,90);}
+    else if(WORLD==="office"){ahead(4,"smiley",40,80);spawnEntity("moth",-30,0);}
+  }
+  function buildGuns(){
+    guns.length=0;gunType=null;gunAmmo=0;
+    if(!CFG.weapons)return;
+    const gm=mat("#2c2c30",{roughness:.5,metalness:.5}),gm2=mat("#4a3a2a",{roughness:.7});
+    let d=50;
+    while(d<RUN_M-30){
+      const type=Math.random()<.5?"G18":"AKM",ammo=type==="G18"?5:20;
+      const x=rand(-2.5,2.5),z=-d;
+      const g=new THREE.Group();g.position.set(x,.5,z);
+      const body=new THREE.Mesh(boxG(type==="AKM"?.9:.4,.16,.12),gm);g.add(body);
+      const grip=new THREE.Mesh(boxG(.1,.22,.1),gm2);grip.position.set(-.1,-.16,0);g.add(grip);
+      if(type==="AKM"){const mag=new THREE.Mesh(boxG(.12,.26,.1),gm2);mag.position.set(.1,-.2,0);mag.rotation.z=.2;g.add(mag);}
+      const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffcf5a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.6}));
+      glow.scale.set(1.4,1.4,1);g.add(glow);
+      scene.add(g);
+      guns.push({x:x,z:z,type:type,ammo:ammo,taken:false,mesh:g,ph:rand(0,6.28)});
+      d+=rand(70,120);
+    }
+  }
+  function buildCharacter(){
+    const SU=SUITS[save.equipped],w=makeWanderer(SU);
+    char=w.g;armL=w.armL;armR=w.armR;legL=w.legL;legR=w.legR;head=w.head;
+    char.rotation.y=Math.PI;char.position.set(0,0,0);scene.add(char);
+    swatch.style.background=SU.body;swatch.style.color=SU.body;suitName.textContent=SU.name;
+    // 持枪模型（拾取后显示）
+    gunMesh=new THREE.Group();
+    const gm=mat("#2c2c30",{roughness:.5,metalness:.5}),gm2=mat("#4a3a2a",{roughness:.7});
+    const body=new THREE.Mesh(boxG(.7,.14,.12),gm);body.position.set(0,0,.3);gunMesh.add(body);
+    const grip=new THREE.Mesh(boxG(.1,.2,.1),gm2);grip.position.set(-.15,-.14,.2);gunMesh.add(grip);
+    const barrel=new THREE.Mesh(cylG(.04,.04,.4,8),gm);barrel.rotation.x=Math.PI/2;barrel.position.set(0,.02,.65);gunMesh.add(barrel);
+    gunMesh.visible=false;char.add(gunMesh);gunMesh.position.set(.5,1.42,.15);gunMesh.rotation.y=-.12;
+  }
+  function buildRemotes(){ for(const id in remotes){scene.remove(remotes[id].g);} for(const k in remotes)delete remotes[k]; }
+  function updateRemotes(){
+    if(!Net.active||!Net.started)return;
+    for(const id in Net.remotes){
+      const r=Net.remotes[id];if(id===Net.myId)continue;
+      let av=remotes[id];
+      if(!av){ const w=makeWanderer(SUITS[r.suit||0]);const g=w.g;
+        const label=makeLabel(r.name||"玩家","#7fe8ff");label.position.y=2.9;label.scale.set(2.4,.9,1);g.add(label);
+        scene.add(g);av={g:g,armL:w.armL,armR:w.armR,legL:w.legL,legR:w.legR};remotes[id]=av; }
+      const mz=-(r.x||0)/40, mx=0, my=(r.y||0)/40;
+      av.g.position.set(mx,my,mz);av.g.rotation.y=Math.PI;
+      const sw=Math.sin(gtime*9+(r.x||0)*.01)*.7;
+      av.legL.rotation.x=-sw;av.legR.rotation.x=sw;av.armL.rotation.x=sw;av.armR.rotation.x=-sw;
+      av.g.visible=r.alive!==false;
+    }
+  }
+
+  // ---------- 音频 ----------
+  function initAudio(){ if(!AC)return;cMaster=AC.createGain();cMaster.gain.value=muted?0:.85;cMaster.connect(AC.destination); }
+  function cTone(f0,f1,dur,vol,type,delay){ if(!AC||!cMaster)return;const t0=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();
+    o.type=type||"triangle";o.frequency.setValueAtTime(f0,t0);o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),t0+dur);
+    g.gain.setValueAtTime(vol,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);o.connect(g).connect(cMaster);o.start(t0);o.stop(t0+dur+.02); }
+  function shotSound(){ if(!AC||!cMaster)return;const t0=AC.currentTime,len=AC.sampleRate*.12,buf=AC.createBuffer(1,len,AC.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+    const src=AC.createBufferSource();src.buffer=buf;const bp=AC.createBiquadFilter();bp.type="bandpass";bp.frequency.value=1400;bp.Q.value=.8;
+    const g=AC.createGain();g.gain.value=.3;src.connect(bp).connect(g).connect(cMaster);src.start(t0); }
+  function disposeAudio(){ if(cMaster){try{cMaster.disconnect();}catch(e){}}cMaster=null; }
+  function toggleMute(){ muted=!muted;if(cMaster)cMaster.gain.value=muted?0:.85;muteBtn.classList.toggle("off",muted);muteLabel.textContent=muted?"静音":"声音"; }
+
+  // ---------- 伤害 / 死亡 / 胜利 ----------
+  function hurt(msg,src){
+    if(inv>0||dead||won)return;
+    if(charges>0){charges--;inv=1.6;cTone(1400,180,.3,.18,"square");}
+    else if(lives>1){lives--;inv=1.6;cTone(500,120,.35,.14,"sine");}
+    else{lives=0;die(msg,false);return;}
+    hitFx=1;
+    if(src){const dx=src.x-charX,dz=src.z-charZ,dl=Math.hypot(dx,dz)||1;src.x+=dx/dl*11;src.z+=dz/dl*11;}
+  }
+  function die(msg,mind){
+    if(dead||won)return;dead=true;lives=0;charges=0;
+    S.best=Math.max(S.best,Math.floor(dist));
+    overTitle.textContent=mind?"精神崩溃":"被抓住了";overText.textContent=msg;
+    overStat.textContent="行进 "+Math.floor(dist)+" m / "+RUN_M+" m · 最远 "+S.best+" m · 积分 +0";
+    overEl.style.display="flex";cTone(260,40,1.2,.22,"sawtooth");
+  }
+  function finish(){
+    if(won||dead)return;won=true;
+    cTone(520,1040,.5,.16,"triangle");cTone(780,1560,.6,.12,"sine",.12);
+    S.best=Math.max(S.best,Math.floor(RUN_M));
+    teardown();P.x=RUN_M*40;S.over=false;S.win=false;win();
+  }
+
+  // ---------- 碰撞 ----------
+  function roomAt(z){ for(const r of rooms){ if(z>=r.z0+.3&&z<=r.z1-.3)return r; } return null; }
+  function collide(nx,nz){
+    const insideRoom = charX>WALL-.05 ? roomAt(charZ) : null;
+    if(insideRoom){
+      // 已在房间内：限制在房间范围；只有对齐门洞才能回到走廊
+      nz=clamp(nz,insideRoom.z0+.35,insideRoom.z1-.35);
+      const aligned=Math.abs(nz-insideRoom.zc)<1.15;
+      nx=clamp(nx, aligned?-(WALL-PR):WALL+.05, insideRoom.x1-PR);
+    }else{
+      let maxX=WALL-PR;
+      const r=roomAt(nz);
+      if(r&&r.open>.6&&Math.abs(nz-r.zc)<1.15)maxX=r.x1-PR;
+      nx=clamp(nx,-(WALL-PR),maxX);
+    }
+    nz=clamp(nz,-(RUN_M+4),5);
+    for(const o of obstacles){
+      if(Math.abs(o.z-nz)>o.hd+PR+.5||Math.abs(o.x-nx)>o.hw+PR+.5)continue;
+      if(jumpY>o.h-.12)continue;
+      const dx=nx-o.x,dz=nz-o.z,px=o.hw+PR-Math.abs(dx),pz=o.hd+PR-Math.abs(dz);
+      if(px>0&&pz>0){ if(px<pz)nx=o.x+(dx<0?-1:1)*(o.hw+PR);else nz=o.z+(dz<0?-1:1)*(o.hd+PR); }
+    }
+    return [nx,nz];
+  }
+
+  function update(dt){
+    gtime+=dt;
+    if(inv>0)inv-=dt;if(hitFx>0)hitFx=Math.max(0,hitFx-dt*2.2);if(muzzle>0)muzzle=Math.max(0,muzzle-dt*6);
+    // 精神危害 3 级
+    const hz=hazRate(3);
+    if(hz>0&&!dead&&!won){haz=Math.min(1,haz+dt*hz);if(haz>=1){die("精神危害满值 —— 你的意识融进了长廊",true);}}
+    const canMove=active&&!dead&&!won;
+    let ix=0,iz=0;
+    if(canMove){
+      if(keys.KeyW||keys.ArrowUp)iz+=1;if(keys.KeyS||keys.ArrowDown)iz-=1;
+      if(keys.KeyA||keys.ArrowLeft)ix-=1;if(keys.KeyD||keys.ArrowRight)ix+=1;
+      ix=clamp(ix+touchMove.x,-1,1);iz=clamp(iz-touchMove.y,-1,1);
+    }
+    const sprint=canMove&&(keys.ShiftLeft||keys.ShiftRight||touchSprint)&&fuel>1;
+    if(sprint)fuel=Math.max(0,fuel-35*dt);else fuel=Math.min(100,fuel+16*dt*(SUITS[save.equipped].regen||.5)*2);
+    const moving=(ix!==0||iz!==0);
+    const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw),Rx=Math.cos(yaw),Rz=-Math.sin(yaw);
+    let dx=Fx*iz+Rx*ix,dz=Fz*iz+Rz*ix;const dl=Math.hypot(dx,dz);
+    // 水域
+    inWater=false;
+    for(const b of basins){ if(Math.abs(charX-b.x)<b.hw&&Math.abs(charZ-b.z)<b.hd&&jumpY<.25){inWater=true;break;} }
+    let spd=(sprint?V_SPRINT:V_WALK)*(inWater?.5:1);
+    if(dl>0){dx/=dl;dz/=dl;
+      const nx=charX+dx*spd*dt,nz=charZ+dz*spd*dt;
+      const c=collide(nx,nz);charX=c[0];charZ=c[1];
+      heading=Math.atan2(dx,dz);
+    }
+    if(inWater&&!dead&&!won){lives=Math.max(0,lives-.5*dt);if(lives<=0)die("你沉进了泳池底",false);}
+    else if(!inWater&&lives<5&&!dead&&!won)lives=Math.min(5,lives+.1*dt);
+    dist=Math.max(dist,-charZ);
+    // 跳跃
+    if(jumpQueued&&onGround&&canMove){vy=6.4;onGround=false;cTone(220,440,.16,.06);}
+    jumpQueued=false;
+    if(!onGround){vy-=19*dt;jumpY+=vy*dt;if(jumpY<=0){jumpY=0;vy=0;onGround=true;cTone(120,50,.1,.05);}}
+    // 房间自动门
+    for(const r of rooms){
+      const near=Math.abs(charZ-r.zc)<3.2&&charX>r.x0-2.6;
+      const target=near?1:0;r.open+=(target-r.open)*Math.min(1,dt*4);
+      r.panel.position.z=r.zc+r.open*2.3;r.panel.position.x=r.x0;
+    }
+    // 实体
+    // 红色长廊：笑脸出没 → 长廊变黑（后室里的笑脸总在黑暗中出现）
+    if(WORLD==="red"){
+      let dmin=999;
+      for(const e of entities){ if(e.alive&&e.kind==="smiley"){const dd=Math.hypot(charX-e.x,charZ-e.z);if(dd<dmin)dmin=dd;} }
+      darkTarget=dmin<999?clamp((48-dmin)/30,0,1):0;
+    } else darkTarget=0;
+    darkAmt+=(darkTarget-darkAmt)*Math.min(1,dt*2.2);
+    let minGap=99;
+    for(const e of entities){
+      if(!e.alive){ if(e.respawn>0){e.respawn-=dt;if(e.respawn<=0){e.alive=true;e.hp=3;e.z=charZ-rand(50,90);e.x=rand(-2.5,2.5);e.mesh.visible=true;}} continue; }
+      const ddx=charX-e.x,ddz=charZ-e.z,dd=Math.hypot(ddx,ddz);
+      minGap=Math.min(minGap,dd);
+      const aggro=e.kind==="bacteria"?26:(e.kind==="kitty"?60:(e.kind==="moth"?12:14));
+      if(dd<aggro&&dd>.01){const mv=e.spd*dt;e.x+=ddx/dd*mv;e.z+=ddz/dd*mv;}
+      e.x=clamp(e.x,-(WALL-.5),WALL-.5);
+      const catchR=e.kind==="kitty"?1.3:(e.kind==="bacteria"?1.2:1.1);
+      if(!dead&&!won&&dd<catchR&&inv<=0){
+        const evade=(e.kind==="smiley"||e.kind==="moth")&&jumpY>1.0;
+        if(evade){e.z=charZ-rand(40,70);e.x=rand(-2.5,2.5);}
+        else hurt(e.kind==="smiley"?"笑脸贴上了你的脸":(e.kind==="bacteria"?"骷髅细菌的长臂把你拍倒":(e.kind==="kitty"?"Kitty 抓住了你":"死亡飞蛾扑到了你脸上")),e);
+      }
+      // 动画
+      const rp=gtime*(e.kind==="bacteria"?10.5:12)+e.ph,sw=Math.sin(rp);
+      if(e.kind==="smiley"){e.mesh.position.set(e.x,1.5+Math.sin(gtime*2.1+e.ph)*.16,e.z);
+        e.mesh.rotation.y=Math.atan2(ddx,ddz);const gl=e.mesh.userData.glow;
+        gl.material.opacity=Math.min(1,(.4+.2*Math.sin(gtime*3+e.ph))*(1+darkAmt*1.8));gl.scale.setScalar(1.7+darkAmt*1.2);}
+      else if(e.kind==="moth"){const dive=dd<7?1:0;
+        e.mesh.position.set(e.x,2.0-dive*.7+Math.sin(gtime*2.3+e.ph)*.2,e.z);
+        e.mesh.rotation.y=Math.atan2(ddx,ddz);
+        const fl=.3+Math.sin(gtime*15+e.ph)*.75;e.mesh.userData.wings[0].rotation.z=-fl;e.mesh.userData.wings[1].rotation.z=fl;}
+      else{e.mesh.position.set(e.x,Math.abs(sw)*.06,e.z);e.mesh.rotation.y=Math.atan2(ddx,ddz);
+        const rig=e.mesh.userData.rig;rig.legL.rotation.x=sw*.95;rig.legR.rotation.x=-sw*.95;
+        rig.armL.rotation.x=(e.kind==="bacteria"?-1.0:-sw*.8)+(e.kind==="bacteria"?sw*.18:0);
+        rig.armR.rotation.x=(e.kind==="bacteria"?-1.1:sw*.8)-(e.kind==="bacteria"?sw*.18:0);
+        rig.body.rotation.x=rig.lean+Math.sin(rp*2)*.04;}
+    }
+    // 拾枪
+    for(const g of guns){ if(g.taken)continue;g.mesh.rotation.y+=dt*1.5;g.mesh.position.y=.5+Math.sin(gtime*2+g.ph)*.1;
+      if(Math.hypot(charX-g.x,charZ-g.z)<1.6){g.taken=true;g.mesh.visible=false;gunType=g.type;gunAmmo=g.ammo;
+        gunMesh.visible=true;cTone(660,990,.2,.12,"triangle");} }
+    // 自动开枪
+    if(gunType&&gunAmmo>0&&!dead&&!won){
+      gunCd-=dt;
+      let target=null,best=9;
+      for(const e of entities){ if(!e.alive)continue;const dd=Math.hypot(charX-e.x,charZ-e.z);
+        const fwd=(-Math.sin(heading))*(e.x-charX)+(-Math.cos(heading))*(e.z-charZ);
+        if(dd<best&&fwd>-.3){best=dd;target=e;} }
+      if(target&&gunCd<=0){
+        gunCd=gunType==="AKM"?.12:.3;gunAmmo--;muzzle=1;shotSound();
+        target.hp--;
+        if(target.hp<=0){target.alive=false;target.mesh.visible=false;target.respawn=6;cTone(300,80,.25,.12,"sawtooth");}
+        if(gunAmmo<=0){gunType=null;gunMesh.visible=false;cTone(200,120,.2,.1,"square");}
+      }
+    }
+    // 小人动画
+    const ph=dt*(9+(sprint?4:0));
+    if(!dead){stepT+=moving?ph:0;const amp=moving?(sprint?1.15:1):0,sw=Math.sin(stepT)*amp;
+      const hold=gunType?1:0;
+      armL.rotation.x=hold?-1.2:sw;armR.rotation.x=hold?-1.2:-sw;
+      armL.rotation.z=-(.1+amp*.2)+(hold?.3:0);armR.rotation.z=(.1+amp*.2)-(hold?.3:0);
+      legL.rotation.x=-sw*.9;legR.rotation.x=sw*.9;head.rotation.x=Math.sin(stepT*2)*.05;
+      if(moving&&onGround){const st=Math.floor(stepT/Math.PI);if(st!==cStep){cStep=st;cTone(70+Math.random()*24,45,.07,.04,"sine");}}
+    }
+    char.position.set(charX,jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
+    char.rotation.y+= ((heading-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
+    if(gunType)gunMesh.rotation.x=muzzle>0?-.15:0;
+    // 相机（拖拽视角跟随，永不自动往后转）
+    camDist+=(camDistT-camDist)*Math.min(1,dt*6);
+    const tx=charX,ty=1.35+jumpY*.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
+    let cx=tx+camDist*Math.sin(yaw)*cp,cy=ty+camDist*sp,cz=tz+camDist*Math.cos(yaw)*cp;
+    cy=clamp(cy,.6,CEIL+3);
+    if(WORLD==="office"){
+      const cr=charX>WALL-.05?roomAt(charZ):null;
+      if(cr){cx=clamp(cx,cr.x0+.3,cr.x1-.3);cz=clamp(cz,cr.z0+.3,cr.z1-.3);}
+      else{cx=clamp(cx,-(WALL-.3),WALL-.3);const rr=roomAt(cz);if(rr&&rr.open>.6)cx=clamp(cx,rr.x0+.3,rr.x1-.3);}
+    }else cx=clamp(cx,-(WALL-.3),WALL-.3);
+    const shk=hitFx*.14;
+    camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
+    camera.lookAt(tx,ty+.4,tz);
+    // 灯光跟随
+    const pulse=.85+Math.sin(gtime*4.6)*.08;
+    const dk=1-.92*darkAmt;
+    if(lampMat)lampMat.emissiveIntensity=.8*pulse*dk;
+    const nearZ=[];for(const s of segs){if(Math.abs(s.z-charZ)<30)nearZ.push(s.z);}
+    nearZ.sort((a,b)=>Math.abs(a-charZ)-Math.abs(b-charZ));
+    if(pl1){pl1.position.set(0,CEIL-.5,nearZ[0]!==undefined?nearZ[0]:charZ);pl1.intensity=1.6*pulse*dk;}
+    if(pl2){pl2.position.set(0,CEIL-.5,nearZ[1]!==undefined?nearZ[1]:charZ-9);pl2.intensity=1.2*pulse*dk;}
+    if(dir){dir.position.set(2,8,charZ+4);dir.intensity=(PAL.dir||.18)*dk;}
+    if(amb)amb.intensity=(PAL.amb||.2)*dk;
+    if(hemi)hemi.intensity=(PAL.hemi||.28)*dk;
+    if(scene&&scene.fog){scene.fog.density=(WORLD==="pool"?.018:.03)*(1+1.8*darkAmt);
+      scene.fog.color.set(PAL.fog).lerp(BLACK_C,darkAmt*.92);
+      if(scene.background&&scene.background.isColor)scene.background.copy(scene.fog.color);}
+    // 水面波动
+    for(const b of basins){b.water.position.y=-.12+Math.sin(gtime*1.6+b.z)*.03;}
+    updateRemotes();
+    // 联机同步 + 共享胜利
+    if(net3DSync(dt,dist,jumpY,lives,charges,fuel,won,dead)){finish();return;}
+    updateHUD(minGap);
+    // 长按 E 退出
+    if(eHolding){const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;}}
+    if(dist>=RUN_M)finish();
+  }
+  function updateHUD(minGap){
+    const hz=hazRate(3),tier=save.equipped+1;
+    const left=hz>0?Math.ceil((1-haz)/hz):0;
+    const key=[Math.floor(dist),Math.round(minGap),Math.round(lives*10),charges,Math.round(fuel),Math.round(haz*100),gunType,gunAmmo].join("|");
+    if(key===hudKey)return;hudKey=key;
+    rdist.textContent=Math.floor(dist)+"m";rprog.style.width=clamp(dist/RUN_M*100,0,100)+"%";
+    rgap.textContent=(minGap>90?"—":Math.round(minGap)+"m");rgapfill.style.width=clamp((30-minGap)/30*100,0,100)+"%";
+    rlife.textContent=String(Math.round(lives*10)/10);rcharge.textContent="×"+charges;
+    rfuel.style.width=fuel+"%";
+    rhaz.textContent=Math.round(haz*100)+"%";rhazfill.style.width=(haz*100)+"%";
+    rhazleft.textContent=hz>0?("剩 "+left+" 秒满值 · "+tier+" 级防护服削减 "+(tier*10)+"%"):"十级防护服 · 完全抵御精神危害";
+    rhazfill.parentElement.classList.toggle("safe",hz<=0);
+    if(gunType){gunrow.style.display="flex";gunname.textContent=gunType+" ×"+gunAmmo;}else gunrow.style.display="none";
+  }
+  function render(){if(active&&renderer&&scene&&camera)renderer.render(scene,camera);}
+  function frame(now){if(!active)return;const dt=Math.min(.05,(now-last)/1000);last=now;update(dt);render();raf=requestAnimationFrame(frame);}
+  function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
+
+  function showRing(on){ringEl.style.display=on?"flex":"none";if(!on)setRing(0);}
+  function setRing(p){ringFg.style.strokeDashoffset=String(RING_C*(1-p));ringPct.textContent=Math.round(p*100)+"%";}
+  function hidePrompt(){promptEl.style.display="none";}
+  function showError(msg){overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errText.textContent=msg;}
+  function onKeyDown(e){if(!active)return;const c=e.code;
+    if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
+    if(c==="KeyE"){if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);}return;}
+    if(c==="Space"){if(!e.repeat)jumpQueued=true;keys[c]=true;return;}
+    keys[c]=true;}
+  function onKeyUp(e){if(!active)return;const c=e.code;if(c==="KeyE"){eHolding=false;showRing(false);return;}keys[c]=false;}
+  function onWheel(e){if(!active)return;camDistT=clamp(camDistT+e.deltaY*.012,4.5,13);e.preventDefault();}
+  let dragId=null,dragLx=0,dragLy=0;
+  function dragDown(e){if(isTouch)return;dragId=e.pointerId;dragLx=e.clientX;dragLy=e.clientY;try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();}
+  function dragMove(e){if(e.pointerId!==dragId)return;const dx=e.clientX-dragLx,dy=e.clientY-dragLy;dragLx=e.clientX;dragLy=e.clientY;
+    yaw-=dx*.005;pitch=clamp(pitch-dy*.005,.06,.85);e.preventDefault();}
+  function dragUp(e){if(e.pointerId!==dragId)return;dragId=null;e.preventDefault();}
+  let stickId=null,stickCx=0,stickCy=0,lookId=null,lookLx=0,lookLy=0;
+  function stickDown(e){stickId=e.pointerId;const r=stick.getBoundingClientRect();stickCx=r.left+r.width/2;stickCy=r.top+r.height/2;try{stick.setPointerCapture(e.pointerId);}catch(_){}stickMove(e);e.preventDefault();}
+  function stickMove(e){if(e.pointerId!==stickId)return;let dx=e.clientX-stickCx,dy=e.clientY-stickCy;const max=50,d=Math.hypot(dx,dy);
+    if(d>max){dx=dx/d*max;dy=dy/d*max;}knob.style.transform="translate("+dx+"px,"+dy+"px)";touchMove.x=dx/max;touchMove.y=dy/max;touchSprint=Math.hypot(touchMove.x,touchMove.y)>.92;e.preventDefault();}
+  function stickUp(e){if(e.pointerId!==stickId)return;stickId=null;touchMove.x=0;touchMove.y=0;touchSprint=false;knob.style.transform="translate(0,0)";e.preventDefault();}
+  function lookDown(e){lookId=e.pointerId;lookLx=e.clientX;lookLy=e.clientY;try{lookArea.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();}
+  function lookMove(e){if(e.pointerId!==lookId)return;const dx=e.clientX-lookLx,dy=e.clientY-lookLy;lookLx=e.clientX;lookLy=e.clientY;
+    yaw-=dx*.005;pitch=clamp(pitch-dy*.005,.06,.85);e.preventDefault();}
+  function lookUp(e){if(e.pointerId!==lookId)return;lookId=null;e.preventDefault();}
+  function jumpDown(e){jumpQueued=true;e.preventDefault();}
+  function addDyn(t,ev,fn,opts){t.addEventListener(ev,fn,opts);dyn.push([t,ev,fn,opts]);}
+  function addListeners(){
+    addDyn(window,"resize",onResize);addDyn(window,"keydown",onKeyDown);addDyn(window,"keyup",onKeyUp);
+    addDyn(window,"wheel",onWheel,{passive:false});
+    addDyn(renderer.domElement,"pointerdown",dragDown,{passive:false});
+    addDyn(renderer.domElement,"pointermove",dragMove,{passive:false});
+    addDyn(renderer.domElement,"pointerup",dragUp);addDyn(renderer.domElement,"pointercancel",dragUp);
+    if(isTouch){
+      addDyn(stick,"pointerdown",stickDown,{passive:false});addDyn(stick,"pointermove",stickMove,{passive:false});
+      addDyn(stick,"pointerup",stickUp);addDyn(stick,"pointercancel",stickUp);
+      addDyn(lookArea,"pointerdown",lookDown,{passive:false});addDyn(lookArea,"pointermove",lookMove,{passive:false});
+      addDyn(lookArea,"pointerup",lookUp);addDyn(lookArea,"pointercancel",lookUp);
+      addDyn(jumpBtn,"pointerdown",jumpDown,{passive:false});
+    }
+  }
+  function removeListeners(){for(const a of dyn)a[0].removeEventListener(a[1],a[2],a[3]);dyn.length=0;}
+  function clearCaches(){for(const g of geoStore){try{g.dispose();}catch(e){}}geoStore.length=0;
+    for(const m of matStore){try{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();}catch(e){}}matStore.clear();
+    for(const k in geoCache)delete geoCache[k];}
+  function disposeScene(){
+    if(scene)scene.traverse(o=>{if(o.geometry)o.geometry.dispose();
+      if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();});}});
+    clearCaches();
+    if(renderer){renderer.dispose();const el=renderer.domElement;if(el&&el.parentNode)el.parentNode.removeChild(el);}
+    scene=null;renderer=null;camera=null;char=null;armL=armR=legL=legR=head=null;gunMesh=null;
+    amb=hemi=dir=pl1=pl2=lampMat=null;eMat=null;
+    segs.length=0;obstacles.length=0;entities.length=0;basins.length=0;rooms.length=0;guns.length=0;
+    for(const k in remotes)delete remotes[k];
+  }
+  function teardown(){
+    active=false;threeActive=false;
+    if(raf)cancelAnimationFrame(raf);raf=0;
+    removeListeners();disposeAudio();disposeScene();
+    keys={};eHolding=false;showRing(false);hidePrompt();touchMove.x=0;touchMove.y=0;touchSprint=false;
+    overlay.classList.remove("run");hzEl.style.display="block";runEl.style.display="none";cortip.style.display="none";
+    overEl.style.display="none";loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
+    overlay.style.display="none";
+  }
+  function exit(){teardown();openMenu();}
+  function restart(){exit();launch();}
+  function launch(){
+    if(active)return;
+    if(typeof THREE==="undefined"){showError("3D 引擎（Three.js）加载失败，请检查网络后重试。");return;}
+    threeActive=true;active=true;ThreeOver.mode="corridor";
+    menuEl.style.display="none";cv.style.display="none";hudEl.style.display="none";
+    overlay.style.display="block";overlay.classList.add("run");
+    errorEl.style.display="none";loadingEl.style.display="flex";
+    WORLD=CFG.world||CFG.pal;if(WORLD==="gray")WORLD="office";PAL=WORLD_PAL[WORLD]||WORLD_PAL.red;
+    RUN_M=CFG.winM;V_WALK=CFG.catSpeed*M2S;V_SPRINT=(CFG.sprintSpeed||CFG.catSpeed+4)*M2S;
+    titleB.textContent=CFG.name;titleSpan.textContent="3D 长廊";
+    hzEl.style.display="none";runEl.style.display="block";overEl.style.display="none";
+    rhead.textContent="逃生距离 · "+RUN_M+"m";rgaplabel.textContent="最近实体";rhazlabel.textContent="精神危害 3级";
+    cortip.style.display="block";cortip.textContent=TIP[WORLD]||"";
+    charX=0;charZ=0;heading=Math.PI;jumpY=0;vy=0;onGround=true;jumpQueued=false;dist=0;
+    fuel=100;lives=5;charges=SUITS[save.equipped].charges;inv=0;dead=false;won=false;hitFx=0;haz=0;inWater=false;
+    yaw=0;pitch=.24;camDist=6.8;camDistT=6.8;gtime=0;stepT=0;cStep=-1;hudKey="";
+    gunType=null;gunAmmo=0;gunCd=0;muzzle=0;darkAmt=0;darkTarget=0;
+    keys={};eHolding=false;touchMove={x:0,y:0};touchSprint=false;
+    muted=false;muteBtn.classList.remove("off");muteLabel.textContent="声音";
+    S.lives=5;S.over=false;S.win=false;
+    isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
+    try{buildRenderer();buildLights();buildRooms();buildBasins();buildCorridor();buildPipes();buildObstacles();buildCharacter();buildEntities();buildGuns();buildRemotes();}
+    catch(err){showError("初始化 3D 长廊失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return;}
+    initAudio();addListeners();loadingEl.style.display="none";
+    overlay.classList.toggle("touch",isTouch);
+    hidePrompt();   // 免点击：进入即可自由移动
+    updateHUD(99);
+    if(isTouch){touchLayer.style.display="block";
+      hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 跳</span><span><b>右侧拖动</b> 视角</span><span><b>右上退出</b> 离开</span>';}
+    else{touchLayer.style.display="none";
+      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">E</span> 长按 2 秒退出</span>';}
+    onResize();last=performance.now();raf=requestAnimationFrame(frame);
+  }
+  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,tag:"corridor"};
+})();
+// 3D 面板通用按钮：按当前激活模式分派（草原 / 快跑层 / 通用长廊）
 (function(){
-  const cur=()=>ThreeOver.mode==="run"?Runner3D:Grassland3D;
+  const cur=()=>ThreeOver.mode==="run"?Runner3D:(ThreeOver.mode==="corridor"?Corridor3D:Grassland3D);
   document.getElementById("g3d-exitbtn").addEventListener("click",()=>cur().exit());
   document.getElementById("g3d-errback").addEventListener("click",()=>cur().exit());
   document.getElementById("g3d-mute").addEventListener("click",()=>cur().muteToggle());
