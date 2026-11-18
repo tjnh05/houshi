@@ -264,6 +264,19 @@
   .g3d-hint{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;gap:14px;flex-wrap:wrap;justify-content:center;background:rgba(10,22,6,.6);border:1px solid rgba(124,194,74,.3);border-radius:12px;padding:9px 18px;font-size:12px;letter-spacing:1px;color:#cfe6b8;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:3;max-width:94vw;box-sizing:border-box;}
   .g3d-hint b{color:#a8d84a;font-weight:700;}
   .g3d-hint .k{display:inline-block;min-width:18px;text-align:center;background:rgba(124,194,74,.18);border:1px solid rgba(124,194,74,.45);border-radius:4px;padding:0 5px;margin-right:4px;color:#dff3c8;font-weight:700;}
+  /* 目标指示牌（指向煤矿 / 安全门） */
+  #g3d-way{position:absolute;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:none;align-items:center;gap:10px;
+    background:rgba(12,26,8,.7);border:1px solid rgba(255,194,77,.5);border-radius:999px;padding:6px 16px 6px 8px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,.45);z-index:6;pointer-events:none;white-space:nowrap;}
+  #g3d-wayarrow{display:flex;align-items:center;justify-content:center;width:26px;height:26px;color:#ffc24d;transition:transform .08s linear;}
+  #g3d-wayarrow svg{width:24px;height:24px;filter:drop-shadow(0 0 7px rgba(255,194,77,.75));}
+  #g3d-way b{font-size:13px;letter-spacing:2px;color:#ffe1b0;}
+  #g3d-way i{font-style:normal;font-size:12px;letter-spacing:1px;color:#cfe6b8;min-width:44px;text-align:right;}
+  #g3d-way.door{border-color:rgba(143,230,106,.62);}
+  #g3d-way.door #g3d-wayarrow{color:#8fe06a;}
+  #g3d-way.door #g3d-wayarrow svg{filter:drop-shadow(0 0 8px rgba(143,230,106,.85));}
+  #g3d-way.door b{color:#d7f7c4;}
+  #grass3d.run #g3d-way{display:none !important;}
   /* 进入提示 / 暂停遮罩 */
   #g3d-prompt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;background:radial-gradient(ellipse at center,rgba(8,18,5,.35),rgba(5,12,3,.72));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);cursor:pointer;}
   .g3d-promptcard{text-align:center;background:rgba(12,26,8,.78);border:1px solid rgba(124,194,74,.5);border-radius:18px;padding:34px 44px;box-shadow:0 12px 50px rgba(0,0,0,.6),0 0 40px rgba(124,194,74,.15);max-width:88vw;box-sizing:border-box;}
@@ -371,6 +384,54 @@
   #g3d-actbtn{position:absolute;right:calc(30px + env(safe-area-inset-right));bottom:calc(190px + env(safe-area-inset-bottom));width:78px;height:78px;border-radius:50%;background:rgba(8,22,12,.6);border:2px solid rgba(143,224,106,.6);color:#8fe06a;font-family:inherit;font-size:13px;letter-spacing:2px;pointer-events:auto;touch-action:none;}
   #g3d-actbtn.on{background:rgba(143,224,106,.28);box-shadow:0 0 18px rgba(143,224,106,.5);}
   #g3d-look{position:absolute;right:0;top:0;width:55%;height:100%;pointer-events:auto;touch-action:none;}
+
+  /* ================= 交互与视觉优化补丁 (2026-11-18) =================
+     说明：以下规则集中覆盖，上方原样式一行未改；删除本段即可回滚。 */
+
+  /* 1. 菜单卡片：描述收拢为最多 3 行（未探查 2 行），降低首屏拥挤；悬停展开全文 */
+  .mode p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;
+    overflow:hidden;max-height:5.4em;}
+  .mode.unknown p{-webkit-line-clamp:2;line-clamp:2;max-height:3.8em;}
+  .mode:hover p{-webkit-line-clamp:unset;line-clamp:unset;max-height:none;overflow:visible;}
+
+  /* 2. 顶部条：收紧间距，让标题/状态/按钮读起来像一条 HUD */
+  .g3d-top{gap:8px;padding:0 12px;}
+  .g3d-title,.g3d-suit{padding:6px 11px;}
+  .g3d-iconbtn{padding:6px 10px;}
+
+  /* 3. 氛围层减弱：让画面主体更清楚 */
+  #vignette{box-shadow:inset 0 0 120px 40px rgba(0,0,0,.68);}
+  #g3d-vignette{background:radial-gradient(ellipse at 50% 46%,transparent 60%,rgba(6,16,4,.38) 100%);}
+  #alert{background:radial-gradient(ellipse at center,transparent 50%,rgba(180,0,0,.42) 100%);}
+
+  /* 4. 顶部关卡说明 + 中下操作条：一次性阅读信息，进关几秒后淡出，交互/悬停唤回 */
+  #g3d-cortip,.g3d-hint{transition:opacity .7s ease;}
+  #g3d-cortip.tip-dim,.g3d-hint.hint-dim{opacity:0;}
+  #g3d-cortip:hover,.g3d-hint:hover{opacity:1 !important;}
+
+  /* 4b. 左下状态窗：默认半透明弱化，悬停恢复清晰（g3d-run=快跑层, g3d-hazard=其余层） */
+  #g3d-run,#g3d-hazard{transition:opacity .35s ease;}
+  #g3d-run:not(:hover),#g3d-hazard:not(:hover){opacity:.62;}
+
+  /* 5. 精简 HUD（按 H 切换）：隐藏非关键信息，保留画面与顶部退出入口 */
+  body.minimal-hud #hud,
+  body.minimal-hud #teamhud,
+  body.minimal-hud #kittywarn,
+  body.minimal-hud #g3d-hazard,
+  body.minimal-hud #g3d-run,
+  body.minimal-hud #g3d-way,
+  body.minimal-hud #g3d-cortip,
+  body.minimal-hud #points,
+  body.minimal-hud .g3d-hint{opacity:0 !important;pointer-events:none !important;}
+
+  /* 6. 精简模式提示气泡 */
+  #hud-opt-toast{position:fixed;left:50%;top:16px;transform:translateX(-50%) translateY(-16px);
+    z-index:9999;padding:8px 18px;border-radius:999px;font:12px/1.4 "Courier New",monospace;
+    letter-spacing:1px;color:#dff3c8;background:rgba(12,26,8,.9);border:1px solid rgba(124,194,74,.5);
+    box-shadow:0 6px 20px rgba(0,0,0,.5);opacity:0;pointer-events:none;
+    transition:opacity .25s,transform .25s;}
+  #hud-opt-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  @media (max-width:560px){#hud-opt-toast{font-size:11px;padding:6px 14px;top:10px;}}
 </style>
 </head>
 <body>
@@ -666,6 +727,11 @@
         <span>退出</span>
       </button>
     </div>
+  </div>
+
+  <div id="g3d-way">
+    <span id="g3d-wayarrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L20.5 20 L12 15.2 L3.5 20 Z"/></svg></span>
+    <b id="g3d-waytext">煤矿</b><i id="g3d-waydist">0m</i>
   </div>
 
   <div class="g3d-hint" id="g3d-hint">
@@ -3096,7 +3162,11 @@ const Grassland3D=(function(){
         objState=document.getElementById("g3d-objstate"),
         objHint=document.getElementById("g3d-objhint"),
         objFill=document.getElementById("g3d-objfill"),
-        actBtn=document.getElementById("g3d-actbtn");
+        actBtn=document.getElementById("g3d-actbtn"),
+        wayEl=document.getElementById("g3d-way"),
+        wayArrow=document.getElementById("g3d-wayarrow"),
+        wayText=document.getElementById("g3d-waytext"),
+        wayDist=document.getElementById("g3d-waydist");
   const RING_C=339.292, HALF=124, GSIZE=260;
   const HZ_BARE=30, HZ_DELAY=0.7, HZ_DELAY_HI=0.85, PILL_SECONDS=4;
   const LEAF_CALM=[0x3f7d33,0x4f9138,0x356b2b], LEAF_TRUE=[0x2b1f2a,0x382233,0x1c1218];
@@ -3121,7 +3191,7 @@ const Grassland3D=(function(){
   const HOUSES=[{x:-17,z:76,r:.2},{x:18,z:48,r:-.3},{x:-19,z:18,r:.1},{x:17,z:-12,r:-.15},{x:-18,z:-44,r:.25},{x:19,z:-76,r:-.2},{x:-17,z:-104,r:.12}];
   const SIGNS=[{x:-6.6,z:106},{x:6.6,z:82},{x:-6.6,z:56},{x:6.6,z:28},{x:-6.6,z:-4},{x:6.6,z:-34},{x:-6.6,z:-64},{x:6.6,z:-92},{x:-6.6,z:-108}];
   let mines=[], door=null, actionHolding=false, won=false, objKey="";
-  let carry=null, tmpV=null;
+  let carry=null, tmpV=null, guideArrow=null;
   const throwFrom={x:0,y:0,z:0}, returnFrom={x:0,y:0,z:0};
   let coalMat=null, woodMat=null, doorMat=null, doorLightMat=null, mineRingMat=null;
   const dyn=[];
@@ -3329,16 +3399,50 @@ const Grassland3D=(function(){
     const w=makeWanderer(SU);
     char=w.g;armL=w.armL;armR=w.armR;legL=w.legL;legR=w.legR;head=w.head;
     char.position.set(0,heightAt(0,0),0);char.rotation.y=Math.PI;scene.add(char);
+    guideArrow=makeGuideArrow();guideArrow.visible=false;scene.add(guideArrow);
   }
 
   function updateSuitHUD(){ const SU=SUITS[save.equipped];swatch.style.background=SU.body;swatch.style.color=SU.body;suitName.textContent=SU.name; }
 
   // ---------- 煤矿与安全门（草原逃生目标） ----------
+  function makeArrowSprite(){
+    const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");
+    g.fillStyle="#ffffff";g.strokeStyle="rgba(0,0,0,.55)";g.lineWidth=10;
+    g.beginPath();g.moveTo(128,238);g.lineTo(30,86);g.lineTo(128,120);g.lineTo(226,86);g.closePath();
+    g.fill();g.stroke();
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;
+    const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,depthWrite:false,fog:false}));
+    s.renderOrder=900;
+    return s;
+  }
+  // 挖满煤后亮起的"指示牌"：悬在小人上方、指向目标的立体箭头
+  function makeGuideArrow(){
+    const g=new THREE.Group();
+    const mat=new THREE.MeshBasicMaterial({color:0x8fe06a,transparent:true,opacity:.95,depthTest:false,depthWrite:false,fog:false});
+    const shaft=new THREE.Mesh(new THREE.BoxGeometry(.16,.16,.9),mat);
+    shaft.position.z=.35;
+    const head=new THREE.Mesh(new THREE.ConeGeometry(.34,.62,4),mat);
+    head.rotation.x=Math.PI/2;head.position.z=1.05;
+    g.add(shaft);g.add(head);
+    g.renderOrder=950;
+    return g;
+  }
   function makeLabel(text,color){ const c=document.createElement("canvas");c.width=256;c.height=96;const g=c.getContext("2d");
     g.fillStyle="rgba(8,12,9,.82)";g.fillRect(0,0,256,96);g.strokeStyle=color;g.lineWidth=5;g.strokeRect(4,4,248,88);
     g.fillStyle=color;g.font="bold 46px sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(text,128,50);
-    const t=new THREE.CanvasTexture(c);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthWrite:false}));
-    s.scale.set(3.2,1.2,1);return s; }
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;
+    const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthWrite:false,depthTest:false,fog:false}));
+    s.renderOrder=890;
+    s.scale.set(2.4,.9,1);
+    s.userData.setText=function(txt,col){ g.clearRect(0,0,256,96);
+      g.fillStyle="rgba(8,12,9,.82)";g.fillRect(0,0,256,96);g.strokeStyle=col;g.lineWidth=5;g.strokeRect(4,4,248,88);
+      g.fillStyle=col;g.textAlign="center";g.textBaseline="middle";
+      let fs=46;g.font="bold "+fs+"px sans-serif";
+      while(fs>16&&g.measureText(txt).width>232){ fs-=2;g.font="bold "+fs+"px sans-serif"; }
+      g.fillText(txt,128,50);
+      t.needsUpdate=true; };
+    s.userData.setText(text,color);
+    return s; }
   function buildMines(){
     mines=[];
     coalMat=new THREE.MeshStandardMaterial({color:0x14110f,roughness:.95,metalness:.05});
@@ -3356,10 +3460,11 @@ const Grassland3D=(function(){
       const beam=new THREE.Mesh(new THREE.BoxGeometry(3.8,.24,.24),woodMat);beam.position.set(0,2.6,0);beam.castShadow=true;g.add(beam);
       const ring=new THREE.Mesh(new THREE.TorusGeometry(2.3,.07,8,32),mineRingMat.clone());ring.rotation.x=Math.PI/2;ring.position.y=.32;g.add(ring);
       const label=makeLabel("煤矿 "+(i+1),"#ffc24d");label.position.set(0,3.3,0);g.add(label);
+      const arrow=makeArrowSprite();arrow.material.color.setHex(0xffc24d);arrow.position.set(0,5.2,0);arrow.scale.setScalar(3);g.add(arrow);
       const shovel=makeShovel();shovel.position.set(1.15,.72,.5);shovel.rotation.set(.2,0,-.6);g.add(shovel);
       const light=new THREE.PointLight(0xffa030,.0,9,2);light.position.set(0,1.4,0);g.add(light);
       scene.add(g);
-      mines.push({x:p.x,z:p.z,progress:0,done:false,group:g,ring:ring,light:light,label:label,shovel:shovel,swing:0,shovelHome:new THREE.Vector3(1.15,.72,.5)});
+      mines.push({x:p.x,z:p.z,progress:0,done:false,group:g,ring:ring,light:light,label:label,arrow:arrow,shovel:shovel,swing:0,shovelHome:new THREE.Vector3(1.15,.72,.5)});
     });
   }
   function buildSafetyDoor(){
@@ -3373,12 +3478,72 @@ const Grassland3D=(function(){
     const handle=new THREE.Mesh(new THREE.BoxGeometry(.5,.12,.16),frameMat);handle.position.set(.8,1.9,.18);g.add(handle);
     doorLightMat=new THREE.MeshStandardMaterial({color:0xff4444,emissive:0xff2222,emissiveIntensity:1.4,roughness:.3});
     const lamp=new THREE.Mesh(new THREE.SphereGeometry(.16,12,10),doorLightMat);lamp.position.set(0,3.5,.3);g.add(lamp);
-    const exit=makeLabel("安全门","#8fe06a");exit.position.set(0,4.9,0);g.add(exit);
+    const exit=makeLabel("安全门","#8fe06a");exit.position.set(0,5.4,0);g.add(exit);
     const glow=new THREE.PointLight(0x8fe06a,0,12,2);glow.position.set(0,2.4,1.2);g.add(glow);
+    const beamMat=new THREE.MeshBasicMaterial({color:0x54d94a,transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide,fog:false,blending:THREE.AdditiveBlending});
+    const beam=new THREE.Mesh(new THREE.CylinderGeometry(2.2,3.4,30,16,1,true),beamMat);
+    beam.position.set(0,15,0);beam.renderOrder=875;g.add(beam);
     scene.add(g);
-    door={x:dx,z:dz,progress:0,unlocked:false,group:g,panel:panel,glow:glow};
+    door={x:dx,z:dz,progress:0,unlocked:false,group:g,panel:panel,glow:glow,label:exit,beam:beam,beamMat:beamMat};
   }
   function minesDone(){ return mines.length>0&&mines.every(m=>m.done); }
+  // 目标指示牌：世界里的箭头标记 + 屏幕顶部罗盘（蛋仔派对式指引）
+  function updateWayfinder(){
+    if(!scene)return;
+    if(won||dead){ wayEl.style.display="none"; return; }
+    const pulse=1+.13*Math.sin(gtime*4);
+    for(const m of mines){
+      if(!m.arrow)continue;
+      const d=Math.hypot(charX-m.x,charZ-m.z);
+      m.arrow.visible=true;
+      m.arrow.material.color.setHex(m.done?0x6ea84a:0xffc24d);
+      m.arrow.material.opacity=m.done?.45:1;
+      m.arrow.scale.setScalar(clamp(d*.095,2.8,15)*(m.done?.6:pulse));
+      m.arrow.position.y=5.2+(m.done?0:Math.sin(gtime*2+m.x)*.25);
+      if(m.label&&m.label.userData.setText){ const want=m.done?"煤矿 "+(mines.indexOf(m)+1)+" 已满":"煤矿 "+(mines.indexOf(m)+1);
+        if(m.label.userData.txt!==want){ m.label.userData.txt=want; m.label.userData.setText(want,m.done?"#6ea84a":"#ffc24d"); }
+        const mk=clamp(d*.05,.7,6);
+        m.label.scale.set(3.2*mk,1.2*mk,1); }
+    }
+    if(door){
+      const d=Math.hypot(charX-door.x,charZ-door.z);
+      const k=clamp(d*.05,.7,6);
+      if(door.beamMat){ door.beamMat.opacity=door.unlocked?.26+.1*Math.sin(gtime*3):0; }
+      if(door.label){ const on=door.unlocked;
+        door.label.visible=true;
+        door.label.material.color.setHex(on?0xffffff:0x8a8a8a);
+        const s=on?1.3+.12*Math.sin(gtime*4):1;
+        door.label.scale.set(3.2*k*s,1.2*k*s,1);
+        if(door.label.userData.setText){ const want=on?"安全门 · 已解锁":"安全门 · 锁定";
+          if(door.label.userData.txt!==want){ door.label.userData.txt=want; door.label.userData.setText(want,on?"#8fe06a":"#a8a8a8"); } }
+      }
+    }
+    let tgt=null,label="",tgtColor="#ffc24d";
+    if(!minesDone()){
+      let best=1e9;
+      for(let i=0;i<mines.length;i++){ const m=mines[i]; if(m.done)continue;
+        const d=Math.hypot(charX-m.x,charZ-m.z); if(d<best){best=d;tgt=m;label="煤矿 "+(i+1);} }
+    }else if(door){ tgt=door; label="安全门"; tgtColor="#8fe06a"; }
+    if(!tgt){ wayEl.style.display="none"; if(guideArrow)guideArrow.visible=false; return; }
+    wayEl.style.display="flex";
+    wayEl.classList.toggle("door",minesDone());
+    const Tx=tgt.x-charX,Tz=tgt.z-charZ;
+    const fx=-Math.sin(yaw),fz=-Math.cos(yaw),rx=-fz,rz=fx;
+    const ang=Math.atan2(Tx*rx+Tz*rz,Tx*fx+Tz*fz);
+    wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
+    wayText.textContent=label;
+    wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
+    if(guideArrow){
+      guideArrow.visible=true;
+      guideArrow.position.set(charX,heightAt(charX,charZ)+2.9+jumpY,charZ);
+      guideArrow.rotation.y=Math.atan2(Tx,Tz);
+      const gm=guideArrow.children[0].material;
+      gm.color.setHex(minesDone()?0x8fe06a:0xffc24d);
+      gm.opacity=minesDone()?.95:.8;
+      const gs=1+.06*Math.sin(gtime*4);
+      guideArrow.scale.set(gs,gs,gs);
+    }
+  }
   function startReturn(m){ const sh=m.shovel;carry.phase="return";carry.t=0;char.rotation.x=0;
     sh.getWorldPosition(tmpV||(tmpV=new THREE.Vector3()));scene.attach(sh);
     returnFrom.x=tmpV.x;returnFrom.y=tmpV.y;returnFrom.z=tmpV.z; }
@@ -3637,6 +3802,7 @@ const Grassland3D=(function(){
       pa.needsUpdate=true; }
     // 煤矿 / 安全门目标
     updateObjective(dt);
+    updateWayfinder();
     // 长按 E 退出
     if(eHolding){ const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;} }
   }
@@ -3702,7 +3868,7 @@ const Grassland3D=(function(){
     scene=null;renderer=null;camera=null;char=null;sun=null;sunGlow=null;particles=null;clouds=[];pSeed=[];
     skyMat=null;hemiLight=null;ambLight=null;fillLight=null;groundMat=null;tuftMat=null;flowerMat=null;rockMat=null;cloudMat=null;trunkMat=null;
     leafMats=[];trees=[];eyeMat=null;scratch=null;
-    mines=[];door=null;coalMat=woodMat=doorMat=doorLightMat=mineRingMat=null;won=false;objKey="";carry=null;tmpV=null;
+    mines=[];door=null;coalMat=woodMat=doorMat=doorLightMat=mineRingMat=null;won=false;objKey="";carry=null;tmpV=null;guideArrow=null;
   }
   function hideOverlay(){ overlay.style.display="none"; }
   function teardown(){
@@ -3716,6 +3882,7 @@ const Grassland3D=(function(){
     if(document.pointerLockElement){try{document.exitPointerLock();}catch(e){}}
     disposeAudio();disposeScene();
     keys={};eHolding=false;actionHolding=false;showRing(false);hidePrompt();loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
+    wayEl.style.display="none";
     hideOverlay();
   }
   function exit(){ teardown();openMenu(); }
@@ -4904,7 +5071,8 @@ const Corridor3D=(function(){
     if(WORLD==="red"){
       let dmin=999;
       for(const e of entities){ if(e.alive&&e.kind==="smiley"){const dd=Math.hypot(charX-e.x,charZ-e.z);if(dd<dmin)dmin=dd;} }
-      darkTarget=dmin<999?clamp((48-dmin)/30,0,1):0;
+      // [亮度修复] 触发距离 48→34m、最大暗度 1→0.85，避免整段长廊长期全黑
+      darkTarget=dmin<999?clamp((34-dmin)/22,0,.85):0;
     } else darkTarget=0;
     darkAmt+=(darkTarget-darkAmt)*Math.min(1,dt*2.2);
     let minGap=99;
@@ -4981,7 +5149,7 @@ const Corridor3D=(function(){
     camera.lookAt(tx,ty+.4,tz);
     // 灯光跟随
     const pulse=.85+Math.sin(gtime*4.6)*.08;
-    const dk=1-.92*darkAmt;
+    const dk=1-.58*darkAmt;  // [亮度修复] 最暗时保留 42% 灯光（原仅 8%）
     if(lampMat)lampMat.emissiveIntensity=.8*pulse*dk;
     const nearZ=[];for(const s of segs){if(Math.abs(s.z-charZ)<30)nearZ.push(s.z);}
     nearZ.sort((a,b)=>Math.abs(a-charZ)-Math.abs(b-charZ));
@@ -4990,8 +5158,8 @@ const Corridor3D=(function(){
     if(dir){dir.position.set(2,8,charZ+4);dir.intensity=(PAL.dir||.18)*dk;}
     if(amb)amb.intensity=(PAL.amb||.2)*dk;
     if(hemi)hemi.intensity=(PAL.hemi||.28)*dk;
-    if(scene&&scene.fog){scene.fog.density=(WORLD==="pool"?.018:.03)*(1+1.8*darkAmt);
-      scene.fog.color.set(PAL.fog).lerp(BLACK_C,darkAmt*.92);
+    if(scene&&scene.fog){scene.fog.density=(WORLD==="pool"?.018:.03)*(1+.7*darkAmt);  // [亮度修复] 雾增浓 1.8→0.7
+      scene.fog.color.set(PAL.fog).lerp(BLACK_C,darkAmt*.55);  // [亮度修复] 染黑 0.92→0.55
       if(scene.background&&scene.background.isColor)scene.background.copy(scene.fog.color);}
     // 水面波动
     for(const b of basins){b.water.position.y=-.12+Math.sin(gtime*1.6+b.z)*.03;}
@@ -5132,6 +5300,77 @@ const Corridor3D=(function(){
   document.getElementById("g3d-overhome").addEventListener("click",()=>cur().exit());
 })();
 requestAnimationFrame(loop);
+</script>
+
+<script>
+/* ================= 交互优化补丁 (2026-11-18) =================
+   挂两个独立的小功能：操作提示渐隐 + H 键精简 HUD。
+   不侵入游戏主逻辑（三套 3D 引擎共用同一 hintEl，H 键空闲）。 */
+(function(){
+  "use strict";
+  var hint = document.getElementById("g3d-hint");
+
+  /* --- 功能 1：一次性提示（中下操作条 + 顶部关卡说明）进关后淡出，交互时唤回 --- */
+  var cortip = document.getElementById("g3d-cortip");
+  var DIM_MS = 5000; // 进入关卡后 5 秒淡出
+  function bindDim(el, dimClass){
+    if(!el) return function(){};
+    var timer = null;
+    function arm(){
+      el.classList.remove(dimClass);
+      clearTimeout(timer);
+      // 淡出后不再被游戏操作打断（否则玩家一直在动 → 永远不淡出）
+      timer = setTimeout(function(){ el.classList.add(dimClass); }, DIM_MS);
+    }
+    // 三套引擎 launch 时会重写内容 / 切换 display，用变化重置计时
+    try{
+      new MutationObserver(arm).observe(el, {childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:["style"]});
+    }catch(e){}
+    // 唤回改为：鼠标悬停时由 CSS :hover 处理；触摸设备点一下元素即唤回
+    el.addEventListener("touchstart", function(){
+      if(el.classList.contains(dimClass)) arm();
+    }, {passive:true});
+    arm();
+    return arm;
+  }
+  var armHint = bindDim(hint, "hint-dim");
+  var armTip  = bindDim(cortip, "tip-dim");
+
+  /* --- 功能 2：H 键切换精简 HUD --- */
+  var toast = null, toastTimer = null;
+  function showToast(msg){
+    if(!toast){
+      toast = document.createElement("div");
+      toast.id = "hud-opt-toast";
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 1500);
+  }
+  function isTyping(el){
+    if(!el) return false;
+    var t = el.tagName;
+    return t === "INPUT" || t === "TEXTAREA" || t === "SELECT" || el.isContentEditable;
+  }
+  document.addEventListener("keydown", function(e){
+    if(e.code !== "KeyH" || e.repeat) return;
+    if(isTyping(e.target)) return;                 // 房间码等输入框内不触发
+    if(document.getElementById("menu").style.display !== "none") return; // 仅在游戏内生效
+    var on = document.body.classList.toggle("minimal-hud");
+    showToast(on ? "精简 HUD 已开启 · 再按 H 恢复" : "完整 HUD 已恢复");
+  });
+
+  // 回菜单 / 结束游戏时清除精简状态，避免影响下一局
+  window.addEventListener("message", function(e){ /* 占位，避免与游戏 postMessage 冲突 */ });
+  var menuEl = document.getElementById("menu");
+  new MutationObserver(function(){
+    if(menuEl && menuEl.style.display !== "none"){
+      document.body.classList.remove("minimal-hud");
+    }
+  }).observe(menuEl, {attributes:true, attributeFilter:["style"]});
+})();
 </script>
 </body>
 </html>
