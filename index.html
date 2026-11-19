@@ -3235,7 +3235,7 @@ const Grassland3D=(function(){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.setSize(innerWidth,innerHeight);
     renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;
+    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08; /* [亮度修复] 曝光回退 1.18→1.08，缓解安全门(亮部)过曝 */
     mount.appendChild(renderer.domElement);
     camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,650);
     scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0xcfe0ea,0.0036);
@@ -3722,12 +3722,12 @@ const Grassland3D=(function(){
   function applyReveal(){
     if(!scene||!scratch)return;
     const s=clamp(strain,0,1), e=1-s*s*(3-2*s);   // e=真实度：0 危害 → 全开真实；1 危害 → 完全幻境
-    mixc(scene.fog.color,0xcfe0ea,0x2b1017,e);scene.fog.density=0.006+e*0.016;
+    mixc(scene.fog.color,0xcfe0ea,0x2b1017,e);scene.fog.density=0.008+e*0.014; /* [亮度修复] 亮端雾 0.006→0.008 加层次 */
     if(skyMat){ mixc(skyMat.uniforms.top.value,0x2a63c8,0x160a14,e); mixc(skyMat.uniforms.mid.value,0x8fbded,0x6b2130,e); mixc(skyMat.uniforms.bot.value,0xdce9f2,0xb8452a,e); }
-    if(hemiLight){ mixc(hemiLight.color,0xbfd9ff,0x54222e,e); mixc(hemiLight.groundColor,0x4a6b3a,0x1a0c07,e); hemiLight.intensity=0.78-e*0.32; }
+    if(hemiLight){ mixc(hemiLight.color,0xbfd9ff,0x54222e,e); mixc(hemiLight.groundColor,0x4a6b3a,0x1a0c07,e); hemiLight.intensity=0.60-e*0.14; } /* [亮度修复] 亮端 0.60，暗端 0.46 锁定 */
     if(ambLight){ mixc(ambLight.color,0xffffff,0xff7a5a,e); ambLight.intensity=0.16-e*0.06; }
-    if(sun){ mixc(sun.color,0xfff0d0,0xff5f38,e); sun.intensity=1.55-e*0.88; }
-    if(fillLight){ mixc(fillLight.color,0x88aaff,0x6a2a86,e); fillLight.intensity=0.34-e*0.20; }
+    if(sun){ mixc(sun.color,0xfff0d0,0xff5f38,e); sun.intensity=1.18-e*0.51; } /* [亮度修复] 亮端 1.18，暗端 0.67 锁定 */
+    if(fillLight){ mixc(fillLight.color,0x88aaff,0x6a2a86,e); fillLight.intensity=0.28-e*0.14; } /* [亮度修复] 亮端 0.34→0.28 */
     if(groundMat) mixc(groundMat.color,0xffffff,0x6b564a,e);
     if(tuftMat) mixc(tuftMat.color,0x5f9e3f,0x3a2f26,e);
     if(flowerMat) mixc(flowerMat.color,0xffffff,0x241a20,e);
