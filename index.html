@@ -432,6 +432,18 @@
     transition:opacity .25s,transform .25s;}
   #hud-opt-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   @media (max-width:560px){#hud-opt-toast{font-size:11px;padding:6px 14px;top:10px;}}
+
+  /* 7. 缩微地图（草原专属 · 右下角圆盘，显示轨迹 / 煤矿 / 安全门 / 公路） */
+  #g3d-minimap{position:absolute;right:20px;bottom:18px;z-index:4;width:180px;height:196px;pointer-events:none;}
+  #g3d-minimap canvas{width:180px;height:180px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.16);background:rgba(10,16,12,.6);
+    box-shadow:0 6px 22px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.25);display:block;}
+  #g3d-minimap-cap{position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    font:11px/1 "Courier New",monospace;letter-spacing:2px;color:rgba(220,240,210,.72);
+    text-shadow:0 1px 3px rgba(0,0,0,.8);white-space:nowrap;}
+  #grass3d.run #g3d-minimap{display:none;}
+  #grass3d.touch #g3d-minimap{right:16px;bottom:278px;width:150px;height:166px;}
+  #grass3d.touch #g3d-minimap canvas{width:150px;height:150px;}
 </style>
 </head>
 <body>
@@ -747,6 +759,11 @@
     <div class="hz-bar"><i id="g3d-hzfill"></i></div>
     <div class="hz-foot"><span id="g3d-hzstate">危害累积中</span><button id="g3d-pillbtn" type="button">止晕药 <b id="g3d-pillcount">0</b><span>Q</span></button></div>
     <div class="hz-life"><span>生命</span><b id="g3d-hzlife">5</b><i><em id="g3d-hzlifefill"></em></i></div>
+  </div>
+
+  <div id="g3d-minimap">
+    <canvas id="g3d-minimap-cv" width="360" height="360"></canvas>
+    <div id="g3d-minimap-cap">草原地图</div>
   </div>
 
   <div id="g3d-obj" style="display:none;position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:6;
@@ -3166,7 +3183,8 @@ const Grassland3D=(function(){
         wayEl=document.getElementById("g3d-way"),
         wayArrow=document.getElementById("g3d-wayarrow"),
         wayText=document.getElementById("g3d-waytext"),
-        wayDist=document.getElementById("g3d-waydist");
+        wayDist=document.getElementById("g3d-waydist"),
+        miniCv=document.getElementById("g3d-minimap-cv");
   const RING_C=339.292, HALF=124, GSIZE=260;
   const HZ_BARE=30, HZ_DELAY=0.7, HZ_DELAY_HI=0.85, PILL_SECONDS=4;
   const LEAF_CALM=[0x3f7d33,0x4f9138,0x356b2b], LEAF_TRUE=[0x2b1f2a,0x382233,0x1c1218];
@@ -3192,6 +3210,7 @@ const Grassland3D=(function(){
   const SIGNS=[{x:-6.6,z:106},{x:6.6,z:82},{x:-6.6,z:56},{x:6.6,z:28},{x:-6.6,z:-4},{x:6.6,z:-34},{x:-6.6,z:-64},{x:6.6,z:-92},{x:-6.6,z:-108}];
   let mines=[], door=null, actionHolding=false, won=false, objKey="";
   let carry=null, tmpV=null, guideArrow=null;
+  let trail=[], lastTrailX=0, lastTrailZ=0, miniCtx=null, miniScale=0;
   const throwFrom={x:0,y:0,z:0}, returnFrom={x:0,y:0,z:0};
   let coalMat=null, woodMat=null, doorMat=null, doorLightMat=null, mineRingMat=null;
   const dyn=[];
@@ -3203,23 +3222,23 @@ const Grassland3D=(function(){
   function makeGlow(){ const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");
     const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,255,255,1)");gr.addColorStop(.3,"rgba(255,255,255,.55)");gr.addColorStop(1,"rgba(255,255,255,0)");
     g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c); }
-  function makeGrassTex(){ const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");
-    g.fillStyle="#4e8a37";g.fillRect(0,0,256,256);
-    for(let i=0;i<5200;i++){ const x=Math.random()*256,y=Math.random()*256,l=Math.random();
+  function makeGrassTex(){ const c=document.createElement("canvas");c.width=c.height=512;const g=c.getContext("2d");
+    g.fillStyle="#4e8a37";g.fillRect(0,0,512,512);
+    for(let i=0;i<22000;i++){ const x=Math.random()*512,y=Math.random()*512,l=Math.random();
       g.strokeStyle="rgba("+(40+l*60|0)+","+(105+l*75|0)+","+(38+l*45|0)+",.5)";g.lineWidth=1;
       g.beginPath();g.moveTo(x,y);g.lineTo(x+rand(-1.6,1.6),y-rand(2,5));g.stroke(); }
     const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(50,50);
-    t.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());return t; }
+    t.anisotropy=Math.min(16,renderer.capabilities.getMaxAnisotropy());return t; }
 
   function buildRenderer(){
     renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.setSize(innerWidth,innerHeight);
     renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
+    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;
     mount.appendChild(renderer.domElement);
     camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,650);
-    scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0xcfe0ea,0.0085);
+    scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0xcfe0ea,0.0036);
     scratch=new THREE.Color();
   }
   function mixc(target,calmHex,trueHex,r){ target.setHex(calmHex).lerp(scratch.setHex(trueHex),r); }
@@ -3544,6 +3563,66 @@ const Grassland3D=(function(){
       guideArrow.scale.set(gs,gs,gs);
     }
   }
+  // 缩微地图：右下角圆盘，固定朝向（前方=上），显示轨迹 / 煤矿 / 安全门 / 公路与玩家朝向
+  function drawMinimap(){
+    if(!miniCv)return;
+    if(!miniCtx){
+      miniCtx=miniCv.getContext("2d");
+      miniScale=(miniCv.width/2-16)/HALF;
+    }
+    const c=miniCtx, R=miniCv.width/2, s=miniScale;
+    c.clearRect(0,0,miniCv.width,miniCv.height);
+    c.save();
+    c.beginPath();c.arc(R,R,R,0,Math.PI*2);c.clip();
+    const bg=c.createRadialGradient(R,R,R*.15,R,R,R);
+    bg.addColorStop(0,"rgba(46,74,40,.86)");bg.addColorStop(1,"rgba(16,26,16,.86)");
+    c.fillStyle=bg;c.fillRect(0,0,miniCv.width,miniCv.height);
+    const W=(x)=>R+x*s, Z=(z)=>R+z*s;
+    // 公路（中轴，z 从 112 到 -112）
+    c.strokeStyle="rgba(214,214,200,.30)";c.lineWidth=7;c.lineCap="round";
+    c.beginPath();c.moveTo(W(0),Z(112));c.lineTo(W(0),Z(-112));c.stroke();
+    c.strokeStyle="rgba(240,222,120,.30)";c.lineWidth=1.5;c.setLineDash([7,9]);
+    c.beginPath();c.moveTo(W(0),Z(112));c.lineTo(W(0),Z(-112));c.stroke();
+    c.setLineDash([]);
+    // 轨迹
+    if(trail.length>1){
+      c.strokeStyle="rgba(255,214,90,.8)";c.lineWidth=2.5;c.lineJoin="round";c.lineCap="round";
+      c.shadowColor="rgba(255,180,60,.7)";c.shadowBlur=4;
+      c.beginPath();
+      for(let i=0;i<trail.length;i++){const p=trail[i],px=W(p.x),pz=Z(p.z);
+        if(i===0)c.moveTo(px,pz);else c.lineTo(px,pz);}
+      c.stroke();c.shadowBlur=0;
+    }
+    // 煤矿
+    for(let i=0;i<MINE_SPOTS.length;i++){
+      const m=MINE_SPOTS[i],done=!!(mines[i]&&mines[i].done),px=W(m.x),pz=Z(m.z);
+      c.fillStyle=done?"rgba(110,168,74,.92)":"rgba(255,194,77,.92)";
+      c.strokeStyle="rgba(0,0,0,.35)";c.lineWidth=1;
+      c.beginPath();c.arc(px,pz,done?4:5,0,Math.PI*2);c.fill();c.stroke();
+      if(!done){c.strokeStyle="rgba(255,194,77,.55)";c.lineWidth=1.5;
+        c.beginPath();c.arc(px,pz,8+.5*Math.sin(gtime*3+i*2),0,Math.PI*2);c.stroke();}
+    }
+    // 安全门
+    if(door){
+      const px=W(door.x),pz=Z(door.z),on=door.unlocked;
+      c.fillStyle=on?"rgba(143,224,106,.95)":"rgba(168,168,168,.85)";
+      c.strokeStyle="rgba(0,0,0,.4)";c.lineWidth=1.5;
+      c.beginPath();c.arc(px,pz,5.5,0,Math.PI*2);c.fill();c.stroke();
+      c.fillStyle="#0a0f0a";c.font="bold 8px sans-serif";c.textAlign="center";c.textBaseline="middle";
+      c.fillText("门",px,pz+.5);
+    }
+    // 玩家（朝向前方的箭头 + 中心白点）
+    const px=W(charX),pz=Z(charZ),h=heading,L=13,Lb=7,Wg=6;
+    const tx=px+Math.sin(h)*L,tz=pz+Math.cos(h)*L;
+    const bx=px+Math.sin(h)*(L-Lb),bz=pz+Math.cos(h)*(L-Lb);
+    c.fillStyle="#ffffff";c.strokeStyle="rgba(0,0,0,.55)";c.lineWidth=1.5;c.lineJoin="round";
+    c.beginPath();c.moveTo(tx,tz);
+    c.lineTo(bx-Math.cos(h)*Wg,bz+Math.sin(h)*Wg);
+    c.lineTo(bx+Math.cos(h)*Wg,bz-Math.sin(h)*Wg);
+    c.closePath();c.fill();c.stroke();
+    c.fillStyle="#fff";c.beginPath();c.arc(px,pz,3,0,Math.PI*2);c.fill();
+    c.restore();
+  }
   function startReturn(m){ const sh=m.shovel;carry.phase="return";carry.t=0;char.rotation.x=0;
     sh.getWorldPosition(tmpV||(tmpV=new THREE.Vector3()));scene.attach(sh);
     returnFrom.x=tmpV.x;returnFrom.y=tmpV.y;returnFrom.z=tmpV.z; }
@@ -3643,11 +3722,11 @@ const Grassland3D=(function(){
   function applyReveal(){
     if(!scene||!scratch)return;
     const s=clamp(strain,0,1), e=1-s*s*(3-2*s);   // e=真实度：0 危害 → 全开真实；1 危害 → 完全幻境
-    mixc(scene.fog.color,0xcfe0ea,0x2b1017,e);scene.fog.density=0.0085+e*0.0245;
+    mixc(scene.fog.color,0xcfe0ea,0x2b1017,e);scene.fog.density=0.006+e*0.016;
     if(skyMat){ mixc(skyMat.uniforms.top.value,0x2a63c8,0x160a14,e); mixc(skyMat.uniforms.mid.value,0x8fbded,0x6b2130,e); mixc(skyMat.uniforms.bot.value,0xdce9f2,0xb8452a,e); }
-    if(hemiLight){ mixc(hemiLight.color,0xbfd9ff,0x54222e,e); mixc(hemiLight.groundColor,0x4a6b3a,0x1a0c07,e); hemiLight.intensity=0.78-e*0.46; }
-    if(ambLight){ mixc(ambLight.color,0xffffff,0xff7a5a,e); ambLight.intensity=0.16-e*0.10; }
-    if(sun){ mixc(sun.color,0xfff0d0,0xff5f38,e); sun.intensity=1.55-e*1.08; }
+    if(hemiLight){ mixc(hemiLight.color,0xbfd9ff,0x54222e,e); mixc(hemiLight.groundColor,0x4a6b3a,0x1a0c07,e); hemiLight.intensity=0.78-e*0.32; }
+    if(ambLight){ mixc(ambLight.color,0xffffff,0xff7a5a,e); ambLight.intensity=0.16-e*0.06; }
+    if(sun){ mixc(sun.color,0xfff0d0,0xff5f38,e); sun.intensity=1.55-e*0.88; }
     if(fillLight){ mixc(fillLight.color,0x88aaff,0x6a2a86,e); fillLight.intensity=0.34-e*0.20; }
     if(groundMat) mixc(groundMat.color,0xffffff,0x6b564a,e);
     if(tuftMat) mixc(tuftMat.color,0x5f9e3f,0x3a2f26,e);
@@ -3769,6 +3848,7 @@ const Grassland3D=(function(){
     const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw),Rx=Math.cos(yaw),Rz=-Math.sin(yaw);
     let dx=Fx*iz+Rx*ix,dz=Fz*iz+Rz*ix;const dl=Math.hypot(dx,dz);
     if(dl>0){ dx/=dl;dz/=dl;const spd=sprint?11:6;charX=clamp(charX+dx*spd*dt,-HALF,HALF);charZ=clamp(charZ+dz*spd*dt,-HALF,HALF);heading=Math.atan2(dx,dz); }
+    if(Math.hypot(charX-lastTrailX,charZ-lastTrailZ)>.8){ trail.push({x:charX,z:charZ});lastTrailX=charX;lastTrailZ=charZ; if(trail.length>2400)trail.shift(); }
     const gh=heightAt(charX,charZ);
     if(jumpQueued&&onGround){ vy=7.2;onGround=false;jumpQueued=false;gTone(220,440,.18,.07); }
     if(!onGround){ vy-=22*dt;jumpY+=vy*dt;if(jumpY<=0){jumpY=0;vy=0;onGround=true;gTone(120,50,.12,.06);} }
@@ -3803,6 +3883,7 @@ const Grassland3D=(function(){
     // 煤矿 / 安全门目标
     updateObjective(dt);
     updateWayfinder();
+    drawMinimap();
     // 长按 E 退出
     if(eHolding){ const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;} }
   }
@@ -3897,6 +3978,7 @@ const Grassland3D=(function(){
     hzEl.style.display="block";document.getElementById("g3d-run").style.display="none";
     overEl.style.display="none";
     keys={};eHolding=false;actionHolding=false;jumpQueued=false;onGround=true;vy=0;jumpY=0;charX=0;charZ=0;heading=Math.PI;
+    trail=[{x:0,z:0}];lastTrailX=0;lastTrailZ=0;miniCtx=null;
     yaw=0;pitch=.34;dist=8;targetDist=8;runBlend=0;phase=0;stepTimer=0;gtime=0;muted=false;touchMove={x:0,y:0};touchSprint=false;
     won=false;objKey="";carry=null;
     muteBtn.classList.remove("off");muteLabel.textContent="声音";
