@@ -622,7 +622,7 @@
         <div class="cstat"><span class="ck">精神危害</span><span class="cv psy">3 级</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
-      <p style="margin-top:10px">地下 3 层车库（后室 Level 1 放大版，每层约 <b style="color:#ffc24d">40 万平方米</b>）· 荧光灯、承重柱，<b style="color:#ffc24d">车辆已全部清空</b> · 每层 <b style="color:#ffc24d">80%</b> 概率在两侧刷出<b style="color:#ffc24d">储藏室</b>，柜子会自己打开，里面可能有<b style="color:#ffcf5a">手电筒</b>，靠近 <b style="color:#ffcf5a">0.5 米</b>自动捡起 · 手电筒照向<b style="color:#ff6b6b">笑脸</b>会让它消失（没死），并在 <b style="color:#ff6b6b">20 米</b>外重新刷出 · 车库每 <b style="color:#ffc24d">1 分钟</b>熄灯一次，熄灯时<b style="color:#ff6b6b">笑脸才会活动</b>，箭头照样指着安全出口 · <b style="color:#ffc24d">箭头</b>指引到电梯（现实世界的观光电梯），进梯后 <b style="color:#ffcf5a">2 秒</b>关门送下一层，到站 <b style="color:#ffcf5a">1 秒</b>后再开门 · 也可以踩<b style="color:#ffc24d">随机坡道</b>直接换层 · <b style="color:#ff8a8a">切皮者</b>会把你整套<b style="color:#ffcf5a">防护服剥掉</b>（商城里不会丢），剥掉后精神危害不再累积，但也失去减伤与体力回复 · 每层有 <b style="color:#ff6b6b">10%</b> 概率刷出<b style="color:#ff6b6b">红门</b>，走进去直达<b style="color:#ff6b6b">跑命医院</b> · 第 3 层顺着箭头找到会发光的<b style="color:#8fe06a">安全门</b>逃出</p>
+      <p style="margin-top:10px">地下 3 层车库（后室 Level 1 放大版，每层约 <b style="color:#ffc24d">40 万平方米</b>）· 荧光灯、密布的承重柱，<b style="color:#ffc24d">车辆已全部清空</b> · 每层 <b style="color:#ffc24d">80%</b> 概率在<b style="color:#ffc24d">两侧墙里凹出储藏室</b>（净高 <b style="color:#ffc24d">20 米</b>）：铁门自己滑开，扶着<b style="color:#ffcf5a">台阶扶手</b>爬上阁楼，柜子里可能有<b style="color:#ffcf5a">手电筒</b>，靠近 <b style="color:#ffcf5a">0.5 米</b>自动捡起 · <b style="color:#8fe06a">躲进储藏室实体就进不来</b>，门在你身后滑上 · 手电筒照向<b style="color:#ff6b6b">笑脸</b>会让它消失（没死），并在 <b style="color:#ff6b6b">20 米</b>外重新刷出 · 车库每 <b style="color:#ffc24d">1 分钟</b>熄灯一次，熄灯时<b style="color:#ff6b6b">笑脸才会活动</b>，箭头照样指着安全出口 · <b style="color:#ffc24d">箭头</b>指引到电梯（现实世界的观光电梯），进梯后 <b style="color:#ffcf5a">2 秒</b>关门送下一层，到站 <b style="color:#ffcf5a">1 秒</b>后再开门 · 也可以踩<b style="color:#ffc24d">随机坡道</b>直接换层 · <b style="color:#ff8a8a">切皮者</b>会把你整套<b style="color:#ffcf5a">防护服剥掉</b>（商城里不会丢），剥掉后精神危害不再累积，但也失去减伤与体力回复 · 每层有 <b style="color:#ff6b6b">10%</b> 概率刷出<b style="color:#ff6b6b">红门</b>，走进去直达<b style="color:#ff6b6b">跑命医院</b> · 第 3 层顺着箭头找到会发光的<b style="color:#8fe06a">安全门</b>逃出</p>
     </button>
   </div>
   <div class="team-select" style="margin:20px 0;display:flex;gap:15px;justify-content:center;">
@@ -5686,7 +5686,10 @@ const Garage3D=(function(){
   const V_WALK=4.0, V_SPRINT=7.2;
   const FLABEL=["B1 地下一层","B2 地下二层","B3 地下三层"];
   const ELEV_Z=-250, START_Z=-226, EXIT_Z=-700;
-  const ROOM_Z0=-70, ROOM_GAP=100, ROOM_N=5, ROOM_DEPTH=18, ROOM_W=16;
+  const ROOM_Z0=-70, ROOM_GAP=100, ROOM_N=5;
+  const ROOM_D=14, ROOM_W=9, ROOM_H=20;                        // 储藏室：凹在侧墙后面，小而高（净高 20 米）
+  const DOOR_W=3.0, DOOR_H=2.4;                                // 每间一扇门
+  const STAIR_X0=1.5, STAIR_X1=5.7, STAIR_N=8, LOFT_H=2.8;     // 台阶 + 扶手 → 阁楼平台
   const RAMP_N=5, LIGHT_ON_T=60, LIGHT_OFF_T=24, LAMP_POOL_N=10, TORCH_PICK=0.5;
   const LAYOUT=[
     {peelers:[[-26,-150]],smiley:[34,-300]},
@@ -5696,8 +5699,8 @@ const Garage3D=(function(){
   let renderer=null,scene=null,camera=null,char=null,charMats=null,armL=null,armR=null,legL=null,legR=null,head=null;
   let amb=null,hemi=null,dir=null,world=null,lampFix=[],lampPool=[],lampPoolT=0;
   let entities=[],obstacles=[],elevator=null,exitDoor=null,redDoor=null,arrowLift=null,arrowExit=null;
-  let torches=[],ramps=[],cabinets=[],torchMesh=null,torchLight=null,torchTarget=null,elevDoorOb=null;
-  let blackout=false,lightT=LIGHT_ON_T,hasTorch=false;
+  let torches=[],ramps=[],cabinets=[],rooms=[],roomPlan=[],torchMesh=null,torchLight=null,torchTarget=null,elevDoorOb=null;
+  let blackout=false,lightT=LIGHT_ON_T,hasTorch=false,hidNote=false;
   let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="";
   let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,walked=0;
   let floorIdx=0,lives=5,charges=0,suitOn=true,haz=0,fuel=100,inv=0,dead=false,won=false,hitFx=0;
@@ -5779,12 +5782,14 @@ const Garage3D=(function(){
       world=null; }
     entities.length=0;obstacles.length=0;elevator=null;exitDoor=null;redDoor=null;arrowLift=null;arrowExit=null;
     lampFix.length=0;lampPool.length=0;torches.length=0;ramps.length=0;cabinets.length=0;elevDoorOb=null;
+    rooms.length=0;roomPlan.length=0;
   }
   function buildFloor(idx){
     disposeWorld();
     floorIdx=idx;
     world=new THREE.Group();scene.add(world);
-    // 地面 / 顶棚 / 侧墙（整层 180m × 2220m）
+    planRooms();
+    // 地面 / 顶棚 / 侧墙（整层 180m × 2220m，可走面积 398230 平方米）
     const fm=new THREE.MeshStandardMaterial({map:tex(gFloorTex(),HALF*2/6,(LEN+9)/6),roughness:.96,metalness:0});
     const fl=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,LEN+9),fm);
     fl.rotation.x=-Math.PI/2;fl.position.set(0,0,-(LEN/2)+1.5);world.add(fl);
@@ -5792,8 +5797,7 @@ const Garage3D=(function(){
     const ce=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,LEN+9),cm);
     ce.rotation.x=Math.PI/2;ce.position.set(0,CEILH,-(LEN/2)+1.5);world.add(ce);
     const wm=new THREE.MeshStandardMaterial({map:tex(gWallTex(),(LEN+9)/4,1),roughness:.93});
-    [-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.PlaneGeometry(LEN+9,CEILH),wm);
-      w.position.set(s*HALF,CEILH/2,-(LEN/2)+1.5);w.rotation.y=-s*Math.PI/2;world.add(w);});
+    buildSideWalls(wm);
     const front=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,CEILH),wm);
     front.position.set(0,CEILH/2,4);front.rotation.y=Math.PI;world.add(front);
     const back=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,CEILH),wm);
@@ -5801,7 +5805,7 @@ const Garage3D=(function(){
     buildLamps();
     // 承重柱（实例化，省绘制）
     const pillars=[];
-    for(let x=-70;x<=70;x+=20)for(let z=-30;z>=-LEN+30;z-=25){
+    for(let x=-75;x<=75;x+=15)for(let z=-25;z>=-LEN+25;z-=18){
       if(Math.abs(x)<=12&&Math.abs(z-ELEV_Z)<10)continue;
       pillars.push([x,z]);
     }
@@ -5816,11 +5820,9 @@ const Garage3D=(function(){
   }
   // ---------- 顶灯：整排灯管 + 少量动态光源池 ----------
   function buildLamps(){
-    const rows=[-52,0,52];
-    for(let ci=0;ci<rows.length;ci++){
-      const x=rows[ci];
-      for(let z=-20;z>=-740;z-=30){ addLamp(x,z); }
-      if(ci===1) for(let z=-800;z>=-(LEN-20);z-=60){ addLamp(x,z); }   // 深处中排补光
+    const rows=[-76,-51,-26,0,26,51,76];
+    for(const x of rows){
+      for(let z=-18;z>=-(LEN-18);z-=32){ addLamp(x,z); }     // 七排密灯
     }
     for(let i=0;i<LAMP_POOL_N;i++){
       const pl=new THREE.PointLight(0xffe0a0,1.6,52,2);
@@ -5828,22 +5830,30 @@ const Garage3D=(function(){
       lampPool.push({light:pl,fix:-1,ph:Math.random()*6.28});
     }
   }
-  function addLamp(x,z){
-    const lg=new THREE.Group();lg.position.set(x,CEILH-.08,z);world.add(lg);
+  function addLamp(x,z,y){
+    const room=y!==undefined;                              // 储藏室里的灯要收着点，不然整间屋子过曝
+    const yy=room?y:CEILH-.08;
+    const lg=new THREE.Group();lg.position.set(x,yy,z);world.add(lg);
     const tube=new THREE.Mesh(new THREE.BoxGeometry(2.6,.1,.26),new THREE.MeshStandardMaterial({color:0xfff3d0,emissive:new THREE.Color(0xffe9b0),emissiveIntensity:1.1,roughness:.5}));
     lg.add(tube);
     const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffe6ae,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
-    halo.scale.set(4.4,2.2,1);halo.position.y=-.1;lg.add(halo);
-    lampFix.push({x:x,z:z,tube:tube,halo:halo,ph:Math.random()*6.28});
+    halo.scale.set(room?2.4:4.2,room?1.2:2.1,1);halo.position.y=-.1;lg.add(halo);
+    if(room){                                               // 20 米高的屋子吊一盏灯
+      const cord=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,ROOM_H-y,5),mat("#2e2b26",{roughness:.9}));
+      cord.position.y=(ROOM_H-y)/2;lg.add(cord);
+      const shade=new THREE.Mesh(new THREE.ConeGeometry(.5,.5,10,1,true),mat("#4b463d",{roughness:.8,side:THREE.DoubleSide}));
+      shade.position.y=.34;shade.rotation.x=Math.PI;lg.add(shade);
+    }
+    lampFix.push({x:x,z:z,y:yy,tube:tube,halo:halo,k:room?.42:1,ph:Math.random()*6.28});
   }
   function updateLamps(dt){
     const on=!blackout;
     if(amb)amb.intensity=on?.24:.05;
     if(hemi)hemi.intensity=on?.38:.10;
     for(const f of lampFix){
-      const fl=.9+.08*Math.sin(gtime*5+f.ph)+(Math.random()<.01?-.5:0);
-      f.tube.material.emissiveIntensity=on?(1.1*fl):0.02;
-      f.halo.material.opacity=on?(0.3*fl):0;
+      const fl=.9+.08*Math.sin(gtime*5+f.ph)+(Math.random()<.01?-.5:0),k=f.k||1;
+      f.tube.material.emissiveIntensity=on?(1.1*k*fl):0.02;
+      f.halo.material.opacity=on?(0.3*k*fl):0;
     }
     lampPoolT-=dt;
     if(lampPoolT<=0){
@@ -5865,8 +5875,8 @@ const Garage3D=(function(){
     for(const L of lampPool){
       const f=L.fix>=0?lampFix[L.fix]:null;
       if(!f){L.light.intensity=0;continue;}
-      L.light.position.set(f.x,CEILH-.5,f.z);
-      L.light.intensity=blackout?0:(1.6*(.9+.08*Math.sin(gtime*5+L.ph)));
+      L.light.position.set(f.x,f.y===undefined?CEILH-.5:f.y-.4,f.z);
+      L.light.intensity=blackout?0:(1.6*(f.k||1)*(.9+.08*Math.sin(gtime*5+L.ph)));
     }
   }
   // ---------- 承重柱 ----------
@@ -5886,36 +5896,143 @@ const Garage3D=(function(){
     cols.frustumCulled=false;bands.frustumCulled=false;
     world.add(cols);world.add(bands);
   }
-  // ---------- 两侧房间（80% 概率刷新）· 房间里有会自己打开的柜子，柜里可能有手电筒 ----------
-  function buildRooms(){
-    if(Math.random()>=0.8)return;
-    const wm=mat("#6f6a60",{roughness:.94,side:THREE.DoubleSide});
-    const rm=new THREE.MeshStandardMaterial({map:tex(gFloorTex(),3,3),roughness:.96});
+  // ---------- 侧墙：按储藏室门洞切成一段一段，门洞上方留门楣 ----------
+  function buildSideWalls(wm){
+    if(!roomPlan.length){
+      [-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.PlaneGeometry(LEN+9,CEILH),wm);
+        w.position.set(s*HALF,CEILH/2,-(LEN/2)+1.5);w.rotation.y=-s*Math.PI/2;world.add(w);});
+      return;
+    }
+    const wc=gWallTex();
+    const wall=(s,znear,zfar,y0,y1)=>{
+      const len=znear-zfar,h=y1-y0;if(len<=.02||h<=.02)return;
+      const m=new THREE.MeshStandardMaterial({map:tex(wc,Math.max(.4,len/4),Math.max(.2,h/3)),roughness:.93,side:THREE.DoubleSide});
+      const w=new THREE.Mesh(new THREE.PlaneGeometry(len,h),m);
+      w.position.set(s*HALF,y0+h/2,(znear+zfar)/2);w.rotation.y=-s*Math.PI/2;world.add(w);
+    };
+    for(const s of[-1,1]){
+      let prev=3.6;
+      for(const r of roomPlan){
+        if(r.s!==s)continue;
+        wall(s,prev,r.zc+DOOR_W/2,0,CEILH);
+        wall(s,r.zc+DOOR_W/2,r.zc-DOOR_W/2,DOOR_H,CEILH);
+        prev=r.zc-DOOR_W/2;
+      }
+      wall(s,prev,-LEN,0,CEILH);
+    }
+  }
+  // ---------- 储藏室：凹在侧墙后面，一间门 + 一段台阶扶手 + 20 米高的阁楼 ----------
+  function planRooms(){
+    roomPlan=[];
+    if(Math.random()>=0.8)return;                       // 每层 80% 概率才刷储藏室
     for(let s=-1;s<=1;s+=2){
       for(let i=0;i<ROOM_N;i++){
-        const zc=ROOM_Z0-i*ROOM_GAP+(Math.random()-.5)*18;
-        if(Math.abs(zc-ELEV_Z)<36)continue;
-        const xIn=s*(HALF-ROOM_DEPTH);
-        const fl2=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_DEPTH,ROOM_W),rm);
-        fl2.rotation.x=-Math.PI/2;fl2.position.set(s*(HALF-ROOM_DEPTH/2),0.02,zc);world.add(fl2);
-        [-1,1].forEach(k=>{
-          const w=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_DEPTH,CEILH),wm);
-          w.position.set(s*(HALF-ROOM_DEPTH/2),CEILH/2,zc+k*ROOM_W/2);
-          w.rotation.y=k>0?Math.PI:0;world.add(w);
-        });
-        const lintel=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W,.7),wm);
-        lintel.position.set(xIn,CEILH-.35,zc);lintel.rotation.y=-s*Math.PI/2;world.add(lintel);
-        [-1,1].forEach(k=>{
-          const post=new THREE.Mesh(new THREE.BoxGeometry(.3,CEILH-.7,.3),mat("#5f5a52"));
-          post.position.set(xIn,(CEILH-.7)/2,zc+k*(ROOM_W/2-.15));world.add(post);
-        });
-        addSign("储藏室",2.6,.8,"#cfd6c2","#232a20",xIn,CEILH-.95,zc,-s*Math.PI/2);
-        addLamp(s*(HALF-ROOM_DEPTH/2),zc);      // 每个储藏室顶上一盏灯，柜子才看得清
-        for(let c=0;c<2;c++){
-          const cz=zc+(c-.5)*5.4;
-          buildCabinet(s*(HALF-5),cz,s>0?-Math.PI/2:Math.PI/2);
-        }
+        const zc=ROOM_Z0-i*ROOM_GAP+(Math.random()-.5)*16;
+        if(Math.abs(zc-ELEV_Z)<42)continue;
+        if(floorIdx===2&&s<0&&Math.abs(zc-EXIT_Z)<24)continue;
+        roomPlan.push({s:s,zc:zc});
       }
+    }
+    roomPlan.sort((a,b)=>b.zc-a.zc);
+  }
+  function buildRooms(){
+    rooms.length=0;
+    if(!roomPlan.length)return;
+    const wm=mat("#5a554c",{roughness:.94,side:THREE.DoubleSide});   // 墙后比大厅暗一档，门口才不至于过曝
+    const fm=mat("#4e4a43",{roughness:.95,side:THREE.DoubleSide});
+    const conM=mat("#6d675e",{roughness:.96});
+    const steel=mat("#8a8f92",{roughness:.5,metalness:.5});
+    const railM=mat("#d0a92c",{roughness:.5,metalness:.6});
+    const frameM=mat("#4f4a43",{roughness:.7,metalness:.3});
+    const doorM=mat("#767a7e",{roughness:.55,metalness:.5});
+    const floorM=new THREE.MeshStandardMaterial({map:tex(gFloorTex(),4,3),color:0x8f8a80,roughness:.96,side:THREE.DoubleSide});
+    const run=STAIR_X1-STAIR_X0,tread=run/STAIR_N,ang=Math.atan2(LOFT_H,run);
+    for(const rp of roomPlan){
+      const s=rp.s,zc=rp.zc;
+      const rg=new THREE.Group();rg.position.set(s*HALF,0,zc);rg.rotation.y=s>0?0:Math.PI;world.add(rg);
+      const bx=(geo,m,x,y,z,rx,ry,rz)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);
+        o.rotation.set(rx||0,ry||0,rz||0);rg.add(o);return o;};
+      // 凹进墙后的盒子：净高 20 米
+      bx(new THREE.PlaneGeometry(ROOM_D,ROOM_W),floorM,ROOM_D/2,.012,0,-Math.PI/2);
+      bx(new THREE.PlaneGeometry(ROOM_W,ROOM_H),wm,ROOM_D,ROOM_H/2,0,0,-Math.PI/2);
+      [-1,1].forEach(k=>bx(new THREE.PlaneGeometry(ROOM_D,ROOM_H),wm,ROOM_D/2,ROOM_H/2,k*ROOM_W/2,0,k>0?Math.PI:0));
+      bx(new THREE.PlaneGeometry(ROOM_D,ROOM_W),fm,ROOM_D/2,ROOM_H,0,Math.PI/2);
+      // 台阶 8 级 + 两侧扶手
+      for(let i=0;i<STAIR_N;i++){
+        const h=LOFT_H*(i+1)/STAIR_N;
+        bx(new THREE.BoxGeometry(tread+.02,h,DOOR_W-.5),conM,STAIR_X0+tread*(i+.5),h/2,0);
+      }
+      [-1,1].forEach(k=>{
+        const zz=k*(DOOR_W/2-.28);
+        bx(new THREE.BoxGeometry(Math.hypot(LOFT_H,run)+.3,.07,.07),railM,STAIR_X0+run/2,LOFT_H/2+.92,zz,0,0,ang);
+        for(let i=0;i<=2;i++){const t=i/2;
+          bx(new THREE.BoxGeometry(.07,.92,.07),railM,STAIR_X0+run*t,LOFT_H*t+.46,zz);}
+      });
+      // 阁楼台面 + 台面前沿的护墙（只有台阶口能上去）
+      bx(new THREE.BoxGeometry(ROOM_D-STAIR_X1-.1,.24,ROOM_W-.4),conM,(STAIR_X1+ROOM_D)/2,LOFT_H-.12,0);
+      [-1,1].forEach(k=>{
+        const w2=(ROOM_W/2-.2-(DOOR_W/2-.25));
+        const z2=k*((DOOR_W/2-.25)+w2/2);
+        bx(new THREE.BoxGeometry(.2,LOFT_H,w2),wm,STAIR_X1-.05,LOFT_H/2,z2);
+        bx(new THREE.BoxGeometry(.26,.1,w2+.1),railM,STAIR_X1-.05,LOFT_H+.02,z2);
+        obstacles.push({x:s*(HALF+STAIR_X1-.05),z:zc+z2,hw:.12,hd:w2/2,h:LOFT_H});
+      });
+      for(let k=0;k<4;k++)bx(new THREE.BoxGeometry(.16,LOFT_H-.2,.16),steel,STAIR_X1+.5,(LOFT_H-.2)/2,(k%2?1:-1)*(ROOM_W/2-.7));
+      // 门：金属推拉门，玩家靠近自动滑开，进去后自己关上
+      [-1,1].forEach(k=>bx(new THREE.BoxGeometry(.16,DOOR_H+.12,.18),frameM,.05,(DOOR_H+.12)/2,k*(DOOR_W/2+.03)));
+      bx(new THREE.BoxGeometry(.16,.2,DOOR_W+.36),frameM,.05,DOOR_H+.1,0);
+      const slider=new THREE.Group();slider.position.set(.36,0,0);rg.add(slider);
+      const leaf=new THREE.Mesh(new THREE.BoxGeometry(.08,DOOR_H-.08,DOOR_W-.14),doorM);
+      leaf.position.set(0,(DOOR_H-.08)/2,0);slider.add(leaf);
+      [-1,1].forEach(k=>{const rib=new THREE.Mesh(new THREE.BoxGeometry(.09,.34,DOOR_W-.6),mat("#5f6367",{roughness:.6,metalness:.5}));
+        rib.position.set(0,DOOR_H*.5+k*.5,0);slider.add(rib);});
+      const knob=new THREE.Mesh(new THREE.BoxGeometry(.08,.3,.08),mat("#d8d3c6",{roughness:.3,metalness:.8}));
+      knob.position.set(.09,1.12,-(DOOR_W/2-.3));slider.add(knob);
+      const ob={x:s*HALF,z:zc,hw:.3,hd:DOOR_W/2-.1,h:DOOR_H,off:true};obstacles.push(ob);
+      rooms.push({s:s,zc:zc,slider:slider,open:0,ob:ob});
+      addSign("储藏室",2.1,.68,"#ffd98a","#1a1309",s*(HALF-.08),1.66,zc+(DOOR_W/2+1.05)*s,-s*Math.PI/2);
+      addLamp(s*(HALF+ROOM_D/2),zc,LOFT_H+2.4);            // 20 米高的屋子吊一盏灯
+      for(let c=0;c<2;c++)buildCabinet(s*(HALF+ROOM_D-1.1),zc+(c-.5)*3.2,s>0?-Math.PI/2:Math.PI/2,LOFT_H);
+    }
+  }
+  function roomAt(sgn,z){
+    for(const r of rooms){if(r.s===sgn&&Math.abs(z-r.zc)<ROOM_W/2)return r;}
+    return null;
+  }
+  function roomIn(){
+    const sgn=charX<0?-1:1;
+    return Math.abs(charX)>HALF-PR?roomAt(sgn,charZ):null;
+  }
+  // 脚下标高：门口平台 0 → 台阶 → 阁楼台面 2.8 米
+  function groundY(x,z){
+    const sgn=x<0?-1:1,ax=Math.abs(x);
+    if(ax<=HALF)return 0;
+    const r=roomAt(sgn,z);
+    if(!r)return 0;
+    const o=ax-HALF;
+    if(o<STAIR_X0)return 0;
+    if(o<STAIR_X1){
+      if(Math.abs(z-r.zc)>DOOR_W/2-.2)return 0;
+      const i=Math.min(STAIR_N-1,Math.floor((o-STAIR_X0)/((STAIR_X1-STAIR_X0)/STAIR_N)));
+      return LOFT_H*(i+1)/STAIR_N;
+    }
+    return LOFT_H;
+  }
+  function hiddenNow(){
+    const sgn=charX<0?-1:1;
+    return Math.abs(charX)>=HALF-0.05&&!!roomAt(sgn,charZ);
+  }
+  function updateDoors(dt){
+    const sgn=charX<0?-1:1,depth=Math.abs(charX)-HALF;
+    for(const r of rooms){
+      const same=r.s===sgn,zin=Math.abs(charZ-r.zc);
+      const inside=same&&depth>-.3&&zin<ROOM_W/2-.2;
+      const near=same&&!inside&&depth<0&&zin<DOOR_W/2+1.1&&-depth<4.6;
+      const want=inside?(depth>2.9?0:1):(near?1:0);
+      r.open+=(want-r.open)*Math.min(1,dt*3.2);
+      if(r.open<.02)r.open=0;else if(r.open>.98)r.open=1;
+      r.slider.position.z=r.open*2.7;
+      r.ob.off=r.open>=.5;
     }
   }
   // 牌子：正反两面各一块，从哪边看字都是正的
@@ -5926,10 +6043,11 @@ const Garage3D=(function(){
     const b=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);b.position.set(x,y,z);b.rotation.y=ry+Math.PI;g.add(b);
     return a;
   }
-  // 柜子：门会自己慢慢打开，里面可能有手电筒
-  function buildCabinet(x,z,ry){
+  // 柜子：门会自己慢慢打开，里面可能有手电筒（y=放在阁楼台面上）
+  function buildCabinet(x,z,ry,y){
+    const yy=y||0;
     const bodyM=mat("#8a8f92",{roughness:.45,metalness:.55});
-    const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;world.add(g);
+    const g=new THREE.Group();g.position.set(x,yy,z);g.rotation.y=ry;world.add(g);
     const back=new THREE.Mesh(new THREE.BoxGeometry(1.3,2.3,.06),bodyM);back.position.set(0,1.15,-.32);g.add(back);
     [-1,1].forEach(s=>{const sd=new THREE.Mesh(new THREE.BoxGeometry(.06,2.3,.7),bodyM);sd.position.set(s*.62,1.15,0);g.add(sd);});
     const top=new THREE.Mesh(new THREE.BoxGeometry(1.3,.06,.7),bodyM);top.position.set(0,2.28,0);g.add(top);
@@ -5940,11 +6058,11 @@ const Garage3D=(function(){
     const handle=new THREE.Mesh(new THREE.BoxGeometry(.07,.28,.07),mat("#d8d3c6",{roughness:.3,metalness:.8}));
     handle.position.set(1.1,1.05,.06);hinge.add(handle);
     cabinets.push({x:x,z:z,hinge:hinge,open:0,go:false});
-    obstacles.push({x:x,z:z,hw:.36,hd:.66,h:2.3});
+    obstacles.push({x:x,z:z,hw:.36,hd:.66,h:2.3,y:yy});
     if(Math.random()<0.55){
       const dirX=Math.sin(ry), dirZ=Math.cos(ry);      // 柜子正面方向
       const px=x+dirX*.45, pz=z+dirZ*.45;
-      const torch=new THREE.Group();torch.position.set(px,1.16,pz);torch.rotation.y=ry;world.add(torch);
+      const torch=new THREE.Group();torch.position.set(px,yy+1.16,pz);torch.rotation.y=ry;world.add(torch);
       const body=new THREE.Mesh(new THREE.CylinderGeometry(.055,.06,.3,10),mat("#2c3136",{roughness:.5,metalness:.6}));
       body.rotation.z=Math.PI/2;body.position.y=.06;torch.add(body);
       const head=new THREE.Mesh(new THREE.CylinderGeometry(.08,.055,.1,10),new THREE.MeshStandardMaterial({color:0xffe6b0,emissive:new THREE.Color(0xffd98a),emissiveIntensity:.9,roughness:.4}));
@@ -6137,7 +6255,8 @@ const Garage3D=(function(){
   function buildRedDoor(idx,force){
     redDoor=null;
     if(!force&&Math.random()>0.10)return;
-    const z=-60-Math.random()*560;
+    let z=-60-Math.random()*560;
+    for(let i=0;i<40&&roomPlan.some(r=>r.s>0&&Math.abs(r.zc-z)<DOOR_W/2+2.4);i++)z=-60-Math.random()*560;   // 别堵在储藏室门口
     const dg=new THREE.Group();dg.position.set(HALF,0,z);dg.rotation.y=-Math.PI/2;world.add(dg);
     const frameM=mat("#2b0606",{roughness:.75});
     const glowM=mat("#ff2b1f",{emissive:new THREE.Color("#ff2b1f"),emissiveIntensity:.75,roughness:.45});
@@ -6264,10 +6383,21 @@ const Garage3D=(function(){
   // ---------- 碰撞 ----------
   function collide(nx,nz){
     const inLift=Math.abs(nx)<1.55&&nz<ELEV_Z+0.5&&nz>ELEV_Z-2.35;
-    nx=clamp(nx,-HALF+PR,HALF-PR);
     nz=clamp(nz,inLift?(ELEV_Z-2.35):(-LEN+PR),3.6-PR);
+    // 侧墙：默认出不了大厅；储藏室凹在墙后，只有门洞能进（进去后沿墙滑动，不会被弹出大厅）
+    const sgn=nx<0?-1:1,ax=Math.abs(nx),wasIn=Math.abs(charX)>HALF-PR+.01;
+    if(ax>HALF-PR){
+      const r=roomAt(sgn,nz)||(wasIn?roomAt(sgn,charZ):null);
+      const canIn=r&&((wasIn&&Math.abs(charZ-r.zc)<ROOM_W/2)||Math.abs(nz-r.zc)<=DOOR_W/2-.15);
+      if(canIn){
+        nx=clamp(nx,-(HALF+ROOM_D-PR),HALF+ROOM_D-PR);
+        nz=clamp(nz,r.zc-ROOM_W/2+PR,r.zc+ROOM_W/2-PR);
+      }else nx=sgn*(HALF-PR);
+    }
+    const gy=groundY(nx,nz);
     for(const o of obstacles){
       if(o.off)continue;
+      if(o.y!==undefined&&Math.abs(o.y-gy)>.9)continue;   // 不同标高的障碍物互不阻挡
       if(Math.abs(o.z-nz)>o.hd+PR+.5||Math.abs(o.x-nx)>o.hw+PR+.5)continue;
       if(jumpY>o.h-.12)continue;
       const dx=nx-o.x,dz=nz-o.z,px=o.hw+PR-Math.abs(dx),pz=o.hd+PR-Math.abs(dz);
@@ -6349,6 +6479,13 @@ const Garage3D=(function(){
     }
     updateLamps(dt);
     updateCabinets(dt);
+    updateDoors(dt);
+    const hideout=hiddenNow();                       // 躲进储藏室（墙后）→ 实体够不到
+    if(hideout&&!hidNote){
+      hidNote=true;
+      cortip.textContent="躲进储藏室 · 铁门在身后滑上，实体隔墙进不来";
+      cortip.style.display="block";gTone(240,150,.4,.1,"triangle");
+    }else if(!hideout)hidNote=false;
     const canMove=active&&!dead&&!won;
     let ix=0,iz=0;
     if(canMove){
@@ -6401,9 +6538,10 @@ const Garage3D=(function(){
         else { e.mesh.visible=false; continue; }
       }
       const live=(e.kind!=="smiley")||(!e.dormant&&!e.hidden);   // 笑脸只在熄灯时活动
-      if(live&&dd<e.aggro&&dd>.01){const mv=e.spd*dt;e.x+=ddx/dd*mv;e.z+=ddz/dd*mv;}
+      const walled=Math.abs(e.x)<HALF&&hideout;                  // 玩家在墙后，实体只能停在走廊
+      if(live&&dd<e.aggro&&dd>.01&&!walled){const mv=e.spd*dt;e.x+=ddx/dd*mv;e.z+=ddz/dd*mv;}
       e.x=clamp(e.x,-HALF+1.1,HALF-1.1);e.z=clamp(e.z,-LEN+1.4,3.2);
-      if(live&&!dead&&!won&&dd<(e.kind==="peeler"?1.35:1.15)&&inv<=0){
+      if(live&&!walled&&!dead&&!won&&dd<(e.kind==="peeler"?1.35:1.15)&&inv<=0){
         if(e.kind==="peeler"){
           if(suitOn)stripSuit();
           else hurt("切皮者把你剩下的皮也扒了下来",e);
@@ -6471,14 +6609,25 @@ const Garage3D=(function(){
       legL.rotation.x=-sw*.9;legR.rotation.x=sw*.9;head.rotation.x=Math.sin(stepT*2)*.05;
       if(moving&&onGround){const st=Math.floor(stepT/Math.PI);if(st!==cStep){cStep=st;gTone(70+Math.random()*24,45,.07,.04,"sine");}}
     }
-    char.position.set(charX,jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
+    const gy=groundY(charX,charZ);
+    char.position.set(charX,gy+jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
     char.rotation.y+=((heading-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
     // 相机
+    const room=roomIn();
     camDist+=(camDistT-camDist)*Math.min(1,dt*6);
-    const tx=charX,ty=1.35+jumpY*.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
-    let cx=tx+camDist*Math.sin(yaw)*cp,cy=ty+camDist*sp,cz=tz+camDist*Math.cos(yaw)*cp;
-    cy=clamp(cy,.6,CEILH-.4);
-    cx=clamp(cx,-HALF+.3,HALF-.3);cz=clamp(cz,-LEN+1,5);
+    const cd=room?Math.min(camDist,3.0):camDist;
+    const tx=charX,ty=1.35+gy+jumpY*.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
+    let cx=tx+cd*Math.sin(yaw)*cp,cy=ty+cd*sp,cz=tz+cd*Math.cos(yaw)*cp;
+    if(room){
+      // 墙后的储藏室：相机最多探到大厅门口 3 米，再往里就得留在屋里
+      cx=clamp(cx,-(HALF+ROOM_D-.6),HALF+ROOM_D-.6);
+      if(Math.abs(cx)<HALF)cz=clamp(cz,room.zc-DOOR_W/2+.3,room.zc+DOOR_W/2-.3);
+      else cz=clamp(cz,room.zc-ROOM_W/2+.5,room.zc+ROOM_W/2-.5);
+      cy=clamp(cy,gy+.6,Math.max(CEILH-.4,ROOM_H-1.2));
+    }else{
+      cy=clamp(cy,.6,CEILH-.4);
+      cx=clamp(cx,-HALF+.3,HALF-.3);cz=clamp(cz,-LEN+1,5);
+    }
     const shk=hitFx*.14;
     camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
     camera.lookAt(tx,ty+.4,tz);
@@ -6636,7 +6785,7 @@ const Garage3D=(function(){
     initGAudio();addListeners();loadingEl.style.display="none";
     overlay.classList.toggle("touch",isTouch);
     cortip.style.display="block";
-    cortip.textContent="车库 · 地下三层 · 每层约 40 万平方米 · 箭头指向电梯 · 侧边可能有储藏室，柜子会自己开，里面有手电筒（靠近 0.5 米自动捡起）· 每 1 分钟熄灯一次，熄灯时笑脸才活动 · 切皮者会剥掉防护服（商城里不会丢）· 偶尔能刷出红门 → 跑命医院";
+    cortip.textContent="车库 · 地下三层 · 每层约 40 万平方米 · 箭头指向电梯 · 侧墙里可能凹着储藏室：铁门自动滑开，扶台阶上阁楼，柜子里有手电筒（靠近 0.5 米自动捡起）· 躲进储藏室实体就进不来 · 每 1 分钟熄灯一次，熄灯时笑脸才活动 · 切皮者会剥掉防护服（商城里不会丢）· 偶尔能刷出红门 → 跑命医院";
     updateHUD(99);
     if(isTouch){touchLayer.style.display="block";
       hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 跳</span><span><b>右侧拖动</b> 视角</span><span><b>右上退出</b> 离开</span>';}
