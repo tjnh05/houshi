@@ -5850,7 +5850,7 @@ const Garage3D=(function(){
         menuEl=gid("menu"),exitBtnEl=gid("g3d-exitbtn");
   const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
   const rand=(a,b)=>a+Math.random()*(b-a);
-  const HALF=90, LEN=2220, CEILH=10, PR=.42, RING_C=339.292, LAMP_Y=2.92, ELEV_H=3.6;   // 整层 180m × 2220m × 10m 高，可走面积 398230 平方米
+  const HALF=90, LEN=2220, CEILH=10, PR=.42, RING_C=339.292, LAMP_Y=4.5, ELEV_H=3.6;   // 整层 180m × 2220m × 10m 高，可走面积 398230 平方米
   const FLOOR_H=CEILH;                                                       // 相邻楼层净间距 = 层高，电梯按这个距离升降
   const V_WALK=4.0, V_SPRINT=7.2;
   const FLABEL=["B1 地下一层","B2 地下二层","B3 地下三层"];
@@ -6001,12 +6001,16 @@ const Garage3D=(function(){
     for(const x of rows){
       for(let z=-18;z>=-(LEN-18);z-=32){ addLamp(x,z); cordPts.push(x,z); }     // 七排密灯
     }
-    // 顶棚 10 米高，灯管仍旧吊在 3 米高度，用一根吊线连到顶棚（合批成一个 InstancedMesh）
+    // 顶棚 10 米高，灯管吊在 4.5 米，每盏灯用两根明显的吊绳连到顶棚（合批成一个 InstancedMesh）
     const cordLen=CEILH-LAMP_Y;
-    const cordMesh=new THREE.InstancedMesh(new THREE.CylinderGeometry(.04,.04,cordLen,5),
-      mat("#2b2823",{roughness:.9}),cordPts.length/2);
+    const cordMesh=new THREE.InstancedMesh(new THREE.CylinderGeometry(.07,.07,cordLen,6),
+      mat("#8a8272",{roughness:.85}),cordPts.length);
     const cm4=new THREE.Matrix4();
-    for(let i=0;i<cordPts.length/2;i++)cm4.makeTranslation(cordPts[i*2],LAMP_Y+cordLen/2,cordPts[i*2+1]);
+    for(let i=0;i<cordPts.length/2;i++){
+      const x=cordPts[i*2], z=cordPts[i*2+1], cy=LAMP_Y+cordLen/2;
+      cm4.makeTranslation(x-.95,cy,z);cordMesh.setMatrixAt(i*2,cm4);
+      cm4.makeTranslation(x+.95,cy,z);cordMesh.setMatrixAt(i*2+1,cm4);
+    }
     cordMesh.instanceMatrix.needsUpdate=true;cordMesh.frustumCulled=false;world.add(cordMesh);
     for(let i=0;i<LAMP_POOL_N;i++){
       const pl=new THREE.PointLight(0xffe0a0,1.6,52,2);
@@ -6023,7 +6027,7 @@ const Garage3D=(function(){
     const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffe6ae,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
     halo.scale.set(room?2.4:4.2,room?1.2:2.1,1);halo.position.y=-.1;lg.add(halo);
     if(room){                                               // 10 米高的屋子吊一盏灯
-      const cord=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,ROOM_H-y,5),mat("#2e2b26",{roughness:.9}));
+      const cord=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,ROOM_H-y,6),mat("#8a8272",{roughness:.85}));
       cord.position.y=(ROOM_H-y)/2;lg.add(cord);
       const shade=new THREE.Mesh(new THREE.ConeGeometry(.5,.5,10,1,true),mat("#4b463d",{roughness:.8,side:THREE.DoubleSide}));
       shade.position.y=.34;shade.rotation.x=Math.PI;lg.add(shade);
