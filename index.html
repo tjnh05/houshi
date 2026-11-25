@@ -5876,7 +5876,7 @@ const Garage3D=(function(){
   let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="";
   let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,walked=0;
   let floorIdx=0,lives=5,charges=0,suitOn=true,haz=0,fuel=100,inv=0,dead=false,won=false,hitFx=0;
-  let elevTimer=-1,doorDelay=0,elevPhase=0;
+  let elevTimer=-1,doorDelay=0,elevPhase=0,elevArrived=false,elevExitHinted=false;
   let yaw=0,pitch=.13,camDist=7.0,camDistT=7.0;
   let firstPerson=false;
   let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0,cStep=-1;
@@ -6931,10 +6931,19 @@ const Garage3D=(function(){
         }
       }else{
         let want=0;
-        if(inside){ if(elevTimer<0)elevTimer=0; elevTimer+=dt; want=elevTimer<1.6?1:0; }
+        if(inside){
+          if(elevArrived){                  // 到站驻留：门保持敞开，绝不自动开走，等玩家自己走出去
+            want=1;
+            if(!elevExitHinted){ cortip.textContent="已到站 · "+FLABEL[floorIdx]+" · 门已开，朝亮光/箭头方向走出电梯即可"; cortip.style.display="block"; elevExitHinted=true; }
+            // 玩家一旦走出轿厢，结束驻留；下一次再进来才会重新计时乘梯
+            if(charZ>ELEV_Z+0.75||Math.abs(charX)>1.7){ elevArrived=false;elevExitHinted=false;elevTimer=-1;doorDelay=1; }
+          }else{
+            if(elevTimer<0)elevTimer=0; elevTimer+=dt; want=elevTimer<1.6?1:0;
+          }
+        }
         else if(near&&doorDelay<=0)want=1;
         elevator.open+=(want-elevator.open)*Math.min(1,dt*4.5);
-        if(inside&&elevTimer>=1.6){ startRide(elevator.next); return; }
+        if(inside&&!elevArrived&&elevTimer>=1.6){ startRide(elevator.next); return; }
       }
       if(cabDl)cabDl.position.x=-(.93+elevator.open*1.8);
       if(cabDr)cabDr.position.x=(.93+elevator.open*1.8);
@@ -7098,18 +7107,32 @@ const Garage3D=(function(){
     camera.position.set(cx+Math.sin(gtime*41)*shk,cyAbs+Math.sin(gtime*33)*shk,cz);
     camera.lookAt(lx,ly,lz);
     // 指引箭头 + 顶部罗盘（熄灯时也照样指着目标）
-    const tgtX=floorIdx===2&&exitDoor?exitDoor.x:0, tgtZ=floorIdx===2&&exitDoor?exitDoor.z:ELEV_Z;
-    const label=floorIdx===2?"安全出口":"电梯";
-    pointArrow(arrowLift,0,ELEV_Z,2.2);
-    if(floorIdx===2&&arrowLift)arrowLift.visible=false;   // B3 只找出口门，别再引去电梯
-    if(floorIdx===2&&exitDoor)pointArrow(arrowExit,exitDoor.x,exitDoor.z,-2.2);
-    else if(arrowExit)arrowExit.visible=false;            // 前两层还没有安全门
-    const Tx=tgtX-charX,Tz=tgtZ-charZ;
-    const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
-    const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
-    wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
-    wayText.textContent=label;wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
-    wayEl.style.display="flex";wayEl.classList.toggle("door",floorIdx===2);
+    // 到站驻留：人还在轿厢里，改指引「走出电梯」——箭头指向门外，罗盘不再指脚下的电梯(0m)
+    if(elevArrived){
+      const exitZ=ELEV_Z+5;                       // 门外方向（+Z）
+      pointArrow(arrowLift,charX,exitZ,0);
+      if(arrowLift)arrowLift.visible=true;
+      if(arrowExit)arrowExit.visible=false;
+      const Tx=0-charX,Tz=exitZ-charZ;
+      const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
+      const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
+      wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
+      wayText.textContent="走出电梯";wayDist.textContent=Math.max(0,Math.round(Tz))+"m";
+      wayEl.style.display="flex";wayEl.classList.remove("door");
+    }else{
+      const tgtX=floorIdx===2&&exitDoor?exitDoor.x:0, tgtZ=floorIdx===2&&exitDoor?exitDoor.z:ELEV_Z;
+      const label=floorIdx===2?"安全出口":"电梯";
+      pointArrow(arrowLift,0,ELEV_Z,2.2);
+      if(floorIdx===2&&arrowLift)arrowLift.visible=false;   // B3 只找出口门，别再引去电梯
+      if(floorIdx===2&&exitDoor)pointArrow(arrowExit,exitDoor.x,exitDoor.z,-2.2);
+      else if(arrowExit)arrowExit.visible=false;            // 前两层还没有安全门
+      const Tx=tgtX-charX,Tz=tgtZ-charZ;
+      const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
+      const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
+      wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
+      wayText.textContent=label;wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
+      wayEl.style.display="flex";wayEl.classList.toggle("door",floorIdx===2);
+    }
     // 联机同步
     if(net3DSync(dt,walked,jumpY,lives,charges,fuel,won,dead)){finish();return;}
     updateHUD(minGap);
@@ -7129,9 +7152,9 @@ const Garage3D=(function(){
     cabY=worldY;
     if(carGrp)carGrp.position.y=cabY;
     charX=0;charZ=ELEV_Z-1.25;heading=Math.PI;jumpY=0;vy=0;onGround=true;
-    elevTimer=-1;doorDelay=0;
+    elevTimer=-1;doorDelay=0;elevArrived=true;elevExitHinted=true;   // 到站驻留：门一直开，等人自己走出去（提示已在下方给出）
     gTone(520,240,.3,.14,"triangle");
-    cortip.textContent="电梯到站 · "+FLABEL[next]+" · 门开了，走出去继续找安全出口";
+    cortip.textContent="电梯到站 · "+FLABEL[next]+" · 门已打开 · 沿地面绿色箭头朝电梯门外走出去（门会一直开着等你）";
     cortip.style.display="block";
   }
   function gotoFloor(idx,via){
@@ -7140,7 +7163,7 @@ const Garage3D=(function(){
     cabY=worldY;
     if(carGrp)carGrp.position.y=cabY;
     charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;
-    elevTimer=-1;doorDelay=1;   // 到站 1 秒后电梯门才重新打开
+    elevTimer=-1;doorDelay=1;elevArrived=false;elevExitHinted=false;   // 到站 1 秒后电梯门才重新打开
     gTone(520,240,.3,.14,"triangle");
     const msg=via?("走"+via+"上到 "+FLABEL[idx]+" · "+(idx===2?"找箭头指向的安全出口逃出去":"箭头指向电梯，坐电梯去下一层"))
                  :("到达 "+FLABEL[idx]+" · "+((idx===2)?"找箭头指向的安全出口逃出去":"箭头指向电梯，坐电梯去下一层")+(redDoor?" · 这一层有一扇红门，走进去 → 跑命医院":""));
@@ -7265,7 +7288,7 @@ const Garage3D=(function(){
     rLightRow.style.display="flex";rTorchRow.style.display="flex";
     floorIdx=0;charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;jumpQueued=false;walked=0;
     fuel=100;lives=5;charges=SUITS[save.equipped].charges;suitOn=true;haz=0;inv=0;dead=false;won=false;hitFx=0;
-    elevTimer=-1;doorDelay=0;blackout=false;lightT=LIGHT_ON_T;
+    elevTimer=-1;doorDelay=0;elevArrived=false;elevExitHinted=false;blackout=false;lightT=LIGHT_ON_T;
     hasTorch=false;torchMesh=null;torchLight=null;torchTarget=null;torchCharge=0;
     yaw=0;pitch=.13;camDist=7.0;camDistT=7.0;gtime=0;stepT=0;cStep=-1;hudKey="";
     keys={};eHolding=false;touchMove.x=0;touchMove.y=0;touchSprint=false;
