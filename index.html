@@ -762,6 +762,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
         <span id="g3d-mutelabel">声音</span>
       </button>
+      <button class="g3d-iconbtn" id="g3d-viewbtn" title="切换视角（V）" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="g3d-viewlabel">第三人称</span>
+      </button>
       <button class="g3d-iconbtn" id="g3d-exitbtn" title="退出草原">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
         <span>退出</span>
@@ -817,6 +821,7 @@
     <div class="rn-row hazleft"><span id="g3d-rhazleft">裸装 60 秒满值</span></div>
     <div class="rn-row" id="g3d-rlightrow" style="display:none"><span id="g3d-rlightlabel">照明</span><b id="g3d-rlight">通电</b></div>
     <div class="rn-row" id="g3d-rtorchrow" style="display:none"><span>手电筒</span><b id="g3d-rtorch">未持有</b></div>
+    <div class="rn-row" id="g3d-rteamrow" style="display:none"><span>队友</span><b id="g3d-rteam">无</b></div>
     <div class="rn-row" id="g3d-gunrow" style="display:none"><span>武器</span><b id="g3d-gunname" style="color:#ffcf5a">—</b></div>
   </div>
 
@@ -938,7 +943,7 @@ const SPRINT_SPEED=10, SPRINT_FRAMES=240,                // 4秒 @60fps
 
 // ---------- 模式配置 ----------
 const MODES=[
-  {name:"LEVEL 0", world:"red", catSpeed:3, sprintSpeed:7, smileys:true, smileyCount:1, party:true, kitty:{speed:4,always:false},
+  {name:"LEVEL 0", world:"red", catSpeed:3, sprintSpeed:7, smileys:true, smileyCount:4, party:true, kitty:{speed:4,always:false},
    doors:true, debris:true, weapons:true, winM:500, pal:"red", doorC:"#ffffff", doorFrame:"#3a0f0f"},
   {name:"LEVEL 1 · 逃生", world:"yellow", catSpeed:5, sprintSpeed:9, smileys:true, smileyCount:1, party:false, kitty:{speed:5,always:true},
    doors:false, debris:false, weapons:true, winM:1000, pal:"yellow", doorC:"#ffffff", doorFrame:"#3a0f0f"},
@@ -999,6 +1004,7 @@ const SUITS=[
 ];
 const SAVE_KEY="houshi-backrooms-v1";
 const save={points:0, owned:[true,false,false,false,false,false,false,false,false,false], equipped:0, history:[], pills:0,
+            torch:false, batteries:0,
             checkin:{last:"",total:0,log:[]}};
 try{ const raw=localStorage.getItem(SAVE_KEY); if(raw)Object.assign(save,JSON.parse(raw)); }catch(e){}
 if(!Array.isArray(save.owned))save.owned=[];
@@ -1008,6 +1014,9 @@ if(save.equipped==null||!save.owned[save.equipped])save.equipped=0;
 if(!Array.isArray(save.history))save.history=[];
 save.history=save.history.filter(h=>h&&typeof h.m==="string"&&typeof h.p==="number"&&typeof h.t==="number");
 if(typeof save.pills!=="number"||isNaN(save.pills)||save.pills<0)save.pills=0;
+if(typeof save.torch!=="boolean")save.torch=false;
+if(typeof save.batteries!=="number"||isNaN(save.batteries)||save.batteries<0)save.batteries=0;
+save.batteries=Math.floor(save.batteries);
 if(!save.checkin||typeof save.checkin!=="object")save.checkin={last:"",total:0,log:[]};
 if(typeof save.checkin.last!=="string")save.checkin.last="";
 if(typeof save.checkin.total!=="number"||isNaN(save.checkin.total)||save.checkin.total<0)save.checkin.total=0;
@@ -1275,6 +1284,35 @@ function renderShop(){
     const btn=el.querySelector("button");
     if(save.points>=10){btn.textContent="购 买";btn.onclick=()=>{save.points-=10;save.pills++;persist();renderShop();tone(600,900,.2,.13,"sine");};}
     else {btn.textContent="积分不足（"+save.points+"/10）";btn.disabled=true;}
+    shopGridEl.appendChild(el);
+  })();
+  // 手电筒（随身携带 · 每 3 秒耗 1% 电 · 死了会消失）
+  (function(){
+    const el=document.createElement("div");
+    el.className="suit pillitem";
+    el.innerHTML='<h3>手电筒</h3>'+
+      '<div class="sw pillo"><span>灯</span></div>'+
+      '<div>开局随身携带 · 每 3 秒耗 1% 电（满电约 5 分钟）<br>死了手电筒会消失 · 关卡里捡到的手电筒会自动变卖成积分</div>'+
+      '<div class="price">需要 20 积分</div>'+
+      '<button></button>';
+    const btn=el.querySelector("button");
+    if(save.torch){btn.textContent="已 持 有";btn.disabled=true;}
+    else if(save.points>=20){btn.textContent="购 买";btn.onclick=()=>{save.points-=20;save.torch=true;persist();renderShop();tone(520,1040,.25,.14,"sine");};}
+    else {btn.textContent="积分不足（"+save.points+"/20）";btn.disabled=true;}
+    shopGridEl.appendChild(el);
+  })();
+  // 电池（5 积分一节 · 一节补 50% 电量）
+  (function(){
+    const el=document.createElement("div");
+    el.className="suit pillitem";
+    el.innerHTML='<h3>电池</h3>'+
+      '<div class="sw pillo"><span>电</span></div>'+
+      '<div>一节补 50% 电量 · 关卡里按 <b style="color:#ffe14d">B</b> 换上<br>持有 <span class="pillown">'+save.batteries+'</span> 节</div>'+
+      '<div class="price">需要 5 积分</div>'+
+      '<button></button>';
+    const btn=el.querySelector("button");
+    if(save.points>=5){btn.textContent="购 买";btn.onclick=()=>{save.points-=5;save.batteries++;persist();renderShop();tone(600,900,.2,.13,"sine");};}
+    else {btn.textContent="积分不足（"+save.points+"/5）";btn.disabled=true;}
     shopGridEl.appendChild(el);
   })();
 }
@@ -3183,6 +3221,43 @@ function makeWanderer(su){
   g.traverse(o=>{if(o.isMesh)o.castShadow=true;});
   return {g:g,armL:armL,armR:armR,legL:legL,legR:legR,head:head,mats:M};
 }
+// ================= 电鼠（静止不动的带电实体 · 踩上去立刻死亡） =================
+// 管道长廊与车库共用；每次调用都新建材质，方便各关卡自己的 dispose 流程回收
+function makeRat(){
+  const M={
+    fur:new THREE.MeshStandardMaterial({color:0x2b2622,roughness:.94}),
+    skin:new THREE.MeshStandardMaterial({color:0x6d5c4d,roughness:.82}),
+    eye:new THREE.MeshStandardMaterial({color:0x180404,emissive:new THREE.Color(0xff3a20),emissiveIntensity:1.8,roughness:.3}),
+    spark:new THREE.MeshBasicMaterial({color:0xcdefff,transparent:true,opacity:.95,fog:false})
+  };
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.SphereGeometry(.22,12,10),M.fur);
+  body.scale.set(1,.7,1.55);body.position.y=.17;g.add(body);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.115,10,8),M.skin);
+  head.scale.set(1,.92,1.25);head.position.set(0,.2,.3);g.add(head);
+  [-1,1].forEach(s=>{
+    const ear=new THREE.Mesh(new THREE.CircleGeometry(.065,10),M.skin);
+    ear.position.set(s*.07,.3,.33);ear.rotation.y=s*.5;g.add(ear);
+    const e=new THREE.Mesh(new THREE.SphereGeometry(.02,6,6),M.eye);
+    e.position.set(s*.05,.235,.4);g.add(e);});
+  const tail=new THREE.Mesh(new THREE.CylinderGeometry(.018,.032,.34,6),M.fur);
+  tail.rotation.x=-1.15;tail.position.set(0,.14,-.4);g.add(tail);
+  const arcs=[];
+  for(let i=0;i<3;i++){
+    const a=new THREE.Mesh(new THREE.TorusGeometry(.075,.011,5,12),M.spark);
+    a.position.set(Math.cos(i*2.1)*.2,.3,Math.sin(i*2.1)*.2);
+    a.rotation.set(i*.9,i*.6,i*.4);g.add(a);arcs.push(a);}
+  // 电弧辉光（程序生成的径向渐变，不依赖各关卡的贴图函数）
+  const c=document.createElement("canvas");c.width=c.height=64;
+  const cg=c.getContext("2d"),gr=cg.createRadialGradient(32,32,0,32,32,32);
+  gr.addColorStop(0,"rgba(190,235,255,.85)");gr.addColorStop(.45,"rgba(120,190,255,.28)");gr.addColorStop(1,"rgba(90,160,255,0)");
+  cg.fillStyle=gr;cg.fillRect(0,0,64,64);
+  const gt=new THREE.CanvasTexture(c);gt.encoding=THREE.sRGBEncoding;
+  const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0x9fe4ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.45,fog:false}));
+  glow.scale.set(1.1,1.1,1);glow.position.set(0,.26,0);g.add(glow);
+  g.userData.arcs=arcs;g.userData.glow=glow;g.userData.sparkM=M.spark;
+  return g;
+}
 // 当前激活的 3D 模式（草原 / 快跑层共用 #grass3d 面板），用于分派面板上的通用按钮
 const ThreeOver={mode:"grass"};
 // ================= 草原 3D 模式（Three.js · 第三人称鼠标视角） =================
@@ -4807,16 +4882,16 @@ const Corridor3D=(function(){
     office:{wallT:"#7a7a7a",wallB:"#525252",floor:"#5e5e5e",ceil:"#242424",lamp:"#f4f4f4",fog:"#161616",accent:"#8fe06a",amb:.2,hemi:.28,dir:.18,exp:.97}
   };
   const TIP={
-    red:"红色长廊 · 侧面岔路口全部互通、没有死路 · 只有 1 张笑脸和 1 只骷髅细菌 · 岔路里有枪 · 精神危害 3 级",
+    red:"红色长廊 · 侧面岔路口全部互通、没有死路 · 4 张小笑脸（做小了很多）· 1 只骷髅细菌 · 岔路里有枪 · 精神危害 3 级",
     yellow:"黄色走廊 · 岔路口全部互通、没有死路 · 身后 Kitty 越追越近，冲刺甩开 · 只有 1 张笑脸",
     blue:"蓝色长廊 · 骷髅细菌一直朝你走，只能绕开或冲刺 · 少量笑脸",
-    pipe:"管道长廊 · 红色管道密布 · 少量笑脸 · 捡到枪后靠近实体会自动开枪",
+    pipe:"管道长廊 · 天花板上一根红管道 · 长方形灯每 3 米一盏 · 每 20 米一道铁栅栏（中间能钻过去）· 地上有电鼠，踩到立刻死 · 少量笑脸 · 捡到枪后靠近实体会自动开枪",
     pool:"泳池层 · 巨大泳池大厅，两侧白色柱子是掩体 · 悬浮箭头指向出口 · 溺水细菌每 10 秒扣 0.1 血",
     office:"办公室 · 撞到门会自动打开 · 每间房两台电脑桌、每桌两台实心电脑（撞不穿）· 死亡飞蛾俯冲"
   };
   let renderer=null,scene=null,camera=null,char=null,armL=null,armR=null,legL=null,legR=null,head=null,gunMesh=null;
   let amb=null,hemi=null,dir=null,pl1=null,pl2=null,lampMat=null;
-  const geoStore=[],matStore=new Set(),segs=[],obstacles=[],entities=[],basins=[],rooms=[],guns=[],remotes={},branches=[];
+  const geoStore=[],matStore=new Set(),segs=[],obstacles=[],entities=[],basins=[],rooms=[],guns=[],remotes={},branches=[],fences=[];
   const geoCache={};
   let RUN_M=500,V_WALK=6,V_SPRINT=11,WORLD="red",PAL=WORLD_PAL.red;
   let WALK_HALF=WALL, CH=CEIL, poolArrow=null, POOL_Z0=-40, POOL_Z1=-455, portalDoor=null;
@@ -4824,6 +4899,7 @@ const Corridor3D=(function(){
   let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,dist=0;
   let fuel=100,charges=0,lives=5,inv=0,dead=false,won=false,hitFx=0,haz=0,inWater=false;
   let yaw=0,pitch=.24,camDist=6.8,camDistT=6.8;
+  let firstPerson=false;
   let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0,cStep=-1;
   let gunType=null,gunAmmo=0,gunCd=0,muzzle=0;
   let darkAmt=0,darkTarget=0;
@@ -4939,9 +5015,10 @@ const Corridor3D=(function(){
       if(end>cursor){ const seg=new THREE.Mesh(boxG(.3,CEIL,end-cursor),wallM);seg.position.set(x,CEIL/2,(cursor+end)/2);scene.add(seg); }
     }
     wallSide(-1);wallSide(1);
-    // 灯
+    // 灯（管道层用长方形灯管，每 3 米一盏）
     lampMat=mat(PAL.lamp,{emissive:new THREE.Color(PAL.lamp),emissiveIntensity:.8,roughness:.4});
-    for(let z=-6;z>-RUN_M;z-=SEG){
+    const lampStep=WORLD==="pipe"?3:SEG;
+    for(let z=-6;z>-RUN_M;z-=lampStep){
       const lamp=new THREE.Mesh(boxG(1.6,.06,.8),lampMat);lamp.position.set(0,CEIL-.04,z);scene.add(lamp);
       segs.push({z:z});
     }
@@ -5096,16 +5173,65 @@ const Corridor3D=(function(){
     scene.add(g);
     portalDoor={x:x,z:z,hw:w/2,h:h,grp:g,halo:halo,glowM:glowM,used:false};
   }
+  // 管道长廊：天花板上一根红色管道（只有一根）+ 每 20 米一道铁栅栏（中间留出能钻过去的空档）
   function buildPipes(){
     if(WORLD!=="pipe")return;
-    const cols=["#cc2222","#aa1818","#991515"];
-    [1.0,2.0,3.0].forEach((h,i)=>{
-      const pm=mat(cols[i],{roughness:.5,metalness:.4});
-      [-1,1].forEach(s=>{
-        const pipe=new THREE.Mesh(cylG(.18,.18,RUN_M+30,10),pm);pipe.rotation.x=Math.PI/2;pipe.position.set(s*(WALL-.28),h,-RUN_M/2);scene.add(pipe);
-        for(let z=-8;z>-RUN_M;z-=SEG){const j=new THREE.Mesh(cylG(.24,.24,.3,10),pm);j.rotation.x=Math.PI/2;j.position.set(s*(WALL-.28),h,z);scene.add(j);}
-      });
-    });
+    const pm=mat("#cc2222",{roughness:.45,metalness:.5});
+    const hangM=mat("#6f757b",{roughness:.5,metalness:.6});
+    const px=-1.6, py=CEIL-.42, L=RUN_M+40;
+    const pipe=new THREE.Mesh(cylG(.24,.24,L,12),pm);
+    pipe.rotation.x=Math.PI/2;pipe.position.set(px,py,-RUN_M/2);scene.add(pipe);
+    for(let z=-8;z>-RUN_M;z-=SEG){
+      const fl=new THREE.Mesh(cylG(.31,.31,.2,12),pm);
+      fl.rotation.x=Math.PI/2;fl.position.set(px,py,z);scene.add(fl);
+      const hang=new THREE.Mesh(boxG(.07,.3,.07),hangM);
+      hang.position.set(px,CEIL-.15,z);scene.add(hang);
+      const brk=new THREE.Mesh(boxG(.5,.07,.07),hangM);
+      brk.position.set(px,py,z);scene.add(brk);
+    }
+  }
+  function buildFences(){
+    fences.length=0;
+    if(WORLD!=="pipe")return;
+    const barM=mat("#4d5257",{roughness:.55,metalness:.7});
+    const railM=mat("#616870",{roughness:.5,metalness:.75});
+    const GAP=1.6;                                    // 中间空档半宽
+    const bars=[],rails=[],posts=[];
+    for(let z=-20;z>-RUN_M;z-=20){
+      if(portalDoor&&Math.abs(z-portalDoor.z)<4)continue;
+      for(const s of[-1,1]){
+        posts.push([s*(GAP+.09),z]);
+        for(let x=GAP+.3;x<WALL-.35;x+=.34) bars.push([s*x,z]);
+        rails.push([s*((GAP+.09+WALL-.35)/2),2.52,z]);
+        rails.push([s*((GAP+.09+WALL-.35)/2),0.18,z]);
+      }
+      fences.push({z:z,gap:GAP});
+    }
+    if(bars.length){
+      const bg=new THREE.BoxGeometry(.06,2.28,.06);
+      const im=new THREE.InstancedMesh(bg,barM,bars.length);
+      const m=new THREE.Matrix4();
+      bars.forEach((p,i)=>{m.makeTranslation(p[0],1.4,p[1]);im.setMatrixAt(i,m);});
+      im.instanceMatrix.needsUpdate=true;im.frustumCulled=false;scene.add(im);
+    }
+    if(rails.length){
+      const rg=new THREE.BoxGeometry(WALL-.35-GAP-.09,.08,.08);
+      const im=new THREE.InstancedMesh(rg,railM,rails.length);
+      const m=new THREE.Matrix4();
+      rails.forEach((p,i)=>{m.makeTranslation(p[0],p[1],p[2]);im.setMatrixAt(i,m);});
+      im.instanceMatrix.needsUpdate=true;im.frustumCulled=false;scene.add(im);
+    }
+    if(posts.length){
+      const pg=new THREE.BoxGeometry(.12,2.62,.12);
+      const im=new THREE.InstancedMesh(pg,railM,posts.length);
+      const m=new THREE.Matrix4();
+      posts.forEach((p,i)=>{m.makeTranslation(p[0],1.31,p[1]);im.setMatrixAt(i,m);});
+      im.instanceMatrix.needsUpdate=true;im.frustumCulled=false;scene.add(im);
+    }
+    for(const f of fences){
+      const sgn=makeLabel("栅栏 · 中间可过","#c8d2d8");
+      sgn.position.set(0,2.9,f.z+.2);sgn.scale.set(3.4,.72,1);scene.add(sgn);
+    }
   }
   function buildObstacles(){
     if(WORLD==="office")return; // 办公室障碍已在房间里建
@@ -5218,10 +5344,11 @@ const Corridor3D=(function(){
     g.userData.wings=wings;return g;
   }
   function spawnEntity(kind,z,x){
-    const mesh=kind==="smiley"?buildSmiler():(kind==="bacteria"?buildBacteria():(kind==="kitty"?buildKitty():(kind==="drown"?buildDrownBacteria():buildMoth())));
+    const mesh=kind==="smiley"?buildSmiler():(kind==="bacteria"?buildBacteria():(kind==="kitty"?buildKitty():(kind==="drown"?buildDrownBacteria():(kind==="rat"?makeRat():buildMoth()))));
     scene.add(mesh);
     const e={kind:kind,x:x||0,z:z,hp:3,alive:true,ph:rand(0,6.28),mesh:mesh,respawn:0,drownT:rand(2,10),
-             spd:V_WALK*(kind==="kitty"?1.12:(kind==="bacteria"?.86:(kind==="moth"?1.0:(kind==="drown"?.7:.92))))};
+             spd:kind==="rat"?0:V_WALK*(kind==="kitty"?1.12:(kind==="bacteria"?.86:(kind==="moth"?1.0:(kind==="drown"?.7:.92))))};
+    if(kind==="smiley"&&WORLD==="red"){mesh.scale.setScalar(.6);e.hitR=.66;}   // 红色长廊：笑脸做得小一点
     entities.push(e);return e;
   }
   function buildEntities(){
@@ -5230,7 +5357,7 @@ const Corridor3D=(function(){
     if(WORLD==="red"){ahead(CFG.smileyCount||1,"smiley",40,70);spawnEntity("bacteria",14,1.5);}
     else if(WORLD==="yellow"){ahead(CFG.smileyCount||1,"smiley",60,120);spawnEntity("kitty",16,0);}
     else if(WORLD==="blue"){ahead(2,"smiley",40,80);spawnEntity("bacteria",16,-1.5);spawnEntity("bacteria",30,1.5);}
-    else if(WORLD==="pipe"){ahead(6,"smiley",35,60);}
+    else if(WORLD==="pipe"){ahead(6,"smiley",35,60);ahead(5,"rat",45,72);}
     else if(WORLD==="pool"){ahead(3,"smiley",50,90);
       for(let i=0;i<5;i++) spawnEntity("drown",-(70+i*72+rand(0,20)),rand(-11,11));}
     else if(WORLD==="office"){ahead(4,"smiley",40,80);spawnEntity("moth",-30,0);}
@@ -5312,10 +5439,10 @@ const Corridor3D=(function(){
     hitFx=1;
     if(src){const dx=src.x-charX,dz=src.z-charZ,dl=Math.hypot(dx,dz)||1;src.x+=dx/dl*11;src.z+=dz/dl*11;}
   }
-  function die(msg,mind){
+  function die(msg,mind,title){
     if(dead||won)return;dead=true;lives=0;charges=0;
     S.best=Math.max(S.best,Math.floor(dist));
-    overTitle.textContent=mind?"精神崩溃":"被抓住了";overText.textContent=msg;
+    overTitle.textContent=title||(mind?"精神崩溃":"被抓住了");overText.textContent=msg;
     overStat.textContent="行进 "+Math.floor(dist)+" m / "+RUN_M+" m · 最远 "+S.best+" m · 积分 +0";
     overEl.style.display="flex";cTone(260,40,1.2,.22,"sawtooth");
   }
@@ -5358,6 +5485,10 @@ const Corridor3D=(function(){
       nx=clamp(nx,lim[0],maxX);
     }
     nz=clamp(nz,-(RUN_M+4),5);
+    for(const f of fences){          // 铁栅栏：靠近时把可走范围收窄到中间空档
+      const d=Math.abs(nz-f.z);
+      if(d<1.7){const lim=f.gap+(d/1.7)*2.3;nx=clamp(nx,-lim,lim);}
+    }
     for(const o of obstacles){
       if(Math.abs(o.z-nz)>o.hd+PR+.5||Math.abs(o.x-nx)>o.hw+PR+.5)continue;
       if(jumpY>o.h-.12)continue;
@@ -5424,6 +5555,15 @@ const Corridor3D=(function(){
       if(!e.alive){ if(e.respawn>0){e.respawn-=dt;if(e.respawn<=0){e.alive=true;e.hp=3;e.z=charZ-rand(50,90);e.x=rand(-2.5,2.5);e.mesh.visible=true;}} continue; }
       const ddx=charX-e.x,ddz=charZ-e.z,dd=Math.hypot(ddx,ddz);
       minGap=Math.min(minGap,dd);
+      if(e.kind==="rat"){
+        // 电鼠：完全不动，踩上去立刻死亡（起跳能躲过去）
+        e.mesh.position.set(e.x,0,e.z);
+        const arcs=e.mesh.userData.arcs;
+        for(let i=0;i<arcs.length;i++){const a=arcs[i];a.rotation.x+=dt*7;a.rotation.z+=dt*5;a.scale.setScalar(.7+Math.random()*.8);}
+        e.mesh.userData.glow.material.opacity=.26+Math.random()*.36;
+        if(!dead&&!won&&dd<0.85&&jumpY<0.45) die("你踩到了电鼠 —— 一阵电流直接穿过了你",false,"触电身亡");
+        continue;
+      }
       const aggro=e.kind==="bacteria"?26:(e.kind==="kitty"?60:(e.kind==="moth"?12:(e.kind==="drown"?16:14)));
       if(dd<aggro&&dd>.01){const mv=e.spd*dt;e.x+=ddx/dd*mv;e.z+=ddz/dd*mv;}
       if(e.kind==="drown"){
@@ -5436,7 +5576,7 @@ const Corridor3D=(function(){
           if(inWater&&dd<14&&!dead&&!won){lives=Math.max(0,lives-.1);hitFx=Math.max(hitFx,.3);cTone(520,280,.18,.1,"sine");}
         }
       }else e.x=clamp(e.x,-(WALK_HALF-.5),WALK_HALF-.5);
-      const catchR=e.kind==="kitty"?1.3:(e.kind==="bacteria"?1.2:(e.kind==="drown"?0:1.1));
+      const catchR=e.hitR!==undefined?e.hitR:(e.kind==="kitty"?1.3:(e.kind==="bacteria"?1.2:(e.kind==="drown"?0:1.1)));
       if(!dead&&!won&&dd<catchR&&inv<=0){
         const evade=(e.kind==="smiley"||e.kind==="moth")&&jumpY>1.0;
         if(evade){e.z=charZ-rand(40,70);e.x=rand(-2.5,2.5);}
@@ -5485,21 +5625,31 @@ const Corridor3D=(function(){
       if(moving&&onGround){const st=Math.floor(stepT/Math.PI);if(st!==cStep){cStep=st;cTone(70+Math.random()*24,45,.07,.04,"sine");}}
     }
     char.position.set(charX,floorY+jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
-    char.rotation.y+= ((heading-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
+    const faceTarget=firstPerson?Math.atan2(-Math.sin(yaw),-Math.cos(yaw)):heading;
+    char.rotation.y+= ((faceTarget-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
+    if(head)head.visible=!firstPerson;      // 第一人称别让后脑勺挡视线
     if(gunType)gunMesh.rotation.x=muzzle>0?-.15:0;
-    // 相机（拖拽视角跟随，永不自动往后转）
+    // 相机（拖拽视角跟随，永不自动往后转；可切第一人称）
     camDist+=(camDistT-camDist)*Math.min(1,dt*6);
     const tx=charX,ty=1.35+jumpY*.5+floorY,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
     let cx=tx+camDist*Math.sin(yaw)*cp,cy=ty+camDist*sp,cz=tz+camDist*Math.cos(yaw)*cp;
-    cy=clamp(cy,floorY+.6,CH+3);
-    if(WORLD==="office"){
-      const cr=charX>WALL-.05?roomAt(charZ):null;
-      if(cr){cx=clamp(cx,cr.x0+.3,cr.x1-.3);cz=clamp(cz,cr.z0+.3,cr.z1-.3);}
-      else{cx=clamp(cx,-(WALL-.3),WALL-.3);const rr=roomAt(cz);if(rr&&rr.open>.6)cx=clamp(cx,rr.x0+.3,rr.x1-.3);}
-    }else{ const lim=walkLimits(cz,charX,.3);cx=clamp(cx,lim[0],lim[1]); }
     const shk=hitFx*.14;
-    camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
-    camera.lookAt(tx,ty+.4,tz);
+    if(firstPerson){
+      // 第一人称：小人的眼睛视角
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=tx+Fx*.3;cz=tz+Fz*.3;cy=floorY+1.98+jumpY;
+      camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
+      camera.lookAt(cx+Fx*cp*10,cy+sp*10,cz+Fz*cp*10);
+    }else{
+      cy=clamp(cy,floorY+.6,CH+3);
+      if(WORLD==="office"){
+        const cr=charX>WALL-.05?roomAt(charZ):null;
+        if(cr){cx=clamp(cx,cr.x0+.3,cr.x1-.3);cz=clamp(cz,cr.z0+.3,cr.z1-.3);}
+        else{cx=clamp(cx,-(WALL-.3),WALL-.3);const rr=roomAt(cz);if(rr&&rr.open>.6)cx=clamp(cx,rr.x0+.3,rr.x1-.3);}
+      }else{ const lim=walkLimits(cz,charX,.3);cx=clamp(cx,lim[0],lim[1]); }
+      camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
+      camera.lookAt(tx,ty+.4,tz);
+    }
     // 实体追到镜头跟前时把模型藏掉，别糊住整个画面
     for(const e of entities){
       if(!e.alive)continue;
@@ -5576,6 +5726,7 @@ const Corridor3D=(function(){
   function showError(msg){overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errText.textContent=msg;}
   function onKeyDown(e){if(!active)return;const c=e.code;
     if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
+    if(c==="KeyV"){if(!e.repeat)toggleView();return;}
     if(c==="KeyE"){if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);}return;}
     if(c==="Space"){if(!e.repeat)jumpQueued=true;keys[c]=true;return;}
     keys[c]=true;}
@@ -5633,7 +5784,7 @@ const Corridor3D=(function(){
     keys={};eHolding=false;showRing(false);hidePrompt();touchMove.x=0;touchMove.y=0;touchSprint=false;
     overlay.classList.remove("run");hzEl.style.display="block";runEl.style.display="none";cortip.style.display="none";
     overEl.style.display="none";loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
-    overlay.style.display="none";
+    overlay.style.display="none";showViewBtn(false);
   }
   function exit(){teardown();openMenu();}
   function restart(){exit();launch();}
@@ -5648,6 +5799,7 @@ const Corridor3D=(function(){
     RUN_M=CFG.winM;V_WALK=CFG.catSpeed*M2S;V_SPRINT=(CFG.sprintSpeed||CFG.catSpeed+4)*M2S;
     WALK_HALF=WORLD==="pool"?POOL_HALF:WALL;CH=WORLD==="pool"?POOL_CEIL:CEIL;
     titleB.textContent=CFG.name;titleSpan.textContent="3D 长廊";
+    showViewBtn(true);updateViewLabel(firstPerson?"第一人称":"第三人称");
     hzEl.style.display="none";runEl.style.display="block";overEl.style.display="none";
     rhead.textContent="逃生距离 · "+RUN_M+"m";rgaplabel.textContent="最近实体";rhazlabel.textContent="精神危害 3级";
     cortip.style.display="block";cortip.textContent=TIP[WORLD]||"";
@@ -5659,7 +5811,7 @@ const Corridor3D=(function(){
     muted=false;muteBtn.classList.remove("off");muteLabel.textContent="声音";
     S.lives=5;S.over=false;S.win=false;
     isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
-    try{buildRenderer();buildLights();buildRooms();buildBranchPlan();buildPoolHall();buildCorridor();buildBranches();buildPipes();buildPortalDoor();buildObstacles();buildCharacter();buildEntities();buildGuns();buildRemotes();}
+    try{buildRenderer();buildLights();buildRooms();buildBranchPlan();buildPoolHall();buildCorridor();buildBranches();buildPipes();buildFences();buildPortalDoor();buildObstacles();buildCharacter();buildEntities();buildGuns();buildRemotes();}
     catch(err){showError("初始化 3D 长廊失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return;}
     initAudio();addListeners();loadingEl.style.display="none";
     overlay.classList.toggle("touch",isTouch);
@@ -5668,10 +5820,15 @@ const Corridor3D=(function(){
     if(isTouch){touchLayer.style.display="block";
       hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 跳</span><span><b>右侧拖动</b> 视角</span><span><b>右上退出</b> 离开</span>';}
     else{touchLayer.style.display="none";
-      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">E</span> 长按 2 秒退出</span>';}
+      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">V</span> 视角</span><span><span class="k">E</span> 长按 2 秒退出</span>';}
     onResize();last=performance.now();raf=requestAnimationFrame(frame);
   }
-  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,tag:"corridor"};
+  function toggleView(){
+    firstPerson=!firstPerson;
+    updateViewLabel(firstPerson?"第一人称":"第三人称");
+    cTone(firstPerson?520:760,firstPerson?760:520,.12,.09,"triangle");
+  }
+  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,toggleView:toggleView,tag:"corridor"};
 })();
 // ================= 车库 3D 层级（地下三层 · 电梯串联 · 切皮者剥防护服） =================
 const Garage3D=(function(){
@@ -5689,15 +5846,17 @@ const Garage3D=(function(){
         rGapLabel=gid("g3d-rgaplabel"),rLife=gid("g3d-rlife"),rCharge=gid("g3d-rcharge"),rFuelFill=gid("g3d-rfuelfill"),
         rHazLabel=gid("g3d-rhazlabel"),rHaz=gid("g3d-rhaz"),rHazFill=gid("g3d-rhazfill"),rHazLeft=gid("g3d-rhazleft"),
         rLightRow=gid("g3d-rlightrow"),rLight=gid("g3d-rlight"),rTorchRow=gid("g3d-rtorchrow"),rTorch=gid("g3d-rtorch"),
+        rTeamRow=gid("g3d-rteamrow"),rTeam=gid("g3d-rteam"),
         menuEl=gid("menu"),exitBtnEl=gid("g3d-exitbtn");
   const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
   const rand=(a,b)=>a+Math.random()*(b-a);
-  const HALF=90, LEN=2220, CEILH=20, PR=.42, RING_C=339.292, LAMP_Y=2.92, ELEV_H=3.6;   // 整层 180m × 2220m × 20m 高，可走面积 398230 平方米
+  const HALF=90, LEN=2220, CEILH=10, PR=.42, RING_C=339.292, LAMP_Y=2.92, ELEV_H=3.6;   // 整层 180m × 2220m × 10m 高，可走面积 398230 平方米
+  const FLOOR_H=CEILH;                                                       // 相邻楼层净间距 = 层高，电梯按这个距离升降
   const V_WALK=4.0, V_SPRINT=7.2;
   const FLABEL=["B1 地下一层","B2 地下二层","B3 地下三层"];
   const ELEV_Z=-250, START_Z=-226, EXIT_Z=-700;
   const ROOM_Z0=-70, ROOM_GAP=100, ROOM_N=5;
-  const ROOM_D=14, ROOM_W=9, ROOM_H=20;                        // 储藏室：凹在侧墙后面，小而高（净高 20 米）
+  const ROOM_D=14, ROOM_W=9, ROOM_H=10;                        // 储藏室：凹在侧墙后面，小而高（净高 10 米）
   const DOOR_W=3.0, DOOR_H=2.8;                                // 每间一扇门（门洞要够 2.5 米高的小人通过）
   const STAIR_X0=1.5, STAIR_X1=5.7, STAIR_N=8, LOFT_H=2.8;     // 台阶 + 扶手 → 阁楼平台
   const RAMP_N=5, LIGHT_ON_T=60, LIGHT_OFF_T=24, LAMP_POOL_N=10, TORCH_PICK=0.5;
@@ -5710,12 +5869,16 @@ const Garage3D=(function(){
   let amb=null,hemi=null,dir=null,world=null,lampFix=[],lampPool=[],lampPoolT=0;
   let entities=[],obstacles=[],elevator=null,exitDoor=null,redDoor=null,arrowLift=null,arrowExit=null;
   let torches=[],ramps=[],cabinets=[],rooms=[],roomPlan=[],torchMesh=null,torchLight=null,torchTarget=null,elevDoorOb=null;
+  let batItems=[],mates=[];                       // 地上的电池 + AI 队友（双排/三排）
+  let torchCharge=0;                              // 手电筒电量 0~100
+  let carGrp=null,shaftGrp=null,cabDl=null,cabDr=null,carLight=null,cabY=0,worldY=0,ride=null;
   let blackout=false,lightT=LIGHT_ON_T,hasTorch=false,hidNote=false;
   let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="";
   let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,walked=0;
   let floorIdx=0,lives=5,charges=0,suitOn=true,haz=0,fuel=100,inv=0,dead=false,won=false,hitFx=0;
   let elevTimer=-1,doorDelay=0,elevPhase=0;
   let yaw=0,pitch=.13,camDist=7.0,camDistT=7.0;
+  let firstPerson=false;
   let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0,cStep=-1;
   let gMaster=null;
   const dyn=[];
@@ -5797,7 +5960,9 @@ const Garage3D=(function(){
   function buildFloor(idx){
     disposeWorld();
     floorIdx=idx;
+    worldY=-idx*FLOOR_H;                       // 每层往下 10 米，电梯按这个距离升降
     world=new THREE.Group();scene.add(world);
+    world.position.y=worldY;
     planRooms();
     // 地面 / 顶棚 / 侧墙（整层 180m × 2220m，可走面积 398230 平方米）
     const fm=new THREE.MeshStandardMaterial({map:tex(gFloorTex(),HALF*2/6,(LEN+9)/6),roughness:.96,metalness:0});
@@ -5826,6 +5991,7 @@ const Garage3D=(function(){
     if(idx===2)buildExitDoor();
     buildRedDoor(idx);
     buildEntities(idx);
+    buildBatteries();
     buildArrows();
   }
   // ---------- 顶灯：整排灯管 + 少量动态光源池 ----------
@@ -5835,7 +6001,7 @@ const Garage3D=(function(){
     for(const x of rows){
       for(let z=-18;z>=-(LEN-18);z-=32){ addLamp(x,z); cordPts.push(x,z); }     // 七排密灯
     }
-    // 顶棚抬到 20 米后，灯管仍旧吊在 3 米高度，用一根吊线连到顶棚（合批成一个 InstancedMesh）
+    // 顶棚 10 米高，灯管仍旧吊在 3 米高度，用一根吊线连到顶棚（合批成一个 InstancedMesh）
     const cordLen=CEILH-LAMP_Y;
     const cordMesh=new THREE.InstancedMesh(new THREE.CylinderGeometry(.04,.04,cordLen,5),
       mat("#2b2823",{roughness:.9}),cordPts.length/2);
@@ -5856,7 +6022,7 @@ const Garage3D=(function(){
     lg.add(tube);
     const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffe6ae,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
     halo.scale.set(room?2.4:4.2,room?1.2:2.1,1);halo.position.y=-.1;lg.add(halo);
-    if(room){                                               // 20 米高的屋子吊一盏灯
+    if(room){                                               // 10 米高的屋子吊一盏灯
       const cord=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,ROOM_H-y,5),mat("#2e2b26",{roughness:.9}));
       cord.position.y=(ROOM_H-y)/2;lg.add(cord);
       const shade=new THREE.Mesh(new THREE.ConeGeometry(.5,.5,10,1,true),mat("#4b463d",{roughness:.8,side:THREE.DoubleSide}));
@@ -5939,7 +6105,7 @@ const Garage3D=(function(){
       wall(s,prev,-LEN,0,CEILH);
     }
   }
-  // ---------- 储藏室：凹在侧墙后面，一间门 + 一段台阶扶手 + 20 米高的阁楼 ----------
+  // ---------- 储藏室：凹在侧墙后面，一间门 + 一段台阶扶手 + 10 米高的阁楼 ----------
   function planRooms(){
     roomPlan=[];
     if(Math.random()>=0.8)return;                       // 每层 80% 概率才刷储藏室
@@ -5970,7 +6136,7 @@ const Garage3D=(function(){
       const rg=new THREE.Group();rg.position.set(s*HALF,0,zc);rg.rotation.y=s>0?0:Math.PI;world.add(rg);
       const bx=(geo,m,x,y,z,rx,ry,rz)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);
         o.rotation.set(rx||0,ry||0,rz||0);rg.add(o);return o;};
-      // 凹进墙后的盒子：净高 20 米
+      // 凹进墙后的盒子：净高 10 米
       bx(new THREE.PlaneGeometry(ROOM_D,ROOM_W),floorM,ROOM_D/2,.012,0,-Math.PI/2);
       bx(new THREE.PlaneGeometry(ROOM_W,ROOM_H),wm,ROOM_D,ROOM_H/2,0,0,-Math.PI/2);
       [-1,1].forEach(k=>bx(new THREE.PlaneGeometry(ROOM_D,ROOM_H),wm,ROOM_D/2,ROOM_H/2,k*ROOM_W/2,0,k>0?Math.PI:0));
@@ -6018,7 +6184,7 @@ const Garage3D=(function(){
       const ob={x:s*HALF,z:zc,hw:.3,hd:DOOR_W/2-.1,h:DOOR_H,off:true};obstacles.push(ob);
       rooms.push({s:s,zc:zc,slider:slider,open:0,ob:ob});
       addSign("储藏室",2.1,.68,"#ffd98a","#1a1309",s*(HALF-.08),1.66,zc+(DOOR_W/2+1.05)*s,-s*Math.PI/2);
-      addLamp(s*(HALF+ROOM_D/2),zc,LOFT_H+2.4);            // 20 米高的屋子吊一盏灯
+      addLamp(s*(HALF+ROOM_D/2),zc,LOFT_H+2.4);            // 10 米高的屋子吊一盏灯
       for(let c=0;c<2;c++)buildCabinet(s*(HALF+ROOM_D-1.1),zc+(c-.5)*3.2,s>0?-Math.PI/2:Math.PI/2,LOFT_H);
     }
   }
@@ -6054,7 +6220,7 @@ const Garage3D=(function(){
   function ceilingAt(x,z){
     if(Math.abs(x)<2.0&&z<ELEV_Z+.6&&z>ELEV_Z-2.9)return 3.2;          // 电梯轿厢顶
     const sgn=x<0?-1:1,r=roomAt(sgn,z);
-    if(r&&Math.abs(x)>HALF-1.8&&Math.abs(x)<HALF+1.1&&Math.abs(z-r.zc)<DOOR_W/2+.2)return DOOR_H;  // 只限门洞那一小段，进了屋子就是 20 米净高
+    if(r&&Math.abs(x)>HALF-1.8&&Math.abs(x)<HALF+1.1&&Math.abs(z-r.zc)<DOOR_W/2+.2)return DOOR_H;  // 只限门洞那一小段，进了屋子就是 10 米净高
     return CEILH;
   }
   function updateDoors(dt){
@@ -6094,7 +6260,7 @@ const Garage3D=(function(){
     handle.position.set(1.1,1.05,.06);hinge.add(handle);
     cabinets.push({x:x,z:z,hinge:hinge,open:0,go:false});
     obstacles.push({x:x,z:z,hw:.36,hd:.66,h:2.3,y:yy});
-    if(Math.random()<0.55){
+    if(Math.random()<0.25){
       const dirX=Math.sin(ry), dirZ=Math.cos(ry);      // 柜子正面方向
       const px=x+dirX*.45, pz=z+dirZ*.45;
       const torch=new THREE.Group();torch.position.set(px,yy+1.16,pz);torch.rotation.y=ry;world.add(torch);
@@ -6117,10 +6283,10 @@ const Garage3D=(function(){
     }
   }
   // ---------- 手电筒 ----------
-  function pickupTorch(t){
-    t.taken=true;
-    if(t.mesh){ t.mesh.traverse(o=>{if(o.geometry)o.geometry.dispose();}); world.remove(t.mesh); t.mesh=null; }
-    hasTorch=true;
+  // 商城买的手电筒：开局随身携带，每 3 秒掉 1% 电，死了会消失
+  function equipTorch(){
+    if(hasTorch||!char)return;
+    hasTorch=true;torchCharge=100;
     const g=new THREE.Group();
     const body=new THREE.Mesh(new THREE.CylinderGeometry(.055,.06,.3,10),mat("#2c3136",{roughness:.5,metalness:.6}));
     body.rotation.x=Math.PI/2;g.add(body);
@@ -6137,7 +6303,31 @@ const Garage3D=(function(){
     char.add(torchTarget);
     torchLight.target=torchTarget;
     gTone(760,1400,.14,.12,"square");
-    cortip.textContent="捡到手电筒 · 照向笑脸就能把它吓退（它不会死，20 米外重新刷）";
+  }
+  function dropTorch(){
+    if(torchMesh){char.remove(torchMesh);torchMesh.traverse(o=>{if(o.geometry)o.geometry.dispose();});torchMesh=null;}
+    if(torchLight){char.remove(torchLight);torchLight=null;}
+    if(torchTarget){char.remove(torchTarget);torchTarget=null;}
+    hasTorch=false;torchCharge=0;
+  }
+  // 捡到柜子里的手电筒 → 自动变卖成积分
+  function pickupTorch(t){
+    t.taken=true;
+    if(t.mesh){ t.mesh.traverse(o=>{if(o.geometry)o.geometry.dispose();}); world.remove(t.mesh); t.mesh=null; }
+    addPoints(15);logPoints("手电筒 · 自动变卖",15);
+    gTone(880,1320,.14,.12,"square");
+    cortip.textContent="捡到手电筒 → 自动变卖成 15 积分";
+    cortip.style.display="block";
+  }
+  // 换电池：消耗一节，电量 +50%
+  function useBattery(){
+    if(!hasTorch){cortip.textContent="手里没有手电筒";cortip.style.display="block";return;}
+    if(save.batteries<=0){cortip.textContent="没有电池了 —— 商城 5 积分一节";cortip.style.display="block";return;}
+    if(torchCharge>=99){cortip.textContent="电量已经满了，不用换电池";cortip.style.display="block";return;}
+    save.batteries--;persist();
+    torchCharge=Math.min(100,torchCharge+50);
+    gTone(520,900,.16,.12,"square");
+    cortip.textContent="换上一节电池 · 电量 "+Math.round(torchCharge)+"% · 剩 "+save.batteries+" 节";
     cortip.style.display="block";
   }
   function updateTorch(){
@@ -6148,6 +6338,7 @@ const Garage3D=(function(){
     const lx=wx*Math.cos(th)-wz*Math.sin(th);
     const lz=wx*Math.sin(th)+wz*Math.cos(th);
     if(torchTarget)torchTarget.position.set(lx*10,1.0,lz*10);
+    if(torchLight)torchLight.intensity=3.2*(torchCharge>0?1:0);
   }
   function zapSmiley(e){
     e.hidden=true;e.respawn=2.5;e.mesh.visible=false;
@@ -6199,7 +6390,7 @@ const Garage3D=(function(){
     for(let i=-128;i<256;i+=32){g.beginPath();g.moveTo(i,0);g.lineTo(i+16,0);g.lineTo(i+16+128,128);g.lineTo(i+128,128);g.closePath();g.fill();}
     return c; }
 
-  // 电梯：按现实世界的观光电梯做 —— 不锈钢门套、楼层指示灯、呼梯按钮；进梯后 2 秒关门送下一层
+  // 电梯：真实的观光电梯 —— 轿厢在井道里真的升降，层门（每层）与轿门（跟着轿厢）分离
   function buildElevator(idx){
     const eg=new THREE.Group();eg.position.set(0,0,ELEV_Z);world.add(eg);
     const frameM=mat("#8e949a",{roughness:.35,metalness:.75});
@@ -6210,9 +6401,9 @@ const Garage3D=(function(){
     const backSlab=new THREE.Mesh(new THREE.BoxGeometry(16,ELEV_H,.5),concreteM);backSlab.position.set(0,ELEV_H/2,-8.2);eg.add(backSlab);
     [-1,1].forEach(s=>{const p=new THREE.Mesh(new THREE.BoxGeometry(.34,2.9,.36),frameM);p.position.set(s*1.9,1.45,0);eg.add(p);});
     const top=new THREE.Mesh(new THREE.BoxGeometry(4.4,.4,.36),frameM);top.position.set(0,3.05,0);eg.add(top);
-    const doorM=mat("#b3b9bf",{roughness:.28,metalness:.85});
-    const dl=new THREE.Mesh(new THREE.BoxGeometry(1.86,2.7,.13),doorM);dl.position.set(-.93,1.35,.06);eg.add(dl);
-    const dr=new THREE.Mesh(new THREE.BoxGeometry(1.86,2.7,.13),doorM);dr.position.set(.93,1.35,.06);eg.add(dr);
+    // 层门闸板：轿厢不在这一层时封住井道口
+    const shutter=new THREE.Mesh(new THREE.BoxGeometry(3.78,2.8,.1),mat("#7d8288",{roughness:.45,metalness:.6}));
+    shutter.position.set(0,1.4,-.12);eg.add(shutter);
     const indC=document.createElement("canvas");indC.width=256;indC.height=64;
     const indTex=new THREE.CanvasTexture(indC);indTex.encoding=THREE.sRGBEncoding;
     const ind=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.4),new THREE.MeshBasicMaterial({map:indTex,transparent:true}));
@@ -6223,14 +6414,6 @@ const Garage3D=(function(){
     [-1,1].forEach((s,i)=>{const b=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.05,12),
       new THREE.MeshStandardMaterial({color:0x2a2d2f,emissive:new THREE.Color(i?0x66ff88:0xffaa33),emissiveIntensity:.7}));
       b.rotation.x=Math.PI/2;b.position.set(2.55,1.5-s*.22,.24);eg.add(b);});
-    const carM=mat("#6b665c",{roughness:.9});
-    const cf=new THREE.Mesh(new THREE.PlaneGeometry(3.8,2.3),mat("#4c483f",{roughness:.95}));
-    cf.rotation.x=-Math.PI/2;cf.position.set(0,.02,-1.3);eg.add(cf);
-    const cb=new THREE.Mesh(new THREE.BoxGeometry(3.8,3.2,.14),carM);cb.position.set(0,1.6,-2.45);eg.add(cb);
-    [-1,1].forEach(s=>{const side=new THREE.Mesh(new THREE.BoxGeometry(.14,3.2,2.3),carM);side.position.set(s*1.9,1.6,-1.3);eg.add(side);});
-    const cc=new THREE.Mesh(new THREE.PlaneGeometry(3.8,2.3),mat("#55514a",{roughness:.9}));
-    cc.rotation.x=Math.PI/2;cc.position.set(0,3.2,-1.3);eg.add(cc);
-    const carLight=new THREE.PointLight(0xffe2a8,1.3,10,2);carLight.position.set(0,2.3,-1.4);eg.add(carLight);
     const label=idx<2?("电梯 → "+FLABEL[idx+1].split(" ")[0]):"电梯 ↑ 回到 B2";
     const sgn=new THREE.Mesh(new THREE.PlaneGeometry(2.7,.72),new THREE.MeshBasicMaterial({map:signTex(label,"#ffc24d","#161109"),transparent:true,side:THREE.DoubleSide}));
     sgn.position.set(-5.4,2.4,.1);eg.add(sgn);
@@ -6238,7 +6421,7 @@ const Garage3D=(function(){
     lamp.position.set(1.62,2.78,.2);eg.add(lamp);
     const stripe=new THREE.Mesh(new THREE.PlaneGeometry(7,1.4),new THREE.MeshBasicMaterial({map:tex(rampStripeTex(),2,1),transparent:true}));
     stripe.rotation.x=-Math.PI/2;stripe.position.set(0,.02,1.4);eg.add(stripe);
-    elevator={grp:eg,dl:dl,dr:dr,open:0,next:idx<2?idx+1:1,lamp:lamp,carLight:carLight,z:ELEV_Z,ind:indState};
+    elevator={grp:eg,open:0,next:idx<2?idx+1:1,lamp:lamp,ind:indState,shutter:shutter};
     // 井道与轿厢的碰撞体（只能从门口进出轿厢）
     obstacles.push({x:-7.7,z:ELEV_Z-4.4,hw:.32,hd:4.1,h:ELEV_H});
     obstacles.push({x:7.7,z:ELEV_Z-4.4,hw:.32,hd:4.1,h:ELEV_H});
@@ -6249,6 +6432,44 @@ const Garage3D=(function(){
     elevDoorOb={x:0,z:ELEV_Z+.05,hw:1.86,hd:.1,h:2.7,off:false};
     obstacles.push(elevDoorOb);
   }
+  // 轿厢（跟着楼层高度上下移动，井道里的观察缝能看到灯带掠过）
+  function buildCab(){
+    carGrp=new THREE.Group();scene.add(carGrp);
+    const carM=mat("#6b665c",{roughness:.9});
+    const cf=new THREE.Mesh(new THREE.PlaneGeometry(3.8,2.3),mat("#4c483f",{roughness:.95}));
+    cf.rotation.x=-Math.PI/2;cf.position.set(0,.02,-1.3);carGrp.add(cf);
+    const cb=new THREE.Mesh(new THREE.BoxGeometry(3.8,3.2,.14),carM);cb.position.set(0,1.6,-2.45);carGrp.add(cb);
+    [-1,1].forEach(s=>{
+      const x=s*1.9;
+      const lower=new THREE.Mesh(new THREE.BoxGeometry(.14,1.0,2.3),carM);lower.position.set(x,.5,-1.3);carGrp.add(lower);
+      const upper=new THREE.Mesh(new THREE.BoxGeometry(.14,1.1,2.3),carM);upper.position.set(x,2.65,-1.3);carGrp.add(upper);
+      const front=new THREE.Mesh(new THREE.BoxGeometry(.14,1.1,1.0),carM);front.position.set(x,1.55,-.65);carGrp.add(front);
+      const back=new THREE.Mesh(new THREE.BoxGeometry(.14,1.1,.95),carM);back.position.set(x,1.55,-1.975);carGrp.add(back);
+    });
+    const cc=new THREE.Mesh(new THREE.PlaneGeometry(3.8,2.3),mat("#55514a",{roughness:.9}));
+    cc.rotation.x=Math.PI/2;cc.position.set(0,3.2,-1.3);carGrp.add(cc);
+    carLight=new THREE.PointLight(0xffe2a8,1.3,10,2);carLight.position.set(0,2.3,-1.4);carGrp.add(carLight);
+    const doorM=mat("#b3b9bf",{roughness:.28,metalness:.85});
+    cabDl=new THREE.Mesh(new THREE.BoxGeometry(1.86,2.7,.13),doorM);cabDl.position.set(-.93,1.35,.06);carGrp.add(cabDl);
+    cabDr=new THREE.Mesh(new THREE.BoxGeometry(1.86,2.7,.13),doorM);cabDr.position.set(.93,1.35,.06);carGrp.add(cabDr);
+    carGrp.position.set(0,cabY,ELEV_Z);
+  }
+  // 井道：三层共用的竖井，轿厢在里面上下跑
+  function buildShaft(){
+    shaftGrp=new THREE.Group();scene.add(shaftGrp);
+    const concreteM=mat("#4a463f",{roughness:.96});
+    const H=3*FLOOR_H+2,x0=2.18;
+    [-1,1].forEach(s=>{
+      const w=new THREE.Mesh(new THREE.BoxGeometry(.2,H,2.9),concreteM);w.position.set(s*x0,1-H/2,ELEV_Z-1.3);shaftGrp.add(w);
+    });
+    const back=new THREE.Mesh(new THREE.BoxGeometry(x0*2,H,.2),concreteM);back.position.set(0,1-H/2,ELEV_Z-2.7);shaftGrp.add(back);
+    const bot=new THREE.Mesh(new THREE.BoxGeometry(x0*2,.2,2.9),concreteM);bot.position.set(0,1-H,ELEV_Z-1.3);shaftGrp.add(bot);
+    const barM=new THREE.MeshStandardMaterial({color:0xffe0a0,emissive:new THREE.Color(0xffd9a0),emissiveIntensity:1.5,roughness:.5});
+    for(let y=-1;y>1-H;y-=2){
+      const bar=new THREE.Mesh(new THREE.BoxGeometry(.12,.14,2.4),barM);bar.position.set(-x0+.14,y,ELEV_Z-1.3);shaftGrp.add(bar);
+    }
+  }
+  function cabDocked(){ return Math.abs(cabY-worldY)<0.05; }
   function drawIndicator(ind,label){
     const g=ind.ctx;
     g.fillStyle="#080a09";g.fillRect(0,0,256,64);
@@ -6362,6 +6583,116 @@ const Garage3D=(function(){
     g.scale.setScalar(1.06);
     return g;
   }
+  // ---------- AI 队友（双排 / 三排）：跟着玩家、帮忙捡电池、一起进储藏室 ----------
+  function buildMates(){
+    for(const m of mates){ if(m.g&&m.g.parent)m.g.parent.remove(m.g); }
+    mates.length=0;
+    const n=Math.max(0,Math.min(2,(S.teamSize||1)-1));
+    const skins=[SUITS[2]||SUITS[0],SUITS[4]||SUITS[0]];
+    for(let i=0;i<n;i++){
+      const w=makeWanderer(skins[i]);
+      const sx=charX+(i?5:-5), sz=charZ+3;
+      w.g.position.set(sx,0,sz);scene.add(w.g);
+      mates.push({g:w.g,armL:w.armL,armR:w.armR,legL:w.legL,legR:w.legR,head:w.head,
+                  x:sx,z:sz,stepT:0,home:{x:sx,z:sz},idx:i});
+    }
+  }
+  function restoreMates(){
+    for(const m of mates){
+      m.x=m.home.x;m.z=m.home.z;
+      if(m.g){m.g.visible=true;m.g.position.set(m.x,worldY+groundY(m.x,m.z),m.z);}
+    }
+  }
+  function mateBlocked(x,z){
+    if(z<-LEN+PR||z>3.6-PR)return true;
+    const ax=Math.abs(x);
+    if(ax>HALF-PR){
+      const sgn=x<0?-1:1,r=roomAt(sgn,z);
+      if(!r)return true;
+      if(ax<HALF+.15&&Math.abs(z-r.zc)>DOOR_W/2-.3)return true;   // 墙上只有门洞能过
+    }
+    for(const o of obstacles){
+      if(o.off)continue;
+      if(Math.abs(o.z-z)>o.hd+.45||Math.abs(o.x-x)>o.hw+.45)continue;
+      if(Math.abs(o.x-x)<o.hw+.32&&Math.abs(o.z-z)<o.hd+.32)return true;
+    }
+    return false;
+  }
+  function updateMates(dt){
+    for(const m of mates){
+      let tx=charX,tz=charZ;
+      const r=roomIn();                       // 玩家躲进储藏室 → 队友先走到门口再跟进去
+      if(r){
+        const mx=r.s*(HALF-1.2);
+        if(Math.hypot(mx-m.x,r.zc-m.z)>1.8){tx=mx;tz=r.zc;}
+      }
+      let bi=null,bd=1e9;
+      for(const b of batItems){ if(b.taken)continue; const d=Math.hypot(b.x-m.x,b.z-m.z); if(d<bd){bd=d;bi=b;} }
+      if(bi&&bd<24&&Math.hypot(charX-m.x,charZ-m.z)<46){tx=bi.x;tz=bi.z;}   // 有意识：会自己去捡电池
+      const dx=tx-m.x,dz=tz-m.z,d=Math.hypot(dx,dz);
+      const spd=4.8;
+      let moved=false;
+      if(d>0.8){
+        const ux=dx/d,uz=dz/d;
+        let nx=m.x+ux*spd*dt,nz=m.z+uz*spd*dt;
+        if(mateBlocked(nx,nz)){
+          if(!mateBlocked(m.x+ux*spd*dt,m.z))nz=m.z;
+          else if(!mateBlocked(m.x,m.z+uz*spd*dt))nx=m.x;
+          else{nx=m.x;nz=m.z;}
+        }
+        moved=Math.hypot(nx-m.x,nz-m.z)>0.001;
+        m.x=nx;m.z=nz;
+      }
+      // 队友不会抢柜子里的手电筒，只捡地上的电池
+      if(bi&&Math.hypot(bi.x-m.x,bi.z-m.z)<1.4&&!bi.taken){
+        bi.taken=true;if(bi.mesh){world.remove(bi.mesh);bi.mesh=null;}
+        save.batteries++;persist();
+        cortip.textContent="队友捡到一节电池递给你了 · 电池 "+save.batteries+" 节";
+        cortip.style.display="block";gTone(700,1100,.12,.1,"square");
+      }
+      // 姿态
+      if(ride){ m.g.position.set(m.x,cabY+0.02,m.z); }
+      else{ m.g.position.set(m.x,worldY+groundY(m.x,m.z),m.z); }
+      const face=Math.atan2(charX-m.x,charZ-m.z);
+      const fd=(face-m.g.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI;
+      m.g.rotation.y+=fd*Math.min(1,dt*8);
+      m.stepT+=moved?dt*9:0;
+      const sw=Math.sin(m.stepT);
+      m.armL.rotation.x=sw*.9;m.armR.rotation.x=-sw*.9;
+      m.legL.rotation.x=-sw*.85;m.legR.rotation.x=sw*.85;
+      if(m.head)m.head.rotation.x=Math.sin(m.stepT*2)*.04;
+    }
+  }
+  // ---------- 地上的电池（玩家和队友都能捡） ----------
+  function buildBatteries(){
+    for(const b of batItems){ if(b.mesh){world.remove(b.mesh);b.mesh=null;} }
+    batItems.length=0;
+    for(let i=0;i<6;i++){
+      const x=rand(-70,70), z=rand(-660,-40);
+      if(Math.abs(x)<26&&Math.abs(z-ELEV_Z)<40)continue;
+      const g=new THREE.Group();g.position.set(x,0,z);world.add(g);
+      const cell=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,.24,10),mat("#3f7a46",{roughness:.5,metalness:.4}));
+      cell.position.y=.12;g.add(cell);
+      const cap=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.04,8),mat("#c9a12e",{roughness:.4,metalness:.7}));
+      cap.position.y=.25;g.add(cap);
+      const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0x8fe06a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.4,fog:false}));
+      halo.scale.set(.7,.7,1);halo.position.y=.16;g.add(halo);
+      batItems.push({x:x,z:z,mesh:g,taken:false,ph:Math.random()*6.28});
+    }
+  }
+  function updateBatteries(dt){
+    for(const b of batItems){
+      if(b.taken)continue;
+      b.mesh.rotation.y+=dt*1.4;
+      b.mesh.position.y=Math.sin(gtime*2+b.ph)*.04;
+      if(Math.hypot(charX-b.x,charZ-b.z)<1.3){
+        b.taken=true;world.remove(b.mesh);b.mesh=null;
+        save.batteries++;persist();
+        cortip.textContent="捡到一节电池 · 电池 "+save.batteries+" 节（按 B 换进手电筒）";
+        cortip.style.display="block";gTone(700,1100,.12,.1,"square");
+      }
+    }
+  }
   function buildEntities(idx){
     const L=LAYOUT[idx];
     const sm=buildSmileyMesh();sm.position.set(L.smiley[0],1.5,L.smiley[1]);world.add(sm);
@@ -6369,6 +6700,12 @@ const Garage3D=(function(){
     L.peelers.forEach((p,i)=>{
       const pm=buildPeelerMesh();pm.position.set(p[0],0,p[1]);world.add(pm);
       entities.push({kind:"peeler",x:p[0],z:p[1],spd:2.5,aggro:999,mesh:pm,ph:i*1.9});
+    });
+    // 电鼠：完全不动，踩上去立刻死亡（起跳能躲过去）
+    const rats=[[-16,-120],[22,-240],[-40,-380],[36,-500]];
+    rats.forEach((p,i)=>{
+      const rm=makeRat();rm.position.set(p[0],0,p[1]);world.add(rm);
+      entities.push({kind:"rat",x:p[0],z:p[1],spd:0,aggro:0,mesh:rm,ph:i*1.7});
     });
   }
   // ---------- 指引箭头（贴地平铺，指向目标） ----------
@@ -6490,10 +6827,15 @@ const Garage3D=(function(){
     hitFx=1;
     if(src){const dx=src.x-charX,dz=src.z-charZ,dl=Math.hypot(dx,dz)||1;src.x+=dx/dl*7;src.z+=dz/dl*7;}
   }
-  function die(msg,mind){
+  function die(msg,mind,title){
     if(dead||won)return;dead=true;lives=0;charges=0;
+    if(hasTorch){                       // 死了手电筒会消失
+      dropTorch();
+      if(save.torch){save.torch=false;persist();}
+    }
+    restoreMates();                     // 队友全部回到身边
     S.best=Math.max(S.best,Math.floor(walked));
-    overTitleEl.textContent=mind?"精神崩溃":"被剥了皮";
+    overTitleEl.textContent=title||(mind?"精神崩溃":"被剥了皮");
     overTextEl.textContent=msg;
     overStatEl.textContent="车库 "+FLABEL[floorIdx]+" · 已行进 "+Math.floor(walked)+" m · 积分 +0";
     overEl.style.display="flex";gTone(260,40,1.2,.22,"sawtooth");
@@ -6540,7 +6882,7 @@ const Garage3D=(function(){
       cortip.textContent="躲进储藏室 · 铁门在身后滑上，实体隔墙进不来";
       cortip.style.display="block";gTone(240,150,.4,.1,"triangle");
     }else if(!hideout)hidNote=false;
-    const canMove=active&&!dead&&!won;
+    const canMove=active&&!dead&&!won&&!ride;   // 乘电梯时锁定移动，人留在轿厢里
     let ix=0,iz=0;
     if(canMove){
       if(keys.KeyW||keys.ArrowUp)iz+=1;if(keys.KeyS||keys.ArrowDown)iz-=1;
@@ -6567,27 +6909,51 @@ const Garage3D=(function(){
     if(!onGround){vy-=19*dt;jumpY+=vy*dt;if(jumpY<=0){jumpY=0;vy=0;onGround=true;gTone(120,50,.1,.05);}
       const cap=Math.max(0,ceilingAt(charX,charZ)-CHAR_H);   // 低矮处别把头穿进顶板
       if(jumpY>cap){jumpY=cap;if(vy>0)vy=0;}}
-    // 电梯：靠近自动开门 → 进梯 2 秒后关门并送楼层
+    // 电梯：靠近自动开门 → 进梯后关门，轿厢真的在井道里升降
     if(elevator){
       if(doorDelay>0)doorDelay=Math.max(0,doorDelay-dt);
       const near=Math.abs(charX)<3.8&&charZ>ELEV_Z-1.2&&charZ<ELEV_Z+6.5;
       const inside=Math.abs(charX)<1.5&&charZ<ELEV_Z+0.55&&charZ>ELEV_Z-2.2;
-      let want=0;
-      if(inside){ if(elevTimer<0)elevTimer=0; elevTimer+=dt; want=elevTimer<1.7?1:0; }
-      else if(near&&doorDelay<=0)want=1;
-      elevator.open+=(want-elevator.open)*Math.min(1,dt*4.5);
-      elevator.dl.position.x=-(.93+elevator.open*1.8);
-      elevator.dr.position.x=(.93+elevator.open*1.8);
+      if(ride){
+        ride.t+=dt;
+        charX=0;charZ=ELEV_Z-1.25;heading=Math.PI;      // 人留在轿厢正中
+        if(ride.t<0.9){ elevator.open=Math.max(0,elevator.open-dt*3.2); }   // 关门
+        else{
+          const p=Math.min(1,(ride.t-0.9)/ride.dur);
+          const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;                          // 缓入缓出
+          cabY=ride.from+(ride.to-ride.from)*e;
+          if(carGrp)carGrp.position.y=cabY;
+          if(p>=1){ arriveFloor(); return; }
+        }
+      }else{
+        let want=0;
+        if(inside){ if(elevTimer<0)elevTimer=0; elevTimer+=dt; want=elevTimer<1.6?1:0; }
+        else if(near&&doorDelay<=0)want=1;
+        elevator.open+=(want-elevator.open)*Math.min(1,dt*4.5);
+        if(inside&&elevTimer>=1.6){ startRide(elevator.next); return; }
+      }
+      if(cabDl)cabDl.position.x=-(.93+elevator.open*1.8);
+      if(cabDr)cabDr.position.x=(.93+elevator.open*1.8);
       elevator.lamp.material.emissive.setHex(elevator.open>.6?0x66ff88:0xff5533);
       elevator.lamp.material.emissiveIntensity=.6+elevator.open*1.4;
-      if(elevDoorOb)elevDoorOb.off=elevator.open>=.62;
-      if(elevTimer>=2.2){ gotoFloor(elevator.next); return; }
+      const docked=cabDocked();
+      if(elevDoorOb)elevDoorOb.off=(docked&&elevator.open>=.62);
+      if(elevator.shutter)elevator.shutter.visible=!docked;
     }
     // 实体
     let minGap=99;
     for(const e of entities){
       const ddx=charX-e.x,ddz=charZ-e.z,dd=Math.hypot(ddx,ddz);
       minGap=Math.min(minGap,dd);
+      if(e.kind==="rat"){
+        // 电鼠：完全不动，踩上去立刻死亡（起跳能躲过去）
+        e.mesh.position.set(e.x,groundY(e.x,e.z),e.z);
+        const arcs=e.mesh.userData.arcs;
+        for(let i=0;i<arcs.length;i++){const a=arcs[i];a.rotation.x+=dt*7;a.rotation.z+=dt*5;a.scale.setScalar(.7+Math.random()*.8);}
+        e.mesh.userData.glow.material.opacity=.26+Math.random()*.36;
+        if(!dead&&!won&&dd<0.85&&jumpY<0.45) die("你踩到了电鼠 —— 一阵电流直接穿过了你",false,"触电身亡");
+        continue;
+      }
       if(e.kind==="smiley"&&e.respawn>0){
         e.respawn-=dt;
         if(e.respawn<=0){ e.hidden=false; e.mesh.visible=true; }
@@ -6631,6 +6997,16 @@ const Garage3D=(function(){
       if(t.taken)continue;
       if(Math.hypot(charX-t.x,charZ-t.z)<TORCH_PICK){ pickupTorch(t); break; }
     }
+    // 手电筒电量：每 3 秒掉 1%（满电约 5 分钟）
+    if(hasTorch&&torchCharge>0){
+      torchCharge=Math.max(0,torchCharge-dt/3);
+      if(torchCharge<=0){
+        cortip.textContent="手电筒没电了 —— 按 B 换电池（商城 5 积分一节）";
+        cortip.style.display="block";gTone(300,120,.3,.12,"square");
+      }
+    }
+    updateBatteries(dt);
+    updateMates(dt);
     if(hasTorch){
       updateTorch();
       const fx=-Math.sin(yaw),fz=-Math.cos(yaw);
@@ -6670,34 +7046,53 @@ const Garage3D=(function(){
       if(moving&&onGround){const st=Math.floor(stepT/Math.PI);if(st!==cStep){cStep=st;gTone(70+Math.random()*24,45,.07,.04,"sine");}}
     }
     const gy=groundY(charX,charZ);
-    char.position.set(charX,gy+jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
-    char.rotation.y+=((heading-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
+    const localG=ride?(cabY-worldY):gy;              // 乘梯时脚踩在轿厢地板上
+    char.position.set(charX,worldY+localG+jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
+    const faceTarget=firstPerson?Math.atan2(-Math.sin(yaw),-Math.cos(yaw)):heading;
+    char.rotation.y+=((faceTarget-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
+    if(head)head.visible=!(firstPerson||ride);        // 第一人称/轿厢里别让后脑勺挡视线
     // 相机
     const room=roomIn();
     camDist+=(camDistT-camDist)*Math.min(1,dt*6);
     let cd=room?Math.min(camDist,3.0):camDist;
     const tx=charX,ty=1.35+gy+jumpY*.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
     let cx=tx+cd*Math.sin(yaw)*cp,cy=ty+cd*sp,cz=tz+cd*Math.cos(yaw)*cp;
-    // 视线被承重柱挡住时把镜头拉近，别让柱子糊住整个画面
-    if(!room&&camObstruct(tx,tz,cx,cz)){
-      for(let d=cd;d>1.2;d-=0.4){
-        const nx=tx+d*Math.sin(yaw)*cp,nz=tz+d*Math.cos(yaw)*cp;
-        if(!camObstruct(tx,tz,nx,nz)){cd=d;cx=nx;cz=nz;break;}
-      }
-    }
-    if(room){
-      // 墙后的储藏室：相机最多探到大厅门口 3 米，再往里就得留在屋里
-      cx=clamp(cx,-(HALF+ROOM_D-.6),HALF+ROOM_D-.6);
-      if(Math.abs(cx)<HALF)cz=clamp(cz,room.zc-DOOR_W/2+.3,room.zc+DOOR_W/2-.3);
-      else cz=clamp(cz,room.zc-ROOM_W/2+.5,room.zc+ROOM_W/2-.5);
-      cy=clamp(cy,gy+.6,Math.max(CEILH-.4,ROOM_H-1.2));
+    let lx=tx,ly=ty+.4,lz=tz,cyAbs=cy+worldY;
+    if(ride){
+      // 乘梯中：镜头锁在轿厢里，只能在轿厢内转头
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=clamp(charX+Fx*.85,-1.5,1.5);
+      cz=clamp(charZ+Fz*.85,ELEV_Z-2.2,ELEV_Z-.4);
+      cyAbs=cabY+1.62;
+      lx=cx+Fx*cp*6; ly=cyAbs+sp*6; lz=cz+Fz*cp*6;
+    }else if(firstPerson){
+      // 第一人称：小人的眼睛视角
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=tx+Fx*.3; cz=tz+Fz*.3; cyAbs=worldY+gy+1.98+jumpY;
+      lx=cx+Fx*cp*10; ly=cyAbs+sp*10; lz=cz+Fz*cp*10;
     }else{
-      cy=clamp(cy,.6,CEILH-.4);
-      cx=clamp(cx,-HALF+.3,HALF-.3);cz=clamp(cz,-LEN+1,5);
+      // 视线被承重柱挡住时把镜头拉近，别让柱子糊住整个画面
+      if(!room&&camObstruct(tx,tz,cx,cz)){
+        for(let d=cd;d>1.2;d-=0.4){
+          const nx=tx+d*Math.sin(yaw)*cp,nz=tz+d*Math.cos(yaw)*cp;
+          if(!camObstruct(tx,tz,nx,nz)){cd=d;cx=nx;cz=nz;break;}
+        }
+      }
+      if(room){
+        // 墙后的储藏室：相机最多探到大厅门口 3 米，再往里就得留在屋里
+        cx=clamp(cx,-(HALF+ROOM_D-.6),HALF+ROOM_D-.6);
+        if(Math.abs(cx)<HALF)cz=clamp(cz,room.zc-DOOR_W/2+.3,room.zc+DOOR_W/2-.3);
+        else cz=clamp(cz,room.zc-ROOM_W/2+.5,room.zc+ROOM_W/2-.5);
+        cy=clamp(cy,gy+.6,Math.max(CEILH-.4,ROOM_H-1.2));
+      }else{
+        cy=clamp(cy,.6,CEILH-.4);
+        cx=clamp(cx,-HALF+.3,HALF-.3);cz=clamp(cz,-LEN+1,5);
+      }
+      cyAbs=cy+worldY;
     }
     const shk=hitFx*.14;
-    camera.position.set(cx+Math.sin(gtime*41)*shk,cy+Math.sin(gtime*33)*shk,cz);
-    camera.lookAt(tx,ty+.4,tz);
+    camera.position.set(cx+Math.sin(gtime*41)*shk,cyAbs+Math.sin(gtime*33)*shk,cz);
+    camera.lookAt(lx,ly,lz);
     // 指引箭头 + 顶部罗盘（熄灯时也照样指着目标）
     const tgtX=floorIdx===2&&exitDoor?exitDoor.x:0, tgtZ=floorIdx===2&&exitDoor?exitDoor.z:ELEV_Z;
     const label=floorIdx===2?"安全出口":"电梯";
@@ -6716,9 +7111,30 @@ const Garage3D=(function(){
     updateHUD(minGap);
     if(eHolding){const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;}}
   }
+  function startRide(next){
+    ride={t:0,dur:2.6,from:cabY,to:-next*FLOOR_H,next:next};
+    elevTimer=-1;
+    gTone(200,90,.5,.12,"sawtooth");
+    cortip.textContent="电梯门关上 · 轿厢正在驶向 "+FLABEL[next]+" …";
+    cortip.style.display="block";
+  }
+  function arriveFloor(){
+    const next=ride.next;ride=null;
+    floorIdx=next;
+    buildFloor(next);                 // 重建该层几何（worldY 已在 buildFloor 里设好）
+    cabY=worldY;
+    if(carGrp)carGrp.position.y=cabY;
+    charX=0;charZ=ELEV_Z-1.25;heading=Math.PI;jumpY=0;vy=0;onGround=true;
+    elevTimer=-1;doorDelay=0;
+    gTone(520,240,.3,.14,"triangle");
+    cortip.textContent="电梯到站 · "+FLABEL[next]+" · 门开了，走出去继续找安全出口";
+    cortip.style.display="block";
+  }
   function gotoFloor(idx,via){
     floorIdx=idx;
     buildFloor(idx);
+    cabY=worldY;
+    if(carGrp)carGrp.position.y=cabY;
     charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;
     elevTimer=-1;doorDelay=1;   // 到站 1 秒后电梯门才重新打开
     gTone(520,240,.3,.14,"triangle");
@@ -6729,7 +7145,7 @@ const Garage3D=(function(){
   function updateHUD(minGap){
     const hz=suitOn?hazRate(3):0,tier=save.equipped+1;
     const left=hz>0?Math.ceil((1-haz)/hz):0;
-    const key=[floorIdx,Math.round(minGap),Math.round(lives*10),charges,Math.round(fuel),Math.round(haz*100),suitOn?1:0,Math.floor(walked),blackout?1:0,hasTorch?1:0].join("|");
+    const key=[floorIdx,Math.round(minGap),Math.round(lives*10),charges,Math.round(fuel),Math.round(haz*100),suitOn?1:0,Math.floor(walked),blackout?1:0,hasTorch?1:0,Math.round(torchCharge),save.batteries,mates.length].join("|");
     if(key===hudKey)return;hudKey=key;
     rhead.textContent="楼层 · "+FLABEL[floorIdx];
     rDist.textContent=(floorIdx+1)+"/3";
@@ -6750,8 +7166,10 @@ const Garage3D=(function(){
     else rHazLeft.textContent="十级防护服 · 完全抵御精神危害";
     rLight.textContent=blackout?("熄灯 "+Math.ceil(lightT)+"s"):("通电 "+Math.ceil(lightT)+"s");
     rLight.style.color=blackout?"#ff6b6b":"#8fe06a";
-    rTorch.textContent=hasTorch?"已持有 · 能驱散笑脸":"未持有";
-    rTorch.style.color=hasTorch?"#ffcf5a":"#9aa4b2";
+    rTorch.textContent=hasTorch?("电量 "+Math.round(torchCharge)+"% · 电池×"+save.batteries):"未持有";
+    rTorch.style.color=hasTorch?(torchCharge>20?"#ffcf5a":"#ff6b6b"):"#9aa4b2";
+    rTeam.textContent=mates.length?(mates.length+" 个 AI 队友（会跟着你、帮你捡电池）"):"无（单排）";
+    rTeam.style.color=mates.length?"#8fe06a":"#9aa4b2";
   }
   function render(){if(active&&renderer&&scene&&camera)renderer.render(scene,camera);}
   function frame(now){if(!active)return;const dt=Math.min(.05,(now-last)/1000);last=now;update(dt);render();raf=requestAnimationFrame(frame);}
@@ -6764,6 +7182,8 @@ const Garage3D=(function(){
   function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
   function onKeyDown(e){if(!active)return;const c=e.code;
     if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
+    if(c==="KeyV"){if(!e.repeat)toggleView();return;}
+    if(c==="KeyB"){if(!e.repeat)useBattery();return;}
     if(c==="KeyE"){if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);}return;}
     if(c==="Space"){if(!e.repeat)jumpQueued=true;keys[c]=true;return;}
     keys[c]=true;}
@@ -6819,9 +7239,9 @@ const Garage3D=(function(){
     mount.style.filter="none";
     overlay.classList.remove("garage");
     hzEl.style.display="block";runEl.style.display="none";cortip.style.display="none";wayEl.style.display="none";
-    rLightRow.style.display="none";rTorchRow.style.display="none";
+    rLightRow.style.display="none";rTorchRow.style.display="none";rTeamRow.style.display="none";
     overEl.style.display="none";loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
-    overlay.style.display="none";
+    overlay.style.display="none";showViewBtn(false);
     hidePrompt();
   }
   function exit(){ teardown();openMenu(); }
@@ -6835,29 +7255,34 @@ const Garage3D=(function(){
     hidePrompt();   // 直接开玩，不要“点击进入”遮罩
     errorEl.style.display="none";loadingEl.style.display="flex";
     titleB.textContent="车库";titleSpan.textContent="LEVEL 8 · 3D";
+    showViewBtn(true);updateViewLabel(firstPerson?"第一人称":"第三人称");
     exitBtnEl.title="退出车库";
     hzEl.style.display="none";runEl.style.display="block";overEl.style.display="none";
     rLightRow.style.display="flex";rTorchRow.style.display="flex";
     floorIdx=0;charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;jumpQueued=false;walked=0;
     fuel=100;lives=5;charges=SUITS[save.equipped].charges;suitOn=true;haz=0;inv=0;dead=false;won=false;hitFx=0;
     elevTimer=-1;doorDelay=0;blackout=false;lightT=LIGHT_ON_T;
-    hasTorch=false;torchMesh=null;torchLight=null;torchTarget=null;
+    hasTorch=false;torchMesh=null;torchLight=null;torchTarget=null;torchCharge=0;
     yaw=0;pitch=.13;camDist=7.0;camDistT=7.0;gtime=0;stepT=0;cStep=-1;hudKey="";
     keys={};eHolding=false;touchMove.x=0;touchMove.y=0;touchSprint=false;
     muted=false;muteBtn.classList.remove("off");muteLabel.textContent="声音";
     S.lives=5;S.over=false;S.win=false;
     isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
-    try{ buildRenderer();buildLights();buildFloor(0);buildCharacter(); }
+    cabY=0;worldY=0;ride=null;
+    try{ buildRenderer();buildLights();buildCab();buildShaft();buildFloor(0);buildCharacter(); }
     catch(err){showError("初始化车库失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return;}
+    if(save.torch)equipTorch();          // 商城买的手电筒：开局随身带
+    buildMates();                          // 双排 / 三排：AI 队友
+    rTeamRow.style.display=mates.length?"flex":"none";
     initGAudio();addListeners();loadingEl.style.display="none";
     overlay.classList.toggle("touch",isTouch);
     cortip.style.display="block";
-    cortip.textContent="车库 · 地下三层 · 每层约 40 万平方米 · 箭头指向电梯 · 侧墙里可能凹着储藏室：铁门自动滑开，扶台阶上阁楼，柜子里有手电筒（靠近 0.5 米自动捡起）· 躲进储藏室实体就进不来 · 每 1 分钟熄灯一次，熄灯时笑脸才活动 · 切皮者会剥掉防护服（商城里不会丢）· 偶尔能刷出红门 → 跑命医院";
+    cortip.textContent="车库 · 地下三层 · 每层约 40 万平方米 · 箭头指向电梯（轿厢真的会升降）· 侧墙里可能凹着储藏室：铁门自动滑开，扶台阶上阁楼，柜子里的手电筒会自动变卖成积分 · 地上有电鼠，踩到立刻死 · 躲进储藏室实体就进不来 · 每 1 分钟熄灯一次，熄灯时笑脸才活动 · 切皮者会剥掉防护服（商城里不会丢）· 偶尔能刷出红门 → 跑命医院";
     updateHUD(99);
     if(isTouch){touchLayer.style.display="block";
       hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 跳</span><span><b>右侧拖动</b> 视角</span><span><b>右上退出</b> 离开</span>';}
     else{touchLayer.style.display="none";
-      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">E</span> 长按 2 秒退出</span>';}
+      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">V</span> 视角</span><span><span class="k">B</span> 换电池</span><span><span class="k">E</span> 长按 2 秒退出</span>';}
     onResize();last=performance.now();raf=requestAnimationFrame(frame);
   }
   function buildCharacter(){
@@ -6866,11 +7291,19 @@ const Garage3D=(function(){
     char.position.set(charX,0,charZ);scene.add(char);
     applySuitLook();
   }
-  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,tag:"garage"};
+  function toggleView(){
+    firstPerson=!firstPerson;
+    updateViewLabel(firstPerson?"第一人称":"第三人称");
+    gTone(firstPerson?520:760,firstPerson?760:520,.12,.09,"triangle");
+  }
+  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,toggleView:toggleView,tag:"garage"};
 })();
 // 3D 面板通用按钮：按当前激活模式分派（草原 / 快跑层 / 通用长廊 / 车库）
+function updateViewLabel(t){ const el=document.getElementById("g3d-viewlabel"); if(el)el.textContent=t; }
+function showViewBtn(on){ const el=document.getElementById("g3d-viewbtn"); if(el)el.style.display=on?"flex":"none"; }
 (function(){
   const cur=()=>ThreeOver.mode==="run"?Runner3D:(ThreeOver.mode==="corridor"?Corridor3D:(ThreeOver.mode==="garage"?Garage3D:Grassland3D));
+  document.getElementById("g3d-viewbtn").addEventListener("click",()=>{ const m=cur(); if(m&&m.toggleView)m.toggleView(); });
   document.getElementById("g3d-exitbtn").addEventListener("click",()=>cur().exit());
   document.getElementById("g3d-errback").addEventListener("click",()=>cur().exit());
   document.getElementById("g3d-mute").addEventListener("click",()=>cur().muteToggle());
