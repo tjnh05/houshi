@@ -249,6 +249,7 @@
   #g3d-mount canvas:active{cursor:grabbing;}
   #g3d-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,transparent 52%,rgba(6,16,4,.55) 100%);mix-blend-mode:multiply;}
   #g3d-grain{position:absolute;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>");}
+  #g3d-fade{position:absolute;inset:0;z-index:4;background:#000;opacity:0;pointer-events:none;transition:opacity .28s ease;}
   .g3d-top{position:absolute;top:calc(12px + env(safe-area-inset-top));left:0;right:0;display:flex;align-items:center;gap:12px;padding:0 16px;pointer-events:none;z-index:5;}
   .g3d-title{display:flex;align-items:center;gap:9px;background:rgba(12,26,8,.62);border:1px solid rgba(124,194,74,.4);border-radius:10px;padding:8px 14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,.4);}
   .g3d-title svg{width:18px;height:18px;color:#a8d84a;}
@@ -277,7 +278,18 @@
   #g3d-way.door{border-color:rgba(143,230,106,.62);}
   #g3d-way.door #g3d-wayarrow{color:#8fe06a;}
   #g3d-way.door #g3d-wayarrow svg{filter:drop-shadow(0 0 8px rgba(143,230,106,.85));}
+  #grass3d.garage #g3d-cortip{top:calc(152px + env(safe-area-inset-top)) !important;}
+  @media (max-width:560px){#grass3d.garage #g3d-cortip{top:calc(146px + env(safe-area-inset-top)) !important;}}
   #g3d-way.door b{color:#d7f7c4;}
+  #g3d-goal{position:absolute;top:calc(108px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:none;align-items:center;gap:9px;
+    background:rgba(24,20,10,.8);border:1px solid rgba(232,177,58,.55);border-radius:999px;padding:7px 16px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,.45);z-index:6;pointer-events:none;white-space:nowrap;}
+  #g3d-goal .dot{width:7px;height:7px;border-radius:50%;background:#ffc24d;box-shadow:0 0 9px rgba(255,194,77,.9);animation:g3dGoalPulse 1.6s ease-in-out infinite;}
+  #g3d-goal b{font-size:12px;letter-spacing:2px;color:#ffcf5a;}
+  #g3d-goal i{font-style:normal;font-size:12px;letter-spacing:1px;color:#d6cbb2;}
+  #grass3d.garage #g3d-goal{display:flex;}
+  @keyframes g3dGoalPulse{50%{opacity:.35;transform:scale(.75);}}
+  @media (max-width:560px){#g3d-goal{top:calc(100px + env(safe-area-inset-top));max-width:92vw;padding:6px 12px;}#g3d-goal b,#g3d-goal i{font-size:11px;letter-spacing:1px;}}
   #grass3d.run #g3d-way{display:none !important;}
   /* 进入提示 / 暂停遮罩 */
   #g3d-prompt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;background:radial-gradient(ellipse at center,rgba(8,18,5,.35),rgba(5,12,3,.72));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);cursor:pointer;}
@@ -750,6 +762,7 @@
   <div id="g3d-grain"></div>
   <div id="g3d-dread"></div>
   <div id="g3d-bliss"></div>
+  <div id="g3d-fade"></div>
 
   <div class="g3d-top">
     <div class="g3d-title">
@@ -777,6 +790,7 @@
     <span id="g3d-wayarrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L20.5 20 L12 15.2 L3.5 20 Z"/></svg></span>
     <b id="g3d-waytext">煤矿</b><i id="g3d-waydist">0m</i>
   </div>
+  <div id="g3d-goal"><span class="dot"></span><b id="g3d-goaltext">下一步</b><i id="g3d-goalsub"></i></div>
 
   <div class="g3d-hint" id="g3d-hint">
     <span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span>
@@ -5847,8 +5861,11 @@ const Garage3D=(function(){
         rHazLabel=gid("g3d-rhazlabel"),rHaz=gid("g3d-rhaz"),rHazFill=gid("g3d-rhazfill"),rHazLeft=gid("g3d-rhazleft"),
         rLightRow=gid("g3d-rlightrow"),rLight=gid("g3d-rlight"),rTorchRow=gid("g3d-rtorchrow"),rTorch=gid("g3d-rtorch"),
         rTeamRow=gid("g3d-rteamrow"),rTeam=gid("g3d-rteam"),
-        menuEl=gid("menu"),exitBtnEl=gid("g3d-exitbtn");
+        menuEl=gid("menu"),exitBtnEl=gid("g3d-exitbtn"),
+        fadeEl=gid("g3d-fade"),dreadEl=gid("g3d-dread"),blissEl=gid("g3d-bliss"),
+        goalEl=gid("g3d-goal"),goalText=gid("g3d-goaltext"),goalSub=gid("g3d-goalsub");
   const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+  const angLerp=(a,b,t)=>{const d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*t;};
   const rand=(a,b)=>a+Math.random()*(b-a);
   const HALF=90, LEN=2220, CEILH=10, PR=.42, RING_C=339.292, LAMP_Y=4.5, ELEV_H=3.6;   // 整层 180m × 2220m × 10m 高，可走面积 398230 平方米
   const FLOOR_H=CEILH;                                                       // 相邻楼层净间距 = 层高，电梯按这个距离升降
@@ -5860,6 +5877,9 @@ const Garage3D=(function(){
   const DOOR_W=3.0, DOOR_H=2.8;                                // 每间一扇门（门洞要够 2.5 米高的小人通过）
   const STAIR_X0=1.5, STAIR_X1=5.7, STAIR_N=8, LOFT_H=2.8;     // 台阶 + 扶手 → 阁楼平台
   const RAMP_N=5, LIGHT_ON_T=60, LIGHT_OFF_T=24, LAMP_POOL_N=10, TORCH_PICK=0.5;
+  // 电梯状态机：靠近开门 → 进梯倒计时 → 关门 → 行驶 → 到站停顿 → 开门 → 驻留等出门
+  const EP_IDLE=0,EP_OPEN=1,EP_WAIT=2,EP_CLOSE=3,EP_RIDE=4,EP_ARRIVE=5,EP_OPENDOOR=6,EP_EXIT=7;
+  const T_DOOR_OPEN=.7,T_WAIT=3.0,T_DOOR_CLOSE=1.1,T_RIDE=3.0,T_ARRIVE=.6,T_DOOR_OPEN2=1.0,CAM_TURN_T=.75;
   const LAYOUT=[
     {peelers:[[-26,-150]],smiley:[34,-300]},
     {peelers:[[26,-330],[40,-560]],smiley:[-38,-360]},
@@ -5873,19 +5893,33 @@ const Garage3D=(function(){
   let torchCharge=0;                              // 手电筒电量 0~100
   let carGrp=null,shaftGrp=null,cabDl=null,cabDr=null,carLight=null,cabY=0,worldY=0,ride=null;
   let blackout=false,lightT=LIGHT_ON_T,hasTorch=false,hidNote=false;
-  let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="";
+  let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="",fadeTimer=0;
   let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,walked=0;
   let floorIdx=0,lives=5,charges=0,suitOn=true,haz=0,fuel=100,inv=0,dead=false,won=false,hitFx=0;
-  let elevTimer=-1,doorDelay=0,elevPhase=0,elevArrived=false,elevExitHinted=false;
-  let yaw=0,pitch=.13,camDist=7.0,camDistT=7.0;
+  let elevTimer=0,doorDelay=0,elevPhase=EP_IDLE,elevNext=1;
+  let yaw=0,pitch=.13,camDist=7.0,camDistT=7.0,camTurn=99,camTurnFrom=0,camPitchFrom=.13,arriveCam=false;
+  let goalKey="";
   let firstPerson=false;
   let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0,cStep=-1;
   let gMaster=null;
   const dyn=[];
 
   // ---------- 贴图 ----------
-  function tex(c,rx,ry){ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.encoding=THREE.sRGBEncoding;
-    if(renderer)t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t; }
+  const texCache=new Map();                 // 跨楼层复用贴图，避免每次换层重建数百张 GPU 纹理
+  const sharedTexSet=new WeakSet();         // r128 的 Texture 没有 userData，用 WeakSet 标记共享资源
+  function sharedTex(key,canvasFn,rx,ry){
+    const k=key+"|"+rx+"|"+ry;
+    let t=texCache.get(k);
+    if(!t){
+      t=new THREE.CanvasTexture(canvasFn());
+      t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.encoding=THREE.sRGBEncoding;
+      sharedTexSet.add(t);
+      texCache.set(k,t);
+    }
+    if(renderer)t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+    return t;
+  }
+  function isSharedTex(t){ return !!(t&&sharedTexSet.has(t)); }
   function mat(hex,o){ return new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(hex),roughness:.88,metalness:.05},o||{})); }
   function gFloorTex(){ const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");
     g.fillStyle="#6e6960";g.fillRect(0,0,256,256);
@@ -5911,11 +5945,12 @@ const Garage3D=(function(){
     for(let i=0;i<600;i++){g.fillStyle="rgba("+(60+Math.random()*28|0)+","+(58+Math.random()*26|0)+","+(52+Math.random()*24|0)+",.5)";g.fillRect(Math.random()*128,Math.random()*128,2,2);}
     g.strokeStyle="rgba(28,26,24,.4)";g.lineWidth=2;g.strokeRect(1,1,126,126);
     return c; }
-  function signTex(text,color,bg){ const c=document.createElement("canvas");c.width=256;c.height=80;const g=c.getContext("2d");
+  function signCanvas(text,color,bg){ const c=document.createElement("canvas");c.width=256;c.height=80;const g=c.getContext("2d");
     g.fillStyle=bg;g.fillRect(0,0,256,80);
     g.strokeStyle=color;g.lineWidth=4;g.strokeRect(3,3,250,74);
     g.fillStyle=color;g.font="bold 36px Courier New";g.textAlign="center";g.textBaseline="middle";g.fillText(text,128,42);
-    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t; }
+    return c; }
+  function sharedSignTex(text,color,bg){ return sharedTex("sign:"+text+"|"+color+"|"+bg,function(){return signCanvas(text,color,bg);},1,1); }
   function glowTex(){ const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");
     const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,255,255,1)");gr.addColorStop(.35,"rgba(255,255,255,.5)");gr.addColorStop(1,"rgba(255,255,255,0)");
     g.fillStyle=gr;g.fillRect(0,0,64,64);return c; }
@@ -5931,12 +5966,21 @@ const Garage3D=(function(){
     return c; }
 
   // ---------- 渲染器 / 灯光 ----------
+  function onContextLost(e){
+    e.preventDefault();
+    if(!active)return;
+    active=false;threeActive=false;
+    if(raf){cancelAnimationFrame(raf);raf=0;}
+    console.error("[Garage3D] WebGL context lost");
+    try{showError("渲染器中断（WebGL 上下文丢失）· 请返回菜单后重新进入车库");}catch(_){}
+  }
   function buildRenderer(){
     renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.setSize(innerWidth,innerHeight);
     renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;
     mount.appendChild(renderer.domElement);
+    renderer.domElement.addEventListener("webglcontextlost",onContextLost,false);
     camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,120);
     scene=new THREE.Scene();scene.background=new THREE.Color(0x0b0a08);scene.fog=new THREE.Fog(0x100d09,10,95);
   }
@@ -5951,7 +5995,7 @@ const Garage3D=(function(){
     if(world){ scene.remove(world);
       world.traverse(o=>{ if(o.geometry)o.geometry.dispose();
         if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];
-          ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();});} });
+          ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture&&!isSharedTex(v))v.dispose();}m.dispose();});} });
       world=null; }
     entities.length=0;obstacles.length=0;elevator=null;exitDoor=null;redDoor=null;arrowLift=null;arrowExit=null;
     lampFix.length=0;lampPool.length=0;torches.length=0;ramps.length=0;cabinets.length=0;elevDoorOb=null;
@@ -5965,13 +6009,13 @@ const Garage3D=(function(){
     world.position.y=worldY;
     planRooms();
     // 地面 / 顶棚 / 侧墙（整层 180m × 2220m，可走面积 398230 平方米）
-    const fm=new THREE.MeshStandardMaterial({map:tex(gFloorTex(),HALF*2/6,(LEN+9)/6),roughness:.96,metalness:0});
+    const fm=new THREE.MeshStandardMaterial({map:sharedTex("gfloor",gFloorTex,HALF*2/6,(LEN+9)/6),roughness:.96,metalness:0});
     const fl=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,LEN+9),fm);
     fl.rotation.x=-Math.PI/2;fl.position.set(0,0,-(LEN/2)+1.5);world.add(fl);
-    const cm=new THREE.MeshStandardMaterial({map:tex(gCeilTex(),HALF*2/6,(LEN+9)/6),roughness:.95});
+    const cm=new THREE.MeshStandardMaterial({map:sharedTex("gceil",gCeilTex,HALF*2/6,(LEN+9)/6),roughness:.95});
     const ce=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,LEN+9),cm);
     ce.rotation.x=Math.PI/2;ce.position.set(0,CEILH,-(LEN/2)+1.5);world.add(ce);
-    const wm=new THREE.MeshStandardMaterial({map:tex(gWallTex(),(LEN+9)/4,1),roughness:.93});
+    const wm=new THREE.MeshStandardMaterial({map:sharedTex("gwall",gWallTex,(LEN+9)/4,1),roughness:.93});
     buildSideWalls(wm);
     const front=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,CEILH),wm);
     front.position.set(0,CEILH/2,4);front.rotation.y=Math.PI;world.add(front);
@@ -6024,7 +6068,7 @@ const Garage3D=(function(){
     const lg=new THREE.Group();lg.position.set(x,yy,z);world.add(lg);
     const tube=new THREE.Mesh(new THREE.BoxGeometry(2.6,.1,.26),new THREE.MeshStandardMaterial({color:0xfff3d0,emissive:new THREE.Color(0xffe9b0),emissiveIntensity:1.1,roughness:.5}));
     lg.add(tube);
-    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffe6ae,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0xffe6ae,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
     halo.scale.set(room?2.4:4.2,room?1.2:2.1,1);halo.position.y=-.1;lg.add(halo);
     if(room){                                               // 10 米高的屋子吊一盏灯
       const cord=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,ROOM_H-y,6),mat("#8a8272",{roughness:.85}));
@@ -6091,10 +6135,10 @@ const Garage3D=(function(){
         w.position.set(s*HALF,CEILH/2,-(LEN/2)+1.5);w.rotation.y=-s*Math.PI/2;world.add(w);});
       return;
     }
-    const wc=gWallTex();
     const wall=(s,znear,zfar,y0,y1)=>{
       const len=znear-zfar,h=y1-y0;if(len<=.02||h<=.02)return;
-      const m=new THREE.MeshStandardMaterial({map:tex(wc,Math.max(.4,len/4),Math.max(.2,h/3)),roughness:.93,side:THREE.DoubleSide});
+      const rx=Math.max(1,Math.round(len/4)),ry=Math.max(1,Math.round(h/3));   // 量化重复次数，避免每层生成大量近似贴图
+      const m=new THREE.MeshStandardMaterial({map:sharedTex("gwall-seg",gWallTex,rx,ry),roughness:.93,side:THREE.DoubleSide});
       const w=new THREE.Mesh(new THREE.PlaneGeometry(len,h),m);
       w.position.set(s*HALF,y0+h/2,(znear+zfar)/2);w.rotation.y=-s*Math.PI/2;world.add(w);
     };
@@ -6133,7 +6177,7 @@ const Garage3D=(function(){
     const railM=mat("#d0a92c",{roughness:.5,metalness:.6});
     const frameM=mat("#4f4a43",{roughness:.7,metalness:.3});
     const doorM=mat("#767a7e",{roughness:.55,metalness:.5});
-    const floorM=new THREE.MeshStandardMaterial({map:tex(gFloorTex(),4,3),color:0x8f8a80,roughness:.96,side:THREE.DoubleSide});
+    const floorM=new THREE.MeshStandardMaterial({map:sharedTex("gfloor-room",gFloorTex,4,3),color:0x8f8a80,roughness:.96,side:THREE.DoubleSide});
     const run=STAIR_X1-STAIR_X0,tread=run/STAIR_N,ang=Math.atan2(LOFT_H,run);
     for(const rp of roomPlan){
       const s=rp.s,zc=rp.zc;
@@ -6242,7 +6286,7 @@ const Garage3D=(function(){
   }
   // 牌子：正反两面各一块，从哪边看字都是正的
   function addSign(txt,w,h,fg,bg,x,y,z,ry,parent){
-    const m=new THREE.MeshBasicMaterial({map:signTex(txt,fg,bg),transparent:true});
+    const m=new THREE.MeshBasicMaterial({map:sharedSignTex(txt,fg,bg),transparent:true});
     const g=parent||world;
     const a=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);a.position.set(x,y,z);a.rotation.y=ry;g.add(a);
     const b=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);b.position.set(x,y,z);b.rotation.y=ry+Math.PI;g.add(b);
@@ -6272,7 +6316,7 @@ const Garage3D=(function(){
       body.rotation.z=Math.PI/2;body.position.y=.06;torch.add(body);
       const head=new THREE.Mesh(new THREE.CylinderGeometry(.08,.055,.1,10),new THREE.MeshStandardMaterial({color:0xffe6b0,emissive:new THREE.Color(0xffd98a),emissiveIntensity:.9,roughness:.4}));
       head.rotation.z=Math.PI/2;head.position.set(.18,.06,0);torch.add(head);
-      const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffd98a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5,fog:false}));
+      const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0xffd98a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5,fog:false}));
       halo.scale.set(.8,.8,1);halo.position.set(.18,.06,0);torch.add(halo);
       torches.push({x:px,z:pz,mesh:torch,taken:false});
     }
@@ -6296,7 +6340,7 @@ const Garage3D=(function(){
     body.rotation.x=Math.PI/2;g.add(body);
     const head=new THREE.Mesh(new THREE.CylinderGeometry(.085,.055,.12,10),new THREE.MeshStandardMaterial({color:0xffe6b0,emissive:new THREE.Color(0xffd98a),emissiveIntensity:1.5,roughness:.4}));
     head.rotation.x=Math.PI/2;head.position.z=.19;g.add(head);
-    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xffd98a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.6,fog:false}));
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0xffd98a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.6,fog:false}));
     halo.scale.set(.9,.9,1);halo.position.z=.2;g.add(halo);
     g.position.set(.34,1.12,.1);
     char.add(g);torchMesh=g;
@@ -6342,7 +6386,7 @@ const Garage3D=(function(){
     const lx=wx*Math.cos(th)-wz*Math.sin(th);
     const lz=wx*Math.sin(th)+wz*Math.cos(th);
     if(torchTarget)torchTarget.position.set(lx*10,1.0,lz*10);
-    if(torchLight)torchLight.intensity=3.2*(torchCharge>0?1:0);
+    if(torchLight)torchLight.intensity=3.2*(torchCharge>0?1:0)*(ride?0.3:1);
   }
   function zapSmiley(e){
     e.hidden=true;e.respawn=2.5;e.mesh.visible=false;
@@ -6373,7 +6417,7 @@ const Garage3D=(function(){
       if(Math.abs(x)<30&&Math.abs(z-ELEV_Z)<60)continue;
       const ry=rand(0,6.283);
       const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=ry;world.add(g);
-      const rampM=new THREE.MeshStandardMaterial({map:tex(rampStripeTex(),1,2),roughness:.9});
+      const rampM=new THREE.MeshStandardMaterial({map:sharedTex("ramp",rampStripeTex,1,2),roughness:.9});
       const zone=new THREE.Mesh(new THREE.PlaneGeometry(6,14),rampM);
       zone.rotation.x=-Math.PI/2;zone.position.set(0,.03,0);g.add(zone);
       const plate=new THREE.Mesh(new THREE.PlaneGeometry(6,5),rampM);
@@ -6382,7 +6426,7 @@ const Garage3D=(function(){
       landing.position.set(0,1.2,-12);g.add(landing);
       const post=new THREE.Mesh(new THREE.BoxGeometry(.16,2.6,.16),mat("#4a463f"));post.position.set(0,1.3,4);g.add(post);
       addSign("坡道 → 上层",3.2,1,"#ffc24d","#161109",0,2.3,4,Math.PI,g);
-      const arrowMark=new THREE.Mesh(new THREE.PlaneGeometry(2.4,3.4),new THREE.MeshBasicMaterial({map:signTex("▲","#ffe9a8","#1a1509"),transparent:true,side:THREE.DoubleSide}));
+      const arrowMark=new THREE.Mesh(new THREE.PlaneGeometry(2.4,3.4),new THREE.MeshBasicMaterial({map:sharedSignTex("▲","#ffe9a8","#1a1509"),transparent:true,side:THREE.DoubleSide}));
       arrowMark.rotation.x=-Math.PI/2;arrowMark.position.set(0,.05,2);g.add(arrowMark);
       const bx=x+Math.sin(ry)*4, bz=z+Math.cos(ry)*4;
       ramps.push({x:x,z:z,g:g,bx:bx,bz:bz});
@@ -6419,11 +6463,11 @@ const Garage3D=(function(){
       new THREE.MeshStandardMaterial({color:0x2a2d2f,emissive:new THREE.Color(i?0x66ff88:0xffaa33),emissiveIntensity:.7}));
       b.rotation.x=Math.PI/2;b.position.set(2.55,1.5-s*.22,.24);eg.add(b);});
     const label=idx<2?("电梯 → "+FLABEL[idx+1].split(" ")[0]):"电梯 ↑ 回到 B2";
-    const sgn=new THREE.Mesh(new THREE.PlaneGeometry(2.7,.72),new THREE.MeshBasicMaterial({map:signTex(label,"#ffc24d","#161109"),transparent:true,side:THREE.DoubleSide}));
+    const sgn=new THREE.Mesh(new THREE.PlaneGeometry(2.7,.72),new THREE.MeshBasicMaterial({map:sharedSignTex(label,"#ffc24d","#161109"),transparent:true,side:THREE.DoubleSide}));
     sgn.position.set(-5.4,2.4,.1);eg.add(sgn);
     const lamp=new THREE.Mesh(new THREE.SphereGeometry(.09,8,6),new THREE.MeshStandardMaterial({color:0x3a3a34,emissive:new THREE.Color(0xff5533),emissiveIntensity:.6}));
     lamp.position.set(1.62,2.78,.2);eg.add(lamp);
-    const stripe=new THREE.Mesh(new THREE.PlaneGeometry(7,1.4),new THREE.MeshBasicMaterial({map:tex(rampStripeTex(),2,1),transparent:true}));
+    const stripe=new THREE.Mesh(new THREE.PlaneGeometry(7,1.4),new THREE.MeshBasicMaterial({map:sharedTex("ramp",rampStripeTex,2,1),transparent:true}));
     stripe.rotation.x=-Math.PI/2;stripe.position.set(0,.02,1.4);eg.add(stripe);
     elevator={grp:eg,open:0,next:idx<2?idx+1:1,lamp:lamp,ind:indState,shutter:shutter};
     // 井道与轿厢的碰撞体（只能从门口进出轿厢）
@@ -6452,8 +6496,8 @@ const Garage3D=(function(){
     });
     const cc=new THREE.Mesh(new THREE.PlaneGeometry(3.8,2.3),mat("#55514a",{roughness:.9}));
     cc.rotation.x=Math.PI/2;cc.position.set(0,3.2,-1.3);carGrp.add(cc);
-    carLight=new THREE.PointLight(0xffe2a8,1.3,10,2);carLight.position.set(0,2.3,-1.4);carGrp.add(carLight);
-    const doorM=mat("#b3b9bf",{roughness:.28,metalness:.85});
+    carLight=new THREE.PointLight(0xffe2a8,.7,8,2);carLight.position.set(0,2.3,-1.4);carGrp.add(carLight);
+    const doorM=mat("#7a8188",{roughness:.42,metalness:.55});
     cabDl=new THREE.Mesh(new THREE.BoxGeometry(1.86,2.7,.13),doorM);cabDl.position.set(-.93,1.35,.06);carGrp.add(cabDl);
     cabDr=new THREE.Mesh(new THREE.BoxGeometry(1.86,2.7,.13),doorM);cabDr.position.set(.93,1.35,.06);carGrp.add(cabDr);
     carGrp.position.set(0,cabY,ELEV_Z);
@@ -6504,9 +6548,9 @@ const Garage3D=(function(){
     knob.rotation.x=Math.PI/2;knob.position.set(.66,1.12,.16);dg.add(knob);
     const kick=new THREE.Mesh(new THREE.BoxGeometry(1.36,.22,.05),mat("#9aa0a6",{roughness:.35,metalness:.7}));
     kick.position.set(0,.16,.16);dg.add(kick);
-    const sgn=new THREE.Mesh(new THREE.PlaneGeometry(1.9,.6),new THREE.MeshBasicMaterial({map:signTex("安全出口","#8fe06a","#06180f"),transparent:true,side:THREE.DoubleSide}));
+    const sgn=new THREE.Mesh(new THREE.PlaneGeometry(1.9,.6),new THREE.MeshBasicMaterial({map:sharedSignTex("安全出口","#8fe06a","#06180f"),transparent:true,side:THREE.DoubleSide}));
     sgn.position.set(0,3.2,.1);dg.add(sgn);
-    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0x9dffbf,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0x9dffbf,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.32,fog:false}));
     halo.scale.set(4.2,4.2,1);halo.position.set(0,1.3,.3);dg.add(halo);
     const pl=new THREE.PointLight(0x9dffbf,1.6,16,2);pl.position.set(0,1.6,.9);dg.add(pl);
     exitDoor={grp:dg,x:-HALF,z:EXIT_Z,glowM:glowM,halo:halo};
@@ -6523,9 +6567,9 @@ const Garage3D=(function(){
     const panel=new THREE.Mesh(new THREE.PlaneGeometry(2.5,2.9),glowM);panel.position.set(0,1.45,.06);dg.add(panel);
     const top=new THREE.Mesh(new THREE.BoxGeometry(3.0,.3,.3),frameM);top.position.set(0,3.0,0);dg.add(top);
     [-1,1].forEach(s=>{const post=new THREE.Mesh(new THREE.BoxGeometry(.3,2.9,.3),frameM);post.position.set(s*1.4,1.45,0);dg.add(post);});
-    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xff2b1f,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.22,fog:false}));
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0xff2b1f,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.22,fog:false}));
     halo.scale.set(3.6,3.2,1);halo.position.set(0,1.6,.3);dg.add(halo);
-    const sgn=new THREE.Mesh(new THREE.PlaneGeometry(2.6,.8),new THREE.MeshBasicMaterial({map:signTex("跑命医院","#ff6b6b","#1a0606"),transparent:true,side:THREE.DoubleSide}));
+    const sgn=new THREE.Mesh(new THREE.PlaneGeometry(2.6,.8),new THREE.MeshBasicMaterial({map:sharedSignTex("跑命医院","#ff6b6b","#1a0606"),transparent:true,side:THREE.DoubleSide}));
     sgn.position.set(0,3.55,.12);dg.add(sgn);
     const pl=new THREE.PointLight(0xff2b1f,1.1,14,2);pl.position.set(0,1.9,.8);dg.add(pl);
     redDoor={grp:dg,x:HALF,z:z,glowM:glowM,halo:halo,used:false};
@@ -6558,10 +6602,10 @@ const Garage3D=(function(){
     const g=new THREE.Group();
     const orb=new THREE.Mesh(new THREE.SphereGeometry(.44,12,10),mat("#07070a",{roughness:.98,metalness:0}));
     orb.scale.set(1,1.05,.78);g.add(orb);
-    const fm=new THREE.MeshBasicMaterial({map:tex(smilerFaceTex(),1,1),transparent:true,depthWrite:false,side:THREE.DoubleSide});
+    const fm=new THREE.MeshBasicMaterial({map:sharedTex("smiler",smilerFaceTex,1,1),transparent:true,depthWrite:false,side:THREE.DoubleSide});
     const face=new THREE.Mesh(new THREE.PlaneGeometry(.8,.8),fm);face.position.set(0,.02,.38);g.add(face);
     const face2=new THREE.Mesh(new THREE.PlaneGeometry(.8,.8),fm);face2.position.set(0,.02,-.38);face2.rotation.y=Math.PI;g.add(face2);
-    const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0xdfe6ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.45,fog:false}));
+    const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0xdfe6ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.45,fog:false}));
     glow.scale.set(1.6,1.6,1);glow.position.set(0,.02,.4);g.add(glow);
     g.userData.glow=glow;
     return g;
@@ -6679,7 +6723,7 @@ const Garage3D=(function(){
       cell.position.y=.12;g.add(cell);
       const cap=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.04,8),mat("#c9a12e",{roughness:.4,metalness:.7}));
       cap.position.y=.25;g.add(cap);
-      const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:tex(glowTex(),1,1),color:0x8fe06a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.4,fog:false}));
+      const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("glow",glowTex,1,1),color:0x8fe06a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.4,fog:false}));
       halo.scale.set(.7,.7,1);halo.position.y=.16;g.add(halo);
       batItems.push({x:x,z:z,mesh:g,taken:false,ph:Math.random()*6.28});
     }
@@ -6864,6 +6908,16 @@ const Garage3D=(function(){
     gtime+=dt;
     if(inv>0)inv-=dt;
     if(hitFx>0)hitFx=Math.max(0,hitFx-dt*2.2);
+    // 到站后把镜头平滑转向电梯门外（+Z），并拉平俯仰，让玩家直接看到出口
+    if(camTurn<CAM_TURN_T){
+      camTurn=Math.min(CAM_TURN_T,camTurn+dt);
+      const e=camTurn/CAM_TURN_T;
+      const ee=e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2;
+      yaw=angLerp(camTurnFrom,Math.PI,ee);
+      pitch=camPitchFrom+(.02-camPitchFrom)*ee;
+    }
+    // 走出电梯约 4 米后再恢复第三人称，避免镜头还在轿厢里就被门挡住
+    if(arriveCam&&(charZ>ELEV_Z+4.0||Math.abs(charX)>3.0))arriveCam=false;
     // 精神危害 3 级：防护服被剥掉后不再累积
     const hz=suitOn?hazRate(3):0;
     if(hz>0&&!dead&&!won){haz=Math.min(1,haz+dt*hz);if(haz>=1){die("精神危害满值 —— 你在地下车库里失去了自己",true);return;}}
@@ -6886,7 +6940,7 @@ const Garage3D=(function(){
       cortip.textContent="躲进储藏室 · 铁门在身后滑上，实体隔墙进不来";
       cortip.style.display="block";gTone(240,150,.4,.1,"triangle");
     }else if(!hideout)hidNote=false;
-    const canMove=active&&!dead&&!won&&!ride;   // 乘电梯时锁定移动，人留在轿厢里
+    const canMove=active&&!dead&&!won&&!ride&&elevPhase!==EP_ARRIVE&&elevPhase!==EP_OPENDOOR;   // 乘梯/到站开门期间锁定移动
     let ix=0,iz=0;
     if(canMove){
       if(keys.KeyW||keys.ArrowUp)iz+=1;if(keys.KeyS||keys.ArrowDown)iz-=1;
@@ -6913,37 +6967,49 @@ const Garage3D=(function(){
     if(!onGround){vy-=19*dt;jumpY+=vy*dt;if(jumpY<=0){jumpY=0;vy=0;onGround=true;gTone(120,50,.1,.05);}
       const cap=Math.max(0,ceilingAt(charX,charZ)-CHAR_H);   // 低矮处别把头穿进顶板
       if(jumpY>cap){jumpY=cap;if(vy>0)vy=0;}}
-    // 电梯：靠近自动开门 → 进梯后关门，轿厢真的在井道里升降
+    // 电梯状态机：靠近开门 → 进梯倒计时 → 关门 → 行驶 → 到站停顿 → 开门 → 驻留等出门
+    const nearElev=!!elevator&&Math.abs(charX)<3.8&&charZ>ELEV_Z-1.2&&charZ<ELEV_Z+6.5;
+    const insideElev=!!elevator&&Math.abs(charX)<1.5&&charZ<ELEV_Z+0.55&&charZ>ELEV_Z-2.2;
     if(elevator){
+      elevNext=elevator.next;
       if(doorDelay>0)doorDelay=Math.max(0,doorDelay-dt);
-      const near=Math.abs(charX)<3.8&&charZ>ELEV_Z-1.2&&charZ<ELEV_Z+6.5;
-      const inside=Math.abs(charX)<1.5&&charZ<ELEV_Z+0.55&&charZ>ELEV_Z-2.2;
-      if(ride){
+      if(elevPhase!==EP_RIDE) elevTimer+=dt;
+      if(elevPhase===EP_IDLE){
+        if((nearElev||insideElev)&&doorDelay<=0){ elevPhase=EP_OPEN;elevTimer=0;gTone(420,300,.25,.08,"triangle"); }
+      }else if(elevPhase===EP_OPEN){
+        if(insideElev){ elevPhase=EP_WAIT;elevTimer=0;tip("站好 · "+Math.round(T_WAIT)+" 秒后关门前往 "+FLABEL[elevNext]+" · 走出去可取消"); }
+        else if(!nearElev){ elevPhase=EP_IDLE;elevTimer=0;doorDelay=.6; }
+      }else if(elevPhase===EP_WAIT){
+        if(!insideElev){ elevPhase=EP_OPEN;elevTimer=0;tip("已取消 · 电梯门保持打开"); }
+        else if(elevTimer>=T_WAIT){ elevPhase=EP_CLOSE;elevTimer=0;tip("电梯门正在关闭 …");gTone(240,180,.3,.08,"sine"); }
+      }else if(elevPhase===EP_CLOSE){
+        if(!insideElev){ elevPhase=EP_OPEN;elevTimer=0;tip("已取消 · 电梯门重新打开"); }
+        else if(elevTimer>=T_DOOR_CLOSE){ beginRide();return; }
+      }else if(elevPhase===EP_RIDE){
         ride.t+=dt;
         charX=0;charZ=ELEV_Z-1.25;heading=Math.PI;      // 人留在轿厢正中
-        if(ride.t<0.9){ elevator.open=Math.max(0,elevator.open-dt*3.2); }   // 关门
-        else{
-          const p=Math.min(1,(ride.t-0.9)/ride.dur);
-          const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;                          // 缓入缓出
-          cabY=ride.from+(ride.to-ride.from)*e;
-          if(carGrp)carGrp.position.y=cabY;
-          if(p>=1){ arriveFloor(); return; }
-        }
+        const p=Math.min(1,ride.t/ride.dur);
+        const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;      // 缓入缓出
+        cabY=ride.from+(ride.to-ride.from)*e;
+        if(carGrp)carGrp.position.y=cabY;
+        if(p>.86&&fadeEl&&fadeEl.style.opacity!=="1")setFade(true);   // 换层前压黑
+        if(p>=1){ arriveFloor();return; }
+      }else if(elevPhase===EP_ARRIVE){
+        if(elevTimer>=T_ARRIVE){ elevPhase=EP_OPENDOOR;elevTimer=0;fadeOutSoon(180);gTone(420,280,.35,.12,"triangle");tip("门已打开 · 走出电梯，沿绿色箭头前往下一处"); }
+      }else if(elevPhase===EP_OPENDOOR){
+        if(elevTimer>=T_DOOR_OPEN2){ elevPhase=EP_EXIT;elevTimer=0; }
+      }else if(elevPhase===EP_EXIT){
+        if(charZ>ELEV_Z+0.75||Math.abs(charX)>1.7){ elevPhase=EP_IDLE;elevTimer=0;doorDelay=1.0; }
+      }
+      // 门开合：按阶段驱动；取消关门时从当前开度继续打开，不会瞬移
+      if(elevPhase===EP_OPEN||elevPhase===EP_OPENDOOR){
+        elevator.open=Math.min(1,elevator.open+dt/(elevPhase===EP_OPEN?T_DOOR_OPEN:T_DOOR_OPEN2));
+      }else if(elevPhase===EP_WAIT||elevPhase===EP_EXIT){
+        elevator.open=Math.min(1,elevator.open+dt*3);
+      }else if(elevPhase===EP_CLOSE){
+        elevator.open=Math.max(0,elevator.open-dt/T_DOOR_CLOSE);
       }else{
-        let want=0;
-        if(inside){
-          if(elevArrived){                  // 到站驻留：门保持敞开，绝不自动开走，等玩家自己走出去
-            want=1;
-            if(!elevExitHinted){ cortip.textContent="已到站 · "+FLABEL[floorIdx]+" · 门已开，朝亮光/箭头方向走出电梯即可"; cortip.style.display="block"; elevExitHinted=true; }
-            // 玩家一旦走出轿厢，结束驻留；下一次再进来才会重新计时乘梯
-            if(charZ>ELEV_Z+0.75||Math.abs(charX)>1.7){ elevArrived=false;elevExitHinted=false;elevTimer=-1;doorDelay=1; }
-          }else{
-            if(elevTimer<0)elevTimer=0; elevTimer+=dt; want=elevTimer<1.6?1:0;
-          }
-        }
-        else if(near&&doorDelay<=0)want=1;
-        elevator.open+=(want-elevator.open)*Math.min(1,dt*4.5);
-        if(inside&&!elevArrived&&elevTimer>=1.6){ startRide(elevator.next); return; }
+        elevator.open=Math.max(0,elevator.open-dt*3.2);
       }
       if(cabDl)cabDl.position.x=-(.93+elevator.open*1.8);
       if(cabDr)cabDr.position.x=(.93+elevator.open*1.8);
@@ -7063,14 +7129,15 @@ const Garage3D=(function(){
     char.position.set(charX,worldY+localG+jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
     const faceTarget=firstPerson?Math.atan2(-Math.sin(yaw),-Math.cos(yaw)):heading;
     char.rotation.y+=((faceTarget-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
-    if(head)head.visible=!(firstPerson||ride);        // 第一人称/轿厢里别让后脑勺挡视线
+    if(head)head.visible=!(firstPerson||ride||arriveCam);        // 第一人称/轿厢/到站镜头别让后脑勺挡视线
+    if(char)char.visible=!arriveCam;                             // 到站第一人称镜头：先隐藏整只角色，避免身体糊住画面
     // 相机
     const room=roomIn();
     camDist+=(camDistT-camDist)*Math.min(1,dt*6);
     let cd=room?Math.min(camDist,3.0):camDist;
     const tx=charX,ty=1.35+gy+jumpY*.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
     let cx=tx+cd*Math.sin(yaw)*cp,cy=ty+cd*sp,cz=tz+cd*Math.cos(yaw)*cp;
-    let lx=tx,ly=ty+.4,lz=tz,cyAbs=cy+worldY;
+    let lx=tx,ly=ty+.4+worldY,lz=tz,cyAbs=cy+worldY;   // ly 必须是绝对高度，否则 B2/B3 会抬头看天花板
     if(ride){
       // 乘梯中：镜头锁在轿厢里，只能在轿厢内转头
       const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
@@ -7078,6 +7145,11 @@ const Garage3D=(function(){
       cz=clamp(charZ+Fz*.85,ELEV_Z-2.2,ELEV_Z-.4);
       cyAbs=cabY+1.62;
       lx=cx+Fx*cp*6; ly=cyAbs+sp*6; lz=cz+Fz*cp*6;
+    }else if(arriveCam){
+      // 到站镜头：站在轿厢里以第一人称看向打开的门，避免第三人称镜头卡进后墙
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=charX; cz=charZ; cyAbs=worldY+1.85;
+      lx=cx+Fx*cp*10; ly=cyAbs+sp*10; lz=cz+Fz*cp*10;
     }else if(firstPerson){
       // 第一人称：小人的眼睛视角
       const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
@@ -7097,9 +7169,11 @@ const Garage3D=(function(){
         if(Math.abs(cx)<HALF)cz=clamp(cz,room.zc-DOOR_W/2+.3,room.zc+DOOR_W/2-.3);
         else cz=clamp(cz,room.zc-ROOM_W/2+.5,room.zc+ROOM_W/2-.5);
         cy=clamp(cy,gy+.6,Math.max(CEILH-.4,ROOM_H-1.2));
-      }else{
+    }else{
         cy=clamp(cy,.6,CEILH-.4);
         cx=clamp(cx,-HALF+.3,HALF-.3);cz=clamp(cz,-LEN+1,5);
+        // 刚走出电梯时，别让第三人称镜头穿进轿厢后墙/井道：把镜头留在门外
+        if(charZ<ELEV_Z+7&&Math.abs(charX)<3.2)cz=Math.max(cz,ELEV_Z+0.15);
       }
       cyAbs=cy+worldY;
     }
@@ -7107,9 +7181,14 @@ const Garage3D=(function(){
     camera.position.set(cx+Math.sin(gtime*41)*shk,cyAbs+Math.sin(gtime*33)*shk,cz);
     camera.lookAt(lx,ly,lz);
     // 指引箭头 + 顶部罗盘（熄灯时也照样指着目标）
-    // 到站驻留：人还在轿厢里，改指引「走出电梯」——箭头指向门外，罗盘不再指脚下的电梯(0m)
-    if(elevArrived){
-      const exitZ=ELEV_Z+5;                       // 门外方向（+Z）
+    if(elevPhase===EP_RIDE){
+      // 行驶中不再指脚下的电梯，目标条显示“前往 B2”
+      wayEl.style.display="none";
+      if(arrowLift)arrowLift.visible=false;
+      if(arrowExit)arrowExit.visible=false;
+    }else if(elevPhase>=EP_ARRIVE){
+      // 到站：人还在轿厢里，改指引「走出电梯」——箭头指向门外
+      const exitZ=ELEV_Z+5;
       pointArrow(arrowLift,charX,exitZ,0);
       if(arrowLift)arrowLift.visible=true;
       if(arrowExit)arrowExit.visible=false;
@@ -7133,41 +7212,72 @@ const Garage3D=(function(){
       wayText.textContent=label;wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
       wayEl.style.display="flex";wayEl.classList.toggle("door",floorIdx===2);
     }
+    updateGoal(nearElev,insideElev);
     // 联机同步
     if(net3DSync(dt,walked,jumpY,lives,charges,fuel,won,dead)){finish();return;}
     updateHUD(minGap);
     if(eHolding){const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;}}
   }
-  function startRide(next){
-    ride={t:0,dur:2.6,from:cabY,to:-next*FLOOR_H,next:next};
-    elevTimer=-1;
+  function tip(t){cortip.textContent=t;cortip.style.display="block";}
+  function shortFloor(i){return FLABEL[i].split(" ")[0];}
+  function setGoal(main,sub){
+    const k=main+"|"+sub;if(k===goalKey)return;goalKey=k;
+    if(goalText)goalText.textContent=main;
+    if(goalSub)goalSub.textContent=sub;
+  }
+  function updateGoal(nearElev,insideElev){
+    let m="",s="";
+    const nxt=shortFloor(elevNext);
+    if(elevPhase===EP_WAIT){m="前往 "+nxt;s=Math.max(0,Math.ceil(T_WAIT-elevTimer))+" 秒后关门 · 走出可取消";}
+    else if(elevPhase===EP_CLOSE){m="前往 "+nxt;s="门正在关闭 …";}
+    else if(elevPhase===EP_RIDE){m="前往 "+nxt;s="电梯行驶中 · "+Math.max(0,Math.ceil(T_RIDE-(ride?ride.t:0)))+" 秒";}
+    else if(elevPhase===EP_ARRIVE){m="到达 "+shortFloor(floorIdx);s="轿厢停稳 · 门即将打开";}
+    else if(elevPhase===EP_OPENDOOR){m="走出电梯";s="门正在打开 …";}
+    else if(elevPhase===EP_EXIT){m="走出电梯";s="沿绿色箭头走到门外";}
+    else if(insideElev){m="前往 "+nxt;s="站好，"+Math.round(T_WAIT)+" 秒后关门";}
+    else if(floorIdx===2){
+      const ex=exitDoor?exitDoor.x:-HALF,ez=exitDoor?exitDoor.z:EXIT_Z;
+      m="找到安全出口";s="跟着绿色箭头 · "+Math.round(Math.hypot(charX-ex,charZ-ez))+"m";
+    }else if(nearElev){m="乘电梯";s="前往 "+nxt;}
+    else{m="前往电梯";s="坐电梯去 "+nxt+" · "+Math.round(Math.hypot(charX,charZ-ELEV_Z))+"m";}
+    setGoal(m,s);
+  }
+  function beginRide(){
+    ride={t:0,dur:T_RIDE,from:cabY,to:-elevNext*FLOOR_H,next:elevNext};
+    elevPhase=EP_RIDE;elevTimer=0;
+    if(fadeTimer){clearTimeout(fadeTimer);fadeTimer=0;}
+    setFade(false);
+    if(renderer)renderer.toneMappingExposure=.86;      // 行驶时略降曝光，避免轿厢金属门过曝
     gTone(200,90,.5,.12,"sawtooth");
-    cortip.textContent="电梯门关上 · 轿厢正在驶向 "+FLABEL[next]+" …";
-    cortip.style.display="block";
+    tip("轿厢正在前往 "+FLABEL[elevNext]+" …");
   }
   function arriveFloor(){
-    const next=ride.next;ride=null;
+    const next=elevNext;ride=null;
     floorIdx=next;
     buildFloor(next);                 // 重建该层几何（worldY 已在 buildFloor 里设好）
     cabY=worldY;
     if(carGrp)carGrp.position.y=cabY;
     charX=0;charZ=ELEV_Z-1.25;heading=Math.PI;jumpY=0;vy=0;onGround=true;
-    elevTimer=-1;doorDelay=0;elevArrived=true;elevExitHinted=true;   // 到站驻留：门一直开，等人自己走出去（提示已在下方给出）
+    elevPhase=EP_ARRIVE;elevTimer=0;doorDelay=0;
+    arriveCam=true;camTurn=0;camTurnFrom=yaw;camPitchFrom=pitch;   // 到站镜头：平滑转向门外
+    if(renderer)renderer.toneMappingExposure=1.0;
     gTone(520,240,.3,.14,"triangle");
-    cortip.textContent="电梯到站 · "+FLABEL[next]+" · 门已打开 · 沿地面绿色箭头朝电梯门外走出去（门会一直开着等你）";
-    cortip.style.display="block";
+    tip("电梯到站 · "+FLABEL[next]+" · 轿厢停稳，门即将打开");
   }
   function gotoFloor(idx,via){
+    setFadeNow(true);                 // 坡道换层是瞬时的，直接压黑再重建
     floorIdx=idx;
     buildFloor(idx);
     cabY=worldY;
     if(carGrp)carGrp.position.y=cabY;
     charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;
-    elevTimer=-1;doorDelay=1;elevArrived=false;elevExitHinted=false;   // 到站 1 秒后电梯门才重新打开
+    elevPhase=EP_IDLE;elevTimer=0;doorDelay=1;ride=null;arriveCam=false;camTurn=99;
+    if(renderer)renderer.toneMappingExposure=1.0;
+    fadeOutSoon(240);
     gTone(520,240,.3,.14,"triangle");
     const msg=via?("走"+via+"上到 "+FLABEL[idx]+" · "+(idx===2?"找箭头指向的安全出口逃出去":"箭头指向电梯，坐电梯去下一层"))
                  :("到达 "+FLABEL[idx]+" · "+((idx===2)?"找箭头指向的安全出口逃出去":"箭头指向电梯，坐电梯去下一层")+(redDoor?" · 这一层有一扇红门，走进去 → 跑命医院":""));
-    cortip.textContent=msg;cortip.style.display="block";
+    tip(msg);
   }
   function updateHUD(minGap){
     const hz=suitOn?hazRate(3):0,tier=save.equipped+1;
@@ -7198,8 +7308,23 @@ const Garage3D=(function(){
     rTeam.textContent=mates.length?(mates.length+" 个 AI 队友（会跟着你、帮你捡电池）"):"无（单排）";
     rTeam.style.color=mates.length?"#8fe06a":"#9aa4b2";
   }
+  function setFade(on){ if(fadeEl)fadeEl.style.opacity=on?"1":"0"; }
+  function setFadeNow(on){ if(!fadeEl)return; const tr=fadeEl.style.transition; fadeEl.style.transition="none"; fadeEl.style.opacity=on?"1":"0"; void fadeEl.offsetWidth; fadeEl.style.transition=tr||""; }
+  function fadeOutSoon(ms){ if(fadeTimer)clearTimeout(fadeTimer); fadeTimer=setTimeout(function(){fadeTimer=0;if(active)setFade(false);},ms); }
   function render(){if(active&&renderer&&scene&&camera)renderer.render(scene,camera);}
-  function frame(now){if(!active)return;const dt=Math.min(.05,(now-last)/1000);last=now;update(dt);render();raf=requestAnimationFrame(frame);}
+  function frame(now){
+    if(!active)return;
+    try{
+      const dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;update(dt);render();
+    }catch(err){
+      console.error("[Garage3D]",err);
+      active=false;threeActive=false;
+      if(raf){cancelAnimationFrame(raf);raf=0;}
+      try{showError("车库渲染中断："+((err&&err.message)||err));}catch(_){}
+      return;
+    }
+    raf=requestAnimationFrame(frame);
+  }
 
   // ---------- 输入 ----------
   function showRing(on){ringEl.style.display=on?"flex":"none";if(!on)setRing(0);}
@@ -7252,7 +7377,7 @@ const Garage3D=(function(){
   function disposeScene(){
     if(scene)scene.traverse(o=>{ if(o.geometry)o.geometry.dispose();
       if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];
-        ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture)v.dispose();}m.dispose();});} });
+        ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture&&!isSharedTex(v))v.dispose();}m.dispose();});} });
     disposeWorld();
     if(renderer){renderer.dispose();const el=renderer.domElement;if(el&&el.parentNode)el.parentNode.removeChild(el);}
     scene=null;renderer=null;camera=null;char=null;charMats=null;armL=armR=legL=legR=head=null;
@@ -7260,6 +7385,10 @@ const Garage3D=(function(){
   }
   function teardown(){
     active=false;threeActive=false;
+    if(fadeTimer){clearTimeout(fadeTimer);fadeTimer=0;}
+    setFade(false);
+    if(dreadEl)dreadEl.style.opacity="0";
+    if(blissEl)blissEl.style.opacity="0";
     if(raf)cancelAnimationFrame(raf);raf=0;
     removeListeners();disposeAudio();disposeScene();
     keys={};eHolding=false;showRing(false);touchMove.x=0;touchMove.y=0;touchSprint=false;
@@ -7279,6 +7408,11 @@ const Garage3D=(function(){
     threeActive=true;active=true;ThreeOver.mode="garage";
     menuEl.style.display="none";cv.style.display="none";hudEl.style.display="none";
     overlay.style.display="block";overlay.classList.add("garage");
+    if(dreadEl)dreadEl.style.opacity="0";      // 清掉上一局可能遗留的全屏滤镜
+    if(blissEl)blissEl.style.opacity="0";
+    mount.style.filter="none";
+    if(fadeTimer){clearTimeout(fadeTimer);fadeTimer=0;}
+    setFade(false);
     hidePrompt();   // 直接开玩，不要“点击进入”遮罩
     errorEl.style.display="none";loadingEl.style.display="flex";
     titleB.textContent="车库";titleSpan.textContent="LEVEL 8 · 3D";
@@ -7288,7 +7422,7 @@ const Garage3D=(function(){
     rLightRow.style.display="flex";rTorchRow.style.display="flex";
     floorIdx=0;charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;jumpQueued=false;walked=0;
     fuel=100;lives=5;charges=SUITS[save.equipped].charges;suitOn=true;haz=0;inv=0;dead=false;won=false;hitFx=0;
-    elevTimer=-1;doorDelay=0;elevArrived=false;elevExitHinted=false;blackout=false;lightT=LIGHT_ON_T;
+    elevPhase=EP_IDLE;elevTimer=0;elevNext=1;doorDelay=0;arriveCam=false;camTurn=99;goalKey="";blackout=false;lightT=LIGHT_ON_T;
     hasTorch=false;torchMesh=null;torchLight=null;torchTarget=null;torchCharge=0;
     yaw=0;pitch=.13;camDist=7.0;camDistT=7.0;gtime=0;stepT=0;cStep=-1;hudKey="";
     keys={};eHolding=false;touchMove.x=0;touchMove.y=0;touchSprint=false;
