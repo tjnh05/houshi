@@ -282,8 +282,8 @@
   #g3d-way.door{border-color:rgba(143,230,106,.62);}
   #g3d-way.door #g3d-wayarrow{color:#8fe06a;}
   #g3d-way.door #g3d-wayarrow svg{filter:drop-shadow(0 0 8px rgba(143,230,106,.85));}
-  #grass3d.garage #g3d-cortip{top:calc(152px + env(safe-area-inset-top)) !important;}
-  @media (max-width:560px){#grass3d.garage #g3d-cortip{top:calc(146px + env(safe-area-inset-top)) !important;}}
+  #grass3d.garage #g3d-cortip,#grass3d.arcade #g3d-cortip{top:calc(152px + env(safe-area-inset-top)) !important;}
+  @media (max-width:560px){#grass3d.garage #g3d-cortip,#grass3d.arcade #g3d-cortip{top:calc(146px + env(safe-area-inset-top)) !important;}}
   #g3d-way.door b{color:#d7f7c4;}
   #g3d-goal{position:absolute;top:calc(108px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:none;align-items:center;gap:9px;
     background:rgba(24,20,10,.8);border:1px solid rgba(232,177,58,.55);border-radius:999px;padding:7px 16px;
@@ -291,7 +291,7 @@
   #g3d-goal .dot{width:7px;height:7px;border-radius:50%;background:#ffc24d;box-shadow:0 0 9px rgba(255,194,77,.9);animation:g3dGoalPulse 1.6s ease-in-out infinite;}
   #g3d-goal b{font-size:12px;letter-spacing:2px;color:#ffcf5a;}
   #g3d-goal i{font-style:normal;font-size:12px;letter-spacing:1px;color:#d6cbb2;}
-  #grass3d.garage #g3d-goal{display:flex;}
+  #grass3d.garage #g3d-goal,#grass3d.arcade #g3d-goal{display:flex;}
   @keyframes g3dGoalPulse{50%{opacity:.35;transform:scale(.75);}}
   @media (max-width:560px){#g3d-goal{top:calc(100px + env(safe-area-inset-top));max-width:92vw;padding:6px 12px;}#g3d-goal b,#g3d-goal i{font-size:11px;letter-spacing:1px;}}
   #grass3d.run #g3d-way{display:none !important;}
@@ -383,8 +383,8 @@
   #grass3d.run .g3d-hint .k{background:rgba(255,102,68,.18);border-color:rgba(255,102,68,.45);}
   #grass3d.run #g3d-vignette{background:radial-gradient(ellipse at 50% 46%,transparent 44%,rgba(28,6,2,.66) 100%);}
   /* 车库 3D HUD（暖黄荧光调） */
-  #grass3d.garage #g3d-run{display:block;}
-  #grass3d.garage #g3d-minimap{display:none;}
+  #grass3d.garage #g3d-run,#grass3d.arcade #g3d-run{display:block;}
+  #grass3d.garage #g3d-minimap,#grass3d.arcade #g3d-minimap{display:none;}
   #grass3d.garage #g3d-run{background:rgba(24,20,10,.7);border-color:rgba(232,177,58,.45);}
   #grass3d.garage #g3d-run .rn-head{color:#ffd9a0;}
   #grass3d.garage #g3d-run .rn-row{color:#e6dcc4;}
@@ -393,6 +393,17 @@
   #grass3d.garage .g3d-title,#grass3d.garage .g3d-suit{background:rgba(24,20,10,.64);border-color:rgba(232,177,58,.42);}
   #grass3d.garage .g3d-title b{color:#ffd9a0;}
   #grass3d.garage #g3d-vignette{background:radial-gradient(ellipse at 50% 46%,transparent 46%,rgba(16,12,4,.62) 100%);}
+  /* 电玩城（Arcade3D）：青绿主题，仅覆盖 HUD 配色，不影响车库 */
+  #grass3d.arcade #g3d-run{background:rgba(8,20,18,.72);border-color:rgba(110,220,190,.45);}
+  #grass3d.arcade #g3d-run .rn-head{color:#a8e6cf;}
+  #grass3d.arcade #g3d-run .rn-row{color:#cfe6dc;}
+  #grass3d.arcade #g3d-run .rn-bar{border-color:rgba(110,220,190,.28);}
+  #grass3d.arcade #g3d-run .rn-meter.fuel i{background:#5ad8b0;}
+  #grass3d.arcade #g3d-goal{background:rgba(8,20,18,.8);border-color:rgba(110,220,190,.5);}
+  #grass3d.arcade #g3d-goal b{color:#7ce6c0;}
+  #grass3d.arcade #g3d-goal .dot{background:#7ce6c0;box-shadow:0 0 9px rgba(124,230,192,.9);}
+  #grass3d.arcade #g3d-cortip{border-color:rgba(110,220,190,.35);}
+  #grass3d.arcade #g3d-vignette{background:radial-gradient(ellipse at 50% 46%,transparent 42%,rgba(4,12,10,.66) 100%);}
   @media (max-width:560px){#g3d-run{left:10px;width:min(250px,calc(100vw - 20px));bottom:calc(100px + env(safe-area-inset-bottom))}}
   /* HUD 持枪小人 */
   #gunstat{display:inline-flex;align-items:center;gap:4px;}
@@ -649,10 +660,10 @@
           <div class="sd-left"><span class="sd-cap">生存难度</span><div class="sd-meter"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
           <div class="sd-badge"><span class="sd-class">CLASS</span><span class="sd-num">3</span></div>
         </div>
-        <div class="cstat"><span class="ck">实体</span><span class="cv info">无实体</span></div>
+        <div class="cstat"><span class="ck">实体</span><span class="cv danger">1 红色笑脸（1F）</span></div>
         <div class="cstat"><span class="ck">宜居</span><span class="cv danger">不宜居地带</span></div>
       </div>
-      <p style="margin-top:10px">约 <b style="color:#b45cff">5 万平方米</b>的巨型 3D 迷宫 · <b style="color:#b45cff">紫色灯光</b>，两侧全是<b style="color:#b45cff">街机与电视机</b>，屏幕全在冒<b style="color:#c9c9c9">雪花病毒</b>，一台都玩不了 · <b style="color:#8fe06a">没有任何实体</b> · 箭头一路指引到<b style="color:#ffcf3b">复位按钮</b>，靠近按 <b style="color:#fff">E</b>，<b style="color:#ffcf5a">2 秒</b>后<b style="color:#ff5b78">逃生门</b>打开，走进去逃出后室</p>
+      <p style="margin-top:10px"><b style="color:#7ce6c0">三层管道长廊</b>（3F 起点 → 2F → 1F 出口层）· <b style="color:#7ce6c0">诡异青绿灯光</b>不安地闪烁，混着<b style="color:#b45cff">紫色霓虹残光</b>与<b style="color:#ffcf5a">电流咔嚓声</b> · 道路<b style="color:#ff8a8a">右侧栅栏内是带电水渠</b>，踩进去扣 1 命 · <b style="color:#ffcf5a">2F 左墙有配电室</b>，角落藏着<b style="color:#8fe06a">医疗包（+1 命）</b> · <b style="color:#8fe06a">绿色箭头</b>指引乘<b style="color:#7ce6c0">电梯</b>逐层下楼 · <b style="color:#ff3b3b">1F 有红色笑脸</b>在暗处游荡追击，能跑赢 · 走到 1F 走廊尽头<b style="color:#ffcf5a">长按 6 两秒</b>开启<b style="color:#8fe06a">绿色安全门</b>逃出后室</p>
     </button>
     <button class="mode library" id="libraryCard" data-mode="9">
       <span class="badge3d">3D</span>
@@ -1010,8 +1021,8 @@ const MODES=[
   // LEVEL 8 车库：地下三层，第三人称 3D，电梯串联楼层 + 切皮者剥防护服
   {name:"LEVEL 8 · 车库", garage:true, winM:300, catSpeed:4, sprintSpeed:7, smileys:false, smileyCount:0,
    party:false, kitty:null, doors:false, debris:false, weapons:false, pal:"gray", doorC:"#ffffff", doorFrame:"#666666"},
-  // 电玩城：大型 3D 迷宫（5 万平方米）· 紫色灯光 · 街机/电视雪花屏 · 找按钮开门逃出
-  {name:"电玩城", maze:"arcade", winM:0, catSpeed:5, sprintSpeed:9, smileys:false, party:false,
+  // 电玩城：三层管道长廊 3D（3F→2F→1F · 电梯 + 电水渠 + 配电室 + 红色笑脸 + 长按 6 开安全门）
+  {name:"电玩城", arcade3d:true, winM:0, catSpeed:5, sprintSpeed:9, smileys:false, party:false,
    pal:"gray", doorC:"#b45cff", doorFrame:"#1a0b2e"},
   // 图书馆：大型 3D 迷宫（20 万平方米）· 只有书架 · 管道笑脸追击 · 红光门回跑命医院
   {name:"图书馆", maze:"library", winM:0, catSpeed:5, sprintSpeed:9, smileys:false, party:false,
@@ -1136,7 +1147,8 @@ function startMode(i, teamSize=1){
   try{
     if(CFG.runner3d){Runner3D.launch();return;} // 快跑层：第三人称 3D 追逐关
     if(CFG.garage){Garage3D.launch();return;}   // 车库：地下三层 3D 关
-    if(CFG.maze){Maze3D.launch();return;}       // 电玩城 / 图书馆：大型 3D 迷宫
+    if(CFG.arcade3d){Arcade3D.launch();return;} // 电玩城：三层管道长廊
+    if(CFG.maze){Maze3D.launch();return;}       // 图书馆：大型 3D 迷宫
     if(CFG.world){Corridor3D.launch();return;}  // 其余层级：通用 3D 长廊（自由移动）
   }catch(err){ show3DLaunchError(err); return; }
   reset();
@@ -1167,6 +1179,7 @@ function portalGo(kind){
   try{ if(Runner3D.isActive())Runner3D.exit(); }catch(e){}
   try{ if(Grassland3D.isActive())Grassland3D.exit(); }catch(e){}
   try{ if(Garage3D.isActive())Garage3D.exit(); }catch(e){}
+  try{ if(Arcade3D.isActive())Arcade3D.exit(); }catch(e){}
   try{ if(Maze3D.isActive())Maze3D.exit(); }catch(e){}
   S.menu=false;S.paused=false;
   menuEl.style.display="none";victoryEl.style.display="none";
@@ -7720,6 +7733,1201 @@ const Garage3D=(function(){
   }
   return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,toggleView:toggleView,tag:"garage"};
 })();
+// ================= 电玩城 · 三层管道长廊引擎（Arcade3D · 3F→2F→1F · 电梯+电水+红色笑脸+安全门） =================
+const Arcade3D=(function(){
+  const gid=s=>document.getElementById(s);
+  const mount=gid("g3d-mount"),overlay=gid("grass3d"),promptEl=gid("g3d-prompt"),hintEl=gid("g3d-hint"),touchLayer=gid("g3d-touch"),
+        stick=gid("g3d-stick"),knob=gid("g3d-knob"),lookArea=gid("g3d-look"),jumpBtnEl=gid("g3d-jumpbtn"),
+        ringEl=gid("g3d-exitring"),ringFg=gid("g3d-ringfg"),ringPct=gid("g3d-ringpct"),
+        loadingEl=gid("g3d-loading"),errorEl=gid("g3d-error"),errTextEl=gid("g3d-errtext"),
+        muteBtn=gid("g3d-mute"),muteLabel=gid("g3d-mutelabel"),titleB=gid("g3d-titleb"),titleSpan=gid("g3d-titlespan"),
+        overEl=gid("g3d-over"),overTitleEl=gid("g3d-overtitle"),overTextEl=gid("g3d-overtext"),overStatEl=gid("g3d-overstat"),
+        hzEl=gid("g3d-hazard"),runEl=gid("g3d-run"),cortip=gid("g3d-cortip"),
+        wayEl=gid("g3d-way"),wayArrow=gid("g3d-wayarrow"),wayText=gid("g3d-waytext"),wayDist=gid("g3d-waydist"),
+        rhead=gid("g3d-rhead"),rDist=gid("g3d-rdist"),rProg=gid("g3d-rprog"),rGap=gid("g3d-rgap"),rGapFill=gid("g3d-rgapfill"),
+        rGapLabel=gid("g3d-rgaplabel"),rLife=gid("g3d-rlife"),rCharge=gid("g3d-rcharge"),rFuelFill=gid("g3d-rfuelfill"),
+        rHazLabel=gid("g3d-rhazlabel"),rHaz=gid("g3d-rhaz"),rHazFill=gid("g3d-rhazfill"),rHazLeft=gid("g3d-rhazleft"),
+        rLightRow=gid("g3d-rlightrow"),rLightLabel=gid("g3d-rlightlabel"),rLight=gid("g3d-rlight"),
+        rTorchRow=gid("g3d-rtorchrow"),rTeamRow=gid("g3d-rteamrow"),
+        menuEl=gid("menu"),exitBtnEl=gid("g3d-exitbtn"),
+        fadeEl=gid("g3d-fade"),dreadEl=gid("g3d-dread"),blissEl=gid("g3d-bliss"),
+        goalEl=gid("g3d-goal"),goalText=gid("g3d-goaltext"),goalSub=gid("g3d-goalsub");
+  const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+  const angLerp=(a,b,t)=>{const d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;return a+d*t;};
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  // 三层管道长廊：宽 24m × 长 480m × 高 6m，3F 起点，逐层下行到 1F 逃安全门
+  const HALF=12, LEN=480, CEILH=6, FLOOR_H=6, PR=.42, RING_C=339.292;
+  const V_WALK=4.0, V_SPRINT=7.2;
+  const FLABEL=["3F 三层","2F 二层","1F 一层"];
+  const ELEV_Z=-70, START_Z=-34, EXIT_Z=-(LEN-2);
+  const WATER_X0=7, WATER_X1=10.8, FENCE_X=7.1, FENCE_PERIOD=40, FENCE_LEN=30;   // 右侧带电水渠 + 纵向栅栏
+  const ALC_D=3.4, ALC_W=3.6, ALC_DOOR=1.5;                                      // 电梯凹室（嵌在左墙）
+  const ROOM_Z=-250, ROOM_D=11, ROOM_W=10, DOOR_W=3.0, DOOR_H=2.8;               // 2F 配电室
+  // 电梯状态机：与车库同款（靠近开门 → 进梯倒计时 → 关门 → 行驶 → 到站停顿 → 开门 → 驻留等出门）
+  const EP_IDLE=0,EP_OPEN=1,EP_WAIT=2,EP_CLOSE=3,EP_RIDE=4,EP_ARRIVE=5,EP_OPENDOOR=6,EP_EXIT=7;
+  const T_DOOR_OPEN=.7,T_WAIT=3.0,T_DOOR_CLOSE=1.1,T_RIDE=3.0,T_ARRIVE=.6,T_DOOR_OPEN2=1.0,CAM_TURN_T=.75;
+  let renderer=null,scene=null,camera=null,char=null,armL=null,armR=null,legL=null,legR=null,head=null;
+  let amb=null,hemi=null,world=null,lampFix=[],lampPool=[],lampPoolT=0;
+  let entities=[],obstacles=[],sideRooms=[],elevator=null,elevDoorOb=null,exitDoor=null,arrowLift=null,arrowExit=null;
+  let roomDoor=null,medkit=null,boxList=[],sparks=[],steams=[],neonList=[],waterMat=null;
+  let carGrp=null,shaftGrp=null,cabDl=null,cabDr=null,carLight=null,cabY=0,worldY=0,ride=null;
+  let active=false,isTouch=false,muted=false,raf=0,last=0,gtime=0,hudKey="",fadeTimer=0;
+  let charX=0,charZ=0,heading=Math.PI,jumpY=0,vy=0,onGround=true,jumpQueued=false,walked=0;
+  let floorIdx=0,lives=5,fuel=100,inv=0,dead=false,won=false,hitFx=0,medTaken=false,crackHot=false;
+  let elevTimer=0,doorDelay=0,elevPhase=EP_IDLE,elevNext=1;
+  let yaw=0,pitch=.13,camDist=6.2,camDistT=6.2,camTurn=99,camTurnFrom=0,camPitchFrom=.13,arriveCam=false;
+  let goalKey="",doorTipShown=false,dHold=0,btnHold=false,doorBtn=null,crackT=4;
+  let firstPerson=false;
+  let keys={},eHolding=false,eHoldStart=0,touchMove={x:0,y:0},touchSprint=false,stepT=0,cStep=-1;
+  let aMaster=null,humOsc=[],humGain=null,noiseBuf=null;
+  const dyn=[];
+
+  // ---------- 贴图（跨楼层共享缓存，换层不重建纹理） ----------
+  const texCache=new Map();
+  const sharedTexSet=new WeakSet();
+  function sharedTex(key,canvasFn,rx,ry){
+    const k=key+"|"+rx+"|"+ry;
+    let t=texCache.get(k);
+    if(!t){
+      t=new THREE.CanvasTexture(canvasFn());
+      t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.encoding=THREE.sRGBEncoding;
+      sharedTexSet.add(t);
+      texCache.set(k,t);
+    }
+    if(renderer)t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+    return t;
+  }
+  function isSharedTex(t){ return !!(t&&sharedTexSet.has(t)); }
+  function mat(hex,o){ return new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(hex),roughness:.88,metalness:.05},o||{})); }
+  function aFloorTex(){ const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");
+    g.fillStyle="#26302d";g.fillRect(0,0,256,256);
+    for(let i=0;i<1400;i++){const l=Math.random();g.fillStyle="rgba("+(34+l*30|0)+","+(44+l*32|0)+","+(40+l*30|0)+",.5)";g.fillRect(Math.random()*256,Math.random()*256,2,2);}
+    for(let i=0;i<7;i++){const x=Math.random()*256,y=Math.random()*256,r=16+Math.random()*34;   // 湿暗水洼
+      const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,"rgba(8,16,14,.85)");gr.addColorStop(.8,"rgba(10,20,18,.5)");gr.addColorStop(1,"rgba(120,220,190,.06)");
+      g.fillStyle=gr;g.beginPath();g.ellipse(x,y,r,r*.6,Math.random()*3,0,6.29);g.fill();}
+    g.strokeStyle="rgba(12,18,16,.5)";g.lineWidth=2;
+    for(let x=0;x<=256;x+=64){g.beginPath();g.moveTo(x,0);g.lineTo(x,256);g.stroke();}
+    g.beginPath();g.moveTo(0,128);g.lineTo(256,128);g.stroke();
+    return c; }
+  function aWallTex(){ const c=document.createElement("canvas");c.width=256;c.height=128;const g=c.getContext("2d");
+    g.fillStyle="#2c3835";g.fillRect(0,0,256,128);
+    for(let i=0;i<900;i++){const l=Math.random();g.fillStyle="rgba("+(36+l*34|0)+","+(48+l*38|0)+","+(44+l*36|0)+",.45)";g.fillRect(Math.random()*256,Math.random()*128,2+l*4,2);}
+    for(let i=0;i<9;i++){const x=Math.random()*256,w=4+Math.random()*14;                          // 水渍垂痕
+      const gr=g.createLinearGradient(0,0,0,128);gr.addColorStop(0,"rgba(10,18,16,.0)");gr.addColorStop(.5,"rgba(8,16,14,.4)");gr.addColorStop(1,"rgba(6,12,10,.65)");
+      g.fillStyle=gr;g.fillRect(x,0,w,128);}
+    g.strokeStyle="rgba(14,22,20,.55)";g.lineWidth=2;
+    for(let y=0;y<=128;y+=42){g.beginPath();g.moveTo(0,y);g.lineTo(256,y);g.stroke();}
+    for(let i=0;i<5;i++){g.fillStyle="rgba(96,54,20,"+(.08+Math.random()*.1)+")";g.beginPath();g.arc(Math.random()*256,Math.random()*128,6+Math.random()*14,0,6.29);g.fill();}
+    return c; }
+  function aCeilTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.fillStyle="#151d1b";g.fillRect(0,0,128,128);
+    for(let i=0;i<500;i++){g.fillStyle="rgba("+(22+Math.random()*20|0)+","+(30+Math.random()*22|0)+","+(28+Math.random()*20|0)+",.5)";g.fillRect(Math.random()*128,Math.random()*128,2,2);}
+    g.strokeStyle="rgba(8,12,10,.6)";g.lineWidth=2;g.strokeRect(1,1,126,126);
+    return c; }
+  function aWaterTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.fillStyle="#04231f";g.fillRect(0,0,128,128);
+    for(let i=0;i<7;i++){                                                            // 电光纹路
+      g.strokeStyle="rgba("+(120+Math.random()*80|0)+",255,"+(210+Math.random()*40|0)+","+(.5+Math.random()*.4)+")";
+      g.lineWidth=1+Math.random()*2;g.beginPath();
+      let x=Math.random()*128,y=0;g.moveTo(x,y);
+      while(y<128){x+=(Math.random()-.5)*36;y+=10+Math.random()*16;g.lineTo(x,y);}
+      g.stroke();}
+    for(let i=0;i<40;i++){g.fillStyle="rgba(160,255,230,"+(.2+Math.random()*.5)+")";g.fillRect(Math.random()*128,Math.random()*128,2,2);}
+    return c; }
+  function aFenceTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.clearRect(0,0,128,128);
+    g.strokeStyle="rgba(150,168,160,.9)";g.lineWidth=3;
+    for(let i=-128;i<256;i+=18){g.beginPath();g.moveTo(i,0);g.lineTo(i+128,128);g.stroke();
+      g.beginPath();g.moveTo(i,128);g.lineTo(i+128,0);g.stroke();}
+    g.strokeStyle="rgba(180,196,188,.95)";g.lineWidth=6;g.strokeRect(0,0,128,128);
+    for(let i=0;i<26;i++){g.fillStyle="rgba(96,54,20,.4)";g.fillRect(Math.random()*128,Math.random()*128,3,3);}
+    return c; }
+  function signCanvas(text,color,bg){ const c=document.createElement("canvas");c.width=256;c.height=80;const g=c.getContext("2d");
+    g.fillStyle=bg;g.fillRect(0,0,256,80);
+    g.strokeStyle=color;g.lineWidth=4;g.strokeRect(3,3,250,74);
+    g.fillStyle=color;g.font="bold 36px Courier New";g.textAlign="center";g.textBaseline="middle";g.fillText(text,128,42);
+    return c; }
+  function sharedSignTex(text,color,bg){ return sharedTex("asign:"+text+"|"+color+"|"+bg,function(){return signCanvas(text,color,bg);},1,1); }
+  function glowTex(){ const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");
+    const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,255,255,1)");gr.addColorStop(.35,"rgba(255,255,255,.5)");gr.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=gr;g.fillRect(0,0,64,64);return c; }
+  function sparkTex(){ const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");
+    g.strokeStyle="rgba(190,255,240,.95)";g.lineWidth=3;g.lineCap="round";
+    for(let i=0;i<5;i++){const a=Math.random()*6.29,r=14+Math.random()*16;
+      g.beginPath();g.moveTo(32,32);g.lineTo(32+Math.cos(a)*r,32+Math.sin(a)*r);g.stroke();}
+    const gr=g.createRadialGradient(32,32,0,32,32,14);gr.addColorStop(0,"rgba(255,255,255,.9)");gr.addColorStop(1,"rgba(140,255,220,0)");
+    g.fillStyle=gr;g.beginPath();g.arc(32,32,14,0,6.29);g.fill();
+    return c; }
+  function redSmilerTex(){ const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+    g.shadowColor="rgba(255,40,30,.95)";g.shadowBlur=16;g.fillStyle="#ff2b22";
+    g.beginPath();g.ellipse(44,48,8.5,12.5,-.2,0,6.29);g.fill();
+    g.beginPath();g.ellipse(84,48,8.5,12.5,.2,0,6.29);g.fill();
+    g.strokeStyle="#ff2b22";g.lineWidth=8;g.lineCap="round";
+    g.beginPath();g.arc(64,60,34,.16*Math.PI,.84*Math.PI);g.stroke();
+    g.shadowBlur=0;g.strokeStyle="rgba(50,0,0,.9)";g.lineWidth=3;
+    for(let i=-3;i<=3;i++){const dx=i*8.6,yy=60+Math.sqrt(Math.max(0,34*34-dx*dx));
+      g.beginPath();g.moveTo(64+dx,yy-8);g.lineTo(64+dx,yy+8);g.stroke();}
+    return c; }
+
+  // ---------- 渲染器 / 灯光 ----------
+  function onContextLost(e){
+    e.preventDefault();
+    if(!active)return;
+    active=false;threeActive=false;
+    if(raf){cancelAnimationFrame(raf);raf=0;}
+    console.error("[Arcade3D] WebGL context lost");
+    try{showError("渲染器中断（WebGL 上下文丢失）· 请返回菜单后重新进入电玩城");}catch(_){}
+  }
+  function buildRenderer(){
+    renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.setSize(innerWidth,innerHeight);
+    renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;
+    mount.appendChild(renderer.domElement);
+    renderer.domElement.addEventListener("webglcontextlost",onContextLost,false);
+    camera=new THREE.PerspectiveCamera(64,innerWidth/innerHeight,.1,120);
+    scene=new THREE.Scene();scene.background=new THREE.Color(0x060f0d);scene.fog=new THREE.Fog(0x081412,6,52);
+  }
+  function buildLights(){
+    amb=new THREE.AmbientLight(0x7fae9e,.16);scene.add(amb);
+    hemi=new THREE.HemisphereLight(0x8fd8c0,0x0a1210,.3);scene.add(hemi);
+  }
+
+  // ---------- 楼层搭建 ----------
+  function disposeWorld(){
+    if(world){ scene.remove(world);
+      world.traverse(o=>{ if(o.geometry)o.geometry.dispose();
+        if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];
+          ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture&&!isSharedTex(v))v.dispose();}m.dispose();});} });
+      world=null; }
+    entities.length=0;obstacles.length=0;sideRooms.length=0;elevator=null;elevDoorOb=null;exitDoor=null;
+    arrowLift=null;arrowExit=null;lampFix.length=0;lampPool.length=0;roomDoor=null;medkit=null;
+    boxList.length=0;sparks.length=0;steams.length=0;neonList.length=0;waterMat=null;
+  }
+  function planSideRooms(){
+    sideRooms=[{zc:ELEV_Z,w:ALC_W,d:ALC_D,doorHalf:ALC_DOOR,kind:"elev"}];
+    if(floorIdx===1)sideRooms.push({zc:ROOM_Z,w:ROOM_W,d:ROOM_D,doorHalf:DOOR_W/2-.15,kind:"room"});
+  }
+  function roomAt(z){for(const r of sideRooms){if(Math.abs(z-r.zc)<r.w/2)return r;}return null;}
+  function roomIn(){return charX<-HALF+PR+0.01?roomAt(charZ):null;}
+  function buildFloor(idx){
+    disposeWorld();
+    floorIdx=idx;
+    worldY=-idx*FLOOR_H;                        // 每层往下 6 米，电梯按这个距离升降
+    world=new THREE.Group();scene.add(world);
+    world.position.y=worldY;
+    planSideRooms();
+    // 地面 / 顶棚 / 侧墙
+    const fm=new THREE.MeshStandardMaterial({map:sharedTex("afloor",aFloorTex,6,122),roughness:.9,metalness:.04});
+    const fl=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,LEN+8),fm);
+    fl.rotation.x=-Math.PI/2;fl.position.set(0,0,-(LEN/2)+1.5);world.add(fl);
+    const cm=new THREE.MeshStandardMaterial({map:sharedTex("aceil",aCeilTex,6,122),roughness:.95});
+    const ce=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,LEN+8),cm);
+    ce.rotation.x=Math.PI/2;ce.position.set(0,CEILH,-(LEN/2)+1.5);world.add(ce);
+    buildWalls();
+    buildPipes();
+    buildLamps();
+    buildNeon();
+    buildWater();
+    buildFence();
+    buildBoxes();
+    buildElevator(idx);
+    if(idx===1)buildPowerRoom();
+    if(idx===2)buildExitDoor();
+    buildEntities(idx);
+    buildArrows();
+  }
+  // 侧墙：左墙按凹室门洞切段（门楣留上方），右墙整面（电水渠在走廊内侧）
+  function buildWalls(){
+    const wall=(s,znear,zfar,y0,y1)=>{
+      const len=znear-zfar,h=y1-y0;if(len<=.02||h<=.02)return;
+      const rx=Math.max(1,Math.round(len/4)),ry=Math.max(1,Math.round(h/3));
+      const m=new THREE.MeshStandardMaterial({map:sharedTex("awall-seg",aWallTex,rx,ry),roughness:.94,side:THREE.DoubleSide});
+      const w=new THREE.Mesh(new THREE.PlaneGeometry(len,h),m);
+      w.position.set(s*HALF,y0+h/2,(znear+zfar)/2);w.rotation.y=-s*Math.PI/2;world.add(w);
+    };
+    let prev=3.6;
+    for(const r of sideRooms){
+      wall(-1,prev,r.zc+r.doorHalf,0,CEILH);
+      wall(-1,r.zc+r.doorHalf,r.zc-r.doorHalf,DOOR_H,CEILH);
+      prev=r.zc-r.doorHalf;
+    }
+    wall(-1,prev,-LEN,0,CEILH);
+    const rw=new THREE.MeshStandardMaterial({map:sharedTex("awall",aWallTex,122,1),roughness:.94});
+    const right=new THREE.Mesh(new THREE.PlaneGeometry(LEN+8,CEILH),rw);
+    right.position.set(HALF,CEILH/2,-(LEN/2)+1.5);right.rotation.y=-Math.PI/2;world.add(right);
+    const wm=new THREE.MeshStandardMaterial({map:sharedTex("awall",aWallTex,6,1),roughness:.94,side:THREE.DoubleSide});
+    const front=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,CEILH),wm);
+    front.position.set(0,CEILH/2,4);front.rotation.y=Math.PI;world.add(front);
+    const back=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,CEILH),wm);
+    back.position.set(0,CEILH/2,-LEN);world.add(back);
+  }
+  // 管道长廊：两侧墙布满纵向管道 + 法兰 + 阀门手轮 + 立管
+  function buildPipes(){
+    const pipeM=mat("#5a6b66",{roughness:.55,metalness:.55});
+    const flangeM=mat("#3c4a46",{roughness:.6,metalness:.5});
+    const lines=[[-HALF+.55,1.5,.26],[-HALF+.55,2.3,.2],[-HALF+.75,4.6,.3],
+                 [HALF-.55,1.2,.24],[HALF-.55,2.0,.2],[HALF-.75,4.6,.3]];
+    for(const p of lines){
+      const c=new THREE.Mesh(new THREE.CylinderGeometry(p[2],p[2],LEN,10),pipeM);
+      c.rotation.x=Math.PI/2;c.position.set(p[0],p[1],-(LEN/2)+1.5);world.add(c);
+    }
+    // 法兰环（合批）
+    const fl=[];
+    for(const p of lines)for(let z=-4;z>=-(LEN-4);z-=12)fl.push([p[0],p[1],z,p[2]]);
+    const flMesh=new THREE.InstancedMesh(new THREE.TorusGeometry(1,.22,6,12),flangeM,fl.length);
+    const m4=new THREE.Matrix4(),q0=new THREE.Quaternion(),v3=new THREE.Vector3(),s3=new THREE.Vector3();
+    fl.forEach((f,i)=>{v3.set(f[0],f[1],f[2]);const r=f[3]+.05;s3.set(r,r,1);m4.compose(v3,q0,s3);flMesh.setMatrixAt(i,m4);});
+    flMesh.instanceMatrix.needsUpdate=true;flMesh.frustumCulled=false;world.add(flMesh);
+    // 阀门手轮（每 40m 交替挂在左右管道上）
+    const vw=[];
+    for(let z=-20;z>=-(LEN-20);z-=40){
+      const k=Math.floor(-z/40)%2;
+      vw.push([k?-HALF+.28:HALF-.28,k?2.3:1.2,z,k?1:-1]);
+    }
+    const wheelMesh=new THREE.InstancedMesh(new THREE.TorusGeometry(.3,.055,6,14),mat("#8a4a3a",{roughness:.5,metalness:.4}),vw.length);
+    const qz=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2);
+    vw.forEach((p,i)=>{v3.set(p[0],p[1],p[2]);s3.set(1,1,1);m4.compose(v3,qz,s3);wheelMesh.setMatrixAt(i,m4);});
+    wheelMesh.instanceMatrix.needsUpdate=true;wheelMesh.frustumCulled=false;world.add(wheelMesh);
+    for(const p of vw){
+      const stem=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.5,6),flangeM);
+      stem.rotation.z=Math.PI/2;stem.position.set(p[0]-p[3]*.3,p[1],p[2]);world.add(stem);
+    }
+    // 立管
+    for(const z of[-120,-240,-360]){
+      const lv=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,CEILH,10),pipeM);lv.position.set(-HALF+.6,CEILH/2,z);world.add(lv);
+      const rv=new THREE.Mesh(new THREE.CylinderGeometry(.26,.26,CEILH,10),pipeM);rv.position.set(HALF-.6,CEILH/2,z-40);world.add(rv);
+    }
+    // 蒸汽团（阀门附近，忽浓忽淡）
+    for(const p of vw){
+      const st=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aglow",glowTex,1,1),color:0xcfe8de,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.08,fog:false}));
+      st.scale.set(2.6,2.6,1);st.position.set(p[0]+p[3]*.6,p[1]+.5,p[2]);world.add(st);
+      steams.push({sp:st,ph:Math.random()*6.28});
+    }
+  }
+  // 病态青绿顶灯：沿步道中线每 8 米一盏，持续不安地闪烁（不是整层熄灯）
+  function buildLamps(){
+    for(let z=-6;z>=-(LEN-6);z-=8)addLamp(-2,z);
+    for(let i=0;i<5;i++){
+      const pl=new THREE.PointLight(0x7fe0c0,1.1,26,2);
+      pl.position.set(-2,CEILH-.8,0);world.add(pl);
+      lampPool.push({light:pl,fix:-1,ph:Math.random()*6.28});
+    }
+  }
+  function addLamp(x,z){
+    const lg=new THREE.Group();lg.position.set(x,CEILH-.18,z);world.add(lg);
+    const tube=new THREE.Mesh(new THREE.BoxGeometry(.2,.07,1.8),new THREE.MeshStandardMaterial({color:0xcff5e8,emissive:new THREE.Color(0x7fe8c8),emissiveIntensity:1.0,roughness:.5}));
+    lg.add(tube);
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aglow",glowTex,1,1),color:0x8fe8d0,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.24,fog:false}));
+    halo.scale.set(2.6,1.3,1);halo.position.y=-.15;lg.add(halo);
+    lampFix.push({x:x,z:z,tube:tube,halo:halo,ph:Math.random()*6.28});
+  }
+  function updateLamps(dt){
+    for(const f of lampFix){
+      const dip=(Math.random()<.012?-.5:0);
+      const fl=Math.max(.06,.78+.2*Math.sin(gtime*5.3+f.ph*7)+dip);
+      f.tube.material.emissiveIntensity=1.05*fl;
+      f.halo.material.opacity=.24*fl;
+    }
+    lampPoolT-=dt;
+    if(lampPoolT<=0){
+      lampPoolT=.25;
+      const cand=[];
+      for(let i=0;i<lampFix.length;i++){const f=lampFix[i];cand.push({i:i,d:Math.abs(f.z-charZ)+Math.abs(f.x-charX)*.5});}
+      cand.sort((a,b)=>a.d-b.d);
+      const keep=new Set();
+      for(const L of lampPool){
+        if(L.fix>=0&&Math.abs(lampFix[L.fix].z-charZ)<40){keep.add(L.fix);continue;}
+        L.fix=-1;
+      }
+      for(const c of cand){
+        if(keep.has(c.i))continue;
+        const L=lampPool.find(l=>l.fix<0);if(!L)break;
+        L.fix=c.i;keep.add(c.i);
+      }
+    }
+    for(const L of lampPool){
+      const f=L.fix>=0?lampFix[L.fix]:null;
+      if(!f){L.light.intensity=0;continue;}
+      L.light.position.set(f.x,CEILH-.6,f.z);
+      L.light.intensity=1.1*(.8+.2*Math.sin(gtime*5.3+f.ph*7)+(Math.random()<.01?-.4:0));
+    }
+  }
+  // 紫色霓虹残光：稀疏几条，缓慢明暗
+  function buildNeon(){
+    for(const z of[-150,-310,-450]){
+      const strip=new THREE.Mesh(new THREE.BoxGeometry(.06,.5,4),new THREE.MeshStandardMaterial({color:0xb45cff,emissive:new THREE.Color(0x9a4cff),emissiveIntensity:1.2,roughness:.4}));
+      strip.position.set(-HALF+.12,3.6,z);world.add(strip);
+      const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aglow",glowTex,1,1),color:0x9a4cff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.16,fog:false}));
+      halo.scale.set(3.4,2.2,1);halo.position.set(-HALF+.4,3.6,z);world.add(halo);
+      neonList.push({strip:strip,halo:halo,ph:Math.random()*6.28});
+    }
+    for(const z of[-150,-310]){const pl=new THREE.PointLight(0x8a4cff,.45,14,2);pl.position.set(-HALF+1.2,3.4,z);world.add(pl);neonList.push({light:pl,ph:Math.random()*6.28});}
+  }
+  function updateNeon(dt){
+    for(const n of neonList){
+      const k=.8+.35*Math.sin(gtime*1.7+n.ph*9);
+      if(n.strip){n.strip.material.emissiveIntensity=1.1*k;n.halo.material.opacity=.16*k;}
+      if(n.light)n.light.intensity=.45*k;
+    }
+  }
+  // 电水渠：道路右侧发光水面 + 电火花闪烁
+  function buildWater(){
+    const wt=sharedTex("awater",aWaterTex,1,80);
+    waterMat=new THREE.MeshStandardMaterial({map:wt,emissive:0x2affd0,emissiveMap:wt,emissiveIntensity:.8,roughness:.3,metalness:.15});
+    const w=new THREE.Mesh(new THREE.PlaneGeometry(WATER_X1-WATER_X0,LEN),waterMat);
+    w.rotation.x=-Math.PI/2;w.position.set((WATER_X0+WATER_X1)/2,.04,-(LEN/2)+2);world.add(w);
+    const curbM=mat("#39463f",{roughness:.9});
+    const curb=new THREE.Mesh(new THREE.BoxGeometry(.24,.3,LEN),curbM);curb.position.set(WATER_X0-.06,.15,-(LEN/2)+2);world.add(curb);
+    const curb2=new THREE.Mesh(new THREE.BoxGeometry(.24,.3,LEN),curbM);curb2.position.set(HALF-.12,.15,-(LEN/2)+2);world.add(curb2);
+    for(let i=0;i<26;i++){
+      const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aspark",sparkTex,1,1),color:0xbfffe8,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0,fog:false}));
+      sp.position.set(rand(WATER_X0+.4,WATER_X1-.3),rand(.15,.9),rand(-LEN+6,2));
+      sp.scale.set(.5,.5,1);world.add(sp);
+      sparks.push({sp:sp,ph:Math.random()*6.28,water:true});
+    }
+  }
+  function updateSparks(dt){
+    for(const s of sparks){
+      if(Math.random()<.22){s.sp.material.opacity=.4+Math.random()*.6;const k=.3+Math.random()*.7;s.sp.scale.set(k,k,1);}
+      else s.sp.material.opacity=Math.max(0,s.sp.material.opacity-dt*6);
+    }
+    if(waterMat)waterMat.emissiveIntensity=.7+.25*Math.sin(gtime*3)+(Math.random()<.02?.5:0);
+  }
+  function updateSteam(dt){
+    for(const s of steams)s.sp.material.opacity=.05+.05*(1+Math.sin(gtime*.8+s.ph*9));
+  }
+  // 栅栏：每 40m 一段，沿走廊纵向贴着右侧墙伸向路中，围住电水渠（段间留 10m 缺口）
+  function buildFence(){
+    const fm=new THREE.MeshStandardMaterial({map:sharedTex("afence",aFenceTex,15,1),transparent:false,alphaTest:.5,side:THREE.DoubleSide,roughness:.6,metalness:.5});
+    const postM=mat("#556258",{roughness:.55,metalness:.6});
+    for(let z0=-6;z0>-(LEN-4);z0-=FENCE_PERIOD){
+      const zc=z0-FENCE_LEN/2;
+      const panel=new THREE.Mesh(new THREE.PlaneGeometry(FENCE_LEN,1.6),fm);
+      panel.rotation.y=Math.PI/2;panel.position.set(FENCE_X,.95,zc);world.add(panel);
+      for(let k=0;k<=6;k++){
+        const post=new THREE.Mesh(new THREE.BoxGeometry(.09,1.75,.09),postM);
+        post.position.set(FENCE_X,.87,z0-k*(FENCE_LEN/6));world.add(post);
+      }
+      const rail=new THREE.Mesh(new THREE.BoxGeometry(.07,.07,FENCE_LEN),postM);
+      rail.rotation.x=Math.PI/2;rail.position.set(FENCE_X,1.72,zc);world.add(rail);
+      obstacles.push({x:FENCE_X,z:zc,hw:.14,hd:FENCE_LEN/2,h:1.7});
+    }
+  }
+  // 配电箱：右墙每隔一段一个，持续冒电火花（咔嚓声源头之一）
+  function buildBoxes(){
+    const bodyM=mat("#4a5550",{roughness:.5,metalness:.5});
+    for(const z of[-100,-260,-420]){
+      const b=new THREE.Mesh(new THREE.BoxGeometry(.6,1.1,.9),bodyM);
+      b.position.set(HALF-.35,2.3,z);world.add(b);
+      const warn=new THREE.Mesh(new THREE.PlaneGeometry(.6,.4),new THREE.MeshBasicMaterial({map:sharedSignTex("⚡ 高压","#ffe14d","#141004"),transparent:true}));
+      warn.rotation.y=-Math.PI/2;warn.position.set(HALF-.66,2.3,z);world.add(warn);
+      const led=new THREE.Mesh(new THREE.SphereGeometry(.05,8,6),new THREE.MeshStandardMaterial({color:0x331100,emissive:new THREE.Color(0xff4422),emissiveIntensity:1.4}));
+      led.position.set(HALF-.66,2.75,z+.25);world.add(led);
+      boxList.push({x:HALF-.5,z:z});
+      for(let i=0;i<3;i++){
+        const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aspark",sparkTex,1,1),color:0xdfffe8,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0,fog:false}));
+        sp.position.set(HALF-.9,rand(1.7,2.9),z+rand(-.5,.5));sp.scale.set(.4,.4,1);world.add(sp);
+        sparks.push({sp:sp,ph:Math.random()*6.28});
+      }
+    }
+  }
+  // 牌子（正反两面）
+  function addSign(txt,w,h,fg,bg,x,y,z,ry){
+    const m=new THREE.MeshBasicMaterial({map:sharedSignTex(txt,fg,bg),transparent:true});
+    const a=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);a.position.set(x,y,z);a.rotation.y=ry;world.add(a);
+    const b=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);b.position.set(x,y,z);b.rotation.y=ry+Math.PI;world.add(b);
+    return a;
+  }
+  // 电梯：嵌在左墙的凹室，层门闸板 + 指示器 + 按钮面板（轿厢/井道在场景层，见 buildCab/buildShaft）
+  function buildElevator(idx){
+    const eg=new THREE.Group();world.add(eg);
+    const frameM=mat("#8e949a",{roughness:.35,metalness:.75});
+    const concreteM=mat("#3c4844",{roughness:.95});
+    [-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.BoxGeometry(ALC_D,CEILH,.5),concreteM);w.position.set(-HALF-ALC_D/2,CEILH/2,ELEV_Z+s*(ALC_W/2-.25));eg.add(w);});
+    const back=new THREE.Mesh(new THREE.BoxGeometry(.5,CEILH,ALC_W+.5),concreteM);back.position.set(-HALF-ALC_D+.25,CEILH/2,ELEV_Z);eg.add(back);
+    const slab=new THREE.Mesh(new THREE.BoxGeometry(ALC_D+.4,.4,ALC_W+.8),concreteM);slab.position.set(-HALF-ALC_D/2,4.4,ELEV_Z);eg.add(slab);
+    [-1,1].forEach(s=>{const p=new THREE.Mesh(new THREE.BoxGeometry(.3,2.9,.3),frameM);p.position.set(-HALF+.08,1.45,ELEV_Z+s*1.55);eg.add(p);});
+    const head=new THREE.Mesh(new THREE.BoxGeometry(.3,.3,3.4),frameM);head.position.set(-HALF+.08,2.95,ELEV_Z);eg.add(head);
+    const shutter=new THREE.Mesh(new THREE.BoxGeometry(.1,2.8,3.1),mat("#6d7a74",{roughness:.45,metalness:.6}));
+    shutter.position.set(-HALF-.08,1.4,ELEV_Z);eg.add(shutter);
+    const indC=document.createElement("canvas");indC.width=256;indC.height=64;
+    const indTex=new THREE.CanvasTexture(indC);indTex.encoding=THREE.sRGBEncoding;
+    const ind=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.4),new THREE.MeshBasicMaterial({map:indTex,transparent:true}));
+    ind.rotation.y=Math.PI/2;ind.position.set(-HALF+.24,3.25,ELEV_Z);eg.add(ind);
+    const indState={ctx:indC.getContext("2d"),tex:indTex};
+    drawIndicator(indState,FLABEL[idx].split(" ")[0]);
+    const panel=new THREE.Mesh(new THREE.BoxGeometry(.1,.7,.34),frameM);panel.position.set(-HALF+.2,1.35,ELEV_Z+2.1);eg.add(panel);
+    [-1,1].forEach((s,i)=>{const b=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.05,12),
+      new THREE.MeshStandardMaterial({color:0x2a2d2f,emissive:new THREE.Color(i?0x66ff88:0xffaa33),emissiveIntensity:.7}));
+      b.rotation.z=Math.PI/2;b.position.set(-HALF+.28,1.5,ELEV_Z+2.1+s*.22);eg.add(b);});
+    const label=idx<2?("电梯 ↓ "+FLABEL[idx+1].split(" ")[0]):("电梯 ↑ "+FLABEL[1].split(" ")[0]);
+    addSign(label,2.7,.72,"#7ce6c0","#07140f",-HALF+.22,2.3,ELEV_Z+3.4,Math.PI/2);
+    addSign(FLABEL[idx],2.2,.8,"#bfe8dc","#08120f",-HALF+.22,4.6,ELEV_Z-3.6,Math.PI/2);
+    const lamp=new THREE.Mesh(new THREE.SphereGeometry(.09,8,6),new THREE.MeshStandardMaterial({color:0x3a3a34,emissive:new THREE.Color(0xff5533),emissiveIntensity:.6}));
+    lamp.position.set(-HALF+.28,2.78,ELEV_Z+2.1);eg.add(lamp);
+    const stripe=new THREE.Mesh(new THREE.PlaneGeometry(2.6,1.2),new THREE.MeshBasicMaterial({map:sharedTex("afloor",aFloorTex,1,1),transparent:true,opacity:.0}));
+    stripe.rotation.x=-Math.PI/2;stripe.position.set(-HALF+1.4,.02,ELEV_Z);stripe.visible=false;eg.add(stripe);
+    elevator={grp:eg,open:0,next:idx<2?idx+1:1,lamp:lamp,ind:indState,shutter:shutter};
+    elevDoorOb={x:-HALF,z:ELEV_Z,hw:.12,hd:ALC_DOOR,h:2.7,off:false};
+    obstacles.push(elevDoorOb);
+  }
+  function cabDocked(){ return Math.abs(cabY-worldY)<0.05; }
+  function drawIndicator(ind,label){
+    const g=ind.ctx;
+    g.fillStyle="#07100c";g.fillRect(0,0,256,64);
+    g.fillStyle="#7ce6c0";g.font="bold 40px Courier New";g.textAlign="center";g.textBaseline="middle";
+    g.fillText(label,128,34);
+    ind.tex.needsUpdate=true;
+  }
+  // 轿厢（场景层，随楼层高度上下移动）
+  function buildCab(){
+    carGrp=new THREE.Group();scene.add(carGrp);
+    const carM=mat("#4c5852",{roughness:.9});
+    const cf=new THREE.Mesh(new THREE.PlaneGeometry(2.7,3.2),mat("#39443f",{roughness:.95}));
+    cf.rotation.x=-Math.PI/2;cf.position.set(-HALF-1.35,.02,ELEV_Z);carGrp.add(cf);
+    const cb=new THREE.Mesh(new THREE.BoxGeometry(.14,3.2,3.2),carM);cb.position.set(-HALF-2.68,1.6,ELEV_Z);carGrp.add(cb);
+    [-1,1].forEach(s=>{
+      const lower=new THREE.Mesh(new THREE.BoxGeometry(2.7,1.0,.14),carM);lower.position.set(-HALF-1.35,.5,ELEV_Z+s*1.6);carGrp.add(lower);
+      const upper=new THREE.Mesh(new THREE.BoxGeometry(2.7,1.1,.14),carM);upper.position.set(-HALF-1.35,2.65,ELEV_Z+s*1.6);carGrp.add(upper);
+      const front=new THREE.Mesh(new THREE.BoxGeometry(1.0,1.1,.14),carM);front.position.set(-HALF-.5,1.55,ELEV_Z+s*1.6);carGrp.add(front);
+      const back=new THREE.Mesh(new THREE.BoxGeometry(.95,1.1,.14),carM);back.position.set(-HALF-2.2,1.55,ELEV_Z+s*1.6);carGrp.add(back);
+    });
+    const cc=new THREE.Mesh(new THREE.PlaneGeometry(2.7,3.2),mat("#454f4a",{roughness:.9}));
+    cc.rotation.x=Math.PI/2;cc.position.set(-HALF-1.35,3.2,ELEV_Z);carGrp.add(cc);
+    carLight=new THREE.PointLight(0xbfe8d8,.8,8,2);carLight.position.set(-HALF-1.4,2.5,ELEV_Z);carGrp.add(carLight);
+    const doorM=mat("#7a8188",{roughness:.42,metalness:.55});
+    cabDl=new THREE.Mesh(new THREE.BoxGeometry(.1,2.7,1.5),doorM);cabDl.position.set(-HALF+.05,1.35,ELEV_Z-.75);carGrp.add(cabDl);
+    cabDr=new THREE.Mesh(new THREE.BoxGeometry(.1,2.7,1.5),doorM);cabDr.position.set(-HALF+.05,1.35,ELEV_Z+.75);carGrp.add(cabDr);
+    carGrp.position.set(0,cabY,0);
+  }
+  // 井道：三层共用的竖井（轿厢后面），行驶中从门缝能看到灯带掠过
+  function buildShaft(){
+    shaftGrp=new THREE.Group();scene.add(shaftGrp);
+    const concreteM=mat("#2e3a36",{roughness:.96});
+    const H=3*FLOOR_H+4;
+    const back=new THREE.Mesh(new THREE.BoxGeometry(.2,H,4.2),concreteM);back.position.set(-HALF-3.7,-6,ELEV_Z);shaftGrp.add(back);
+    [-1,1].forEach(s=>{const w=new THREE.Mesh(new THREE.BoxGeometry(1.1,H,.2),concreteM);w.position.set(-HALF-3.15,-6,ELEV_Z+s*2.1);shaftGrp.add(w);});
+    const barM=new THREE.MeshStandardMaterial({color:0x9fe8d0,emissive:new THREE.Color(0x7fe0c0),emissiveIntensity:1.4,roughness:.5});
+    for(let y=0;y>-14;y-=2){
+      const bar=new THREE.Mesh(new THREE.BoxGeometry(.06,.12,3.4),barM);bar.position.set(-HALF-3.6,y,ELEV_Z);shaftGrp.add(bar);
+    }
+  }
+  // 2F 配电室：左墙后的凹室，一排配电箱持续冒火花，角落一个医疗包（+1 命 · 一次性）
+  function buildPowerRoom(){
+    const wm=mat("#333f3b",{roughness:.94,side:THREE.DoubleSide});
+    const fm=mat("#2a3531",{roughness:.95,side:THREE.DoubleSide});
+    const flr=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_D,ROOM_W),fm);
+    flr.rotation.x=-Math.PI/2;flr.position.set(-HALF-ROOM_D/2,.012,ROOM_Z);world.add(flr);
+    const bk=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W,CEILH),wm);
+    bk.rotation.y=Math.PI/2;bk.position.set(-HALF-ROOM_D,CEILH/2,ROOM_Z);world.add(bk);
+    [-1,1].forEach(k=>{const w=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_D,CEILH),wm);
+      w.position.set(-HALF-ROOM_D/2,CEILH/2,ROOM_Z+k*ROOM_W/2);w.rotation.y=k>0?Math.PI:0;world.add(w);});
+    const cl=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_D,ROOM_W),fm);
+    cl.rotation.x=Math.PI/2;cl.position.set(-HALF-ROOM_D/2,CEILH,ROOM_Z);world.add(cl);
+    // 靠走廊一侧补前墙（只留门洞）
+    const half=ROOM_W/2,d=DOOR_W/2;
+    const fw=(w,h,z,y)=>{if(w<=.02||h<=.02)return;
+      const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),wm);
+      m.rotation.y=Math.PI/2;m.position.set(-HALF+.06,y+h/2,z);world.add(m);};
+    fw(half-d,CEILH,ROOM_Z-(half+d)/2,0);
+    fw(half-d,CEILH,ROOM_Z+(half+d)/2,0);
+    fw(d*2,CEILH-DOOR_H,ROOM_Z,DOOR_H);
+    // 配电箱一排
+    const bodyM=mat("#556258",{roughness:.5,metalness:.55});
+    for(let k=0;k<4;k++){
+      const zc=ROOM_Z-3.6+k*2.4;
+      const b=new THREE.Mesh(new THREE.BoxGeometry(.7,2.0,1.9),bodyM);b.position.set(-HALF-ROOM_D+.45,1.0,zc);world.add(b);
+      const pn=new THREE.Mesh(new THREE.BoxGeometry(.06,1.5,1.6),mat("#242e2a",{roughness:.6}));pn.position.set(-HALF-ROOM_D+.84,1.05,zc);world.add(pn);
+      addSign("⚡ "+(k+1)+"号配电",1.2,.4,"#ffe14d","#141004",-HALF-ROOM_D+.9,1.7,zc,Math.PI/2);
+      for(let i=0;i<2;i++){
+        const led=new THREE.Mesh(new THREE.SphereGeometry(.04,8,6),new THREE.MeshStandardMaterial({color:0x112211,emissive:new THREE.Color(i?0x66ff88:0xff4422),emissiveIntensity:1.3}));
+        led.position.set(-HALF-ROOM_D+.9,1.2,zc+(i?.4:-.4));world.add(led);
+      }
+      for(let i=0;i<3;i++){
+        const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aspark",sparkTex,1,1),color:0xdfffe8,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0,fog:false}));
+        sp.position.set(-HALF-ROOM_D+1.1,rand(1.4,2.3),zc+rand(-.7,.7));sp.scale.set(.45,.45,1);world.add(sp);
+        sparks.push({sp:sp,ph:Math.random()*6.28});
+      }
+      obstacles.push({x:-HALF-ROOM_D+.45,z:zc,hw:.4,hd:.95,h:2.0});
+    }
+    boxList.push({x:-HALF-ROOM_D+.5,z:ROOM_Z});
+    addLamp(-HALF-ROOM_D/2,ROOM_Z);
+    addSign("配电室",2.2,.7,"#ffe14d","#141004",-HALF+.22,3.3,ROOM_Z+2.4,Math.PI/2);
+    // 自动推拉门（靠近滑开，进去后自己关上）
+    const frameM=mat("#4f4a43",{roughness:.7,metalness:.3});
+    [-1,1].forEach(k=>{const p=new THREE.Mesh(new THREE.BoxGeometry(.16,DOOR_H+.12,.18),frameM);p.position.set(-HALF+.05,(DOOR_H+.12)/2,ROOM_Z+k*(DOOR_W/2+.03));world.add(p);});
+    const hb=new THREE.Mesh(new THREE.BoxGeometry(.16,.2,DOOR_W+.36),frameM);hb.position.set(-HALF+.05,DOOR_H+.1,ROOM_Z);world.add(hb);
+    const slider=new THREE.Group();slider.position.set(-HALF+.36,0,ROOM_Z);world.add(slider);
+    const leaf=new THREE.Mesh(new THREE.BoxGeometry(.08,DOOR_H+.04,DOOR_W+.18),mat("#6f7a74",{roughness:.55,metalness:.5}));
+    leaf.position.set(0,(DOOR_H+.04)/2,0);slider.add(leaf);
+    const ob={x:-HALF,z:ROOM_Z,hw:.3,hd:DOOR_W/2-.1,h:DOOR_H,off:true};obstacles.push(ob);
+    roomDoor={slider:slider,open:0,ob:ob};
+    // 医疗包：白盒红十字，角落一次性 +1 命
+    const mg=new THREE.Group();mg.position.set(-HALF-ROOM_D+1.5,.0,ROOM_Z+3.6);world.add(mg);
+    const mbox=new THREE.Mesh(new THREE.BoxGeometry(.6,.4,.42),mat("#d8ddd4",{roughness:.6}));mbox.position.y=.2;mg.add(mbox);
+    const cross1=new THREE.Mesh(new THREE.PlaneGeometry(.3,.1),new THREE.MeshBasicMaterial({color:0xff3b3b}));
+    cross1.rotation.y=Math.PI/2;cross1.position.set(.31,.24,0);mg.add(cross1);
+    const cross2=new THREE.Mesh(new THREE.PlaneGeometry(.1,.3),new THREE.MeshBasicMaterial({color:0xff3b3b}));
+    cross2.rotation.y=Math.PI/2;cross2.position.set(.31,.2,0);mg.add(cross2);
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aglow",glowTex,1,1),color:0xff8a8a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5,fog:false}));
+    halo.scale.set(1.2,1.2,1);halo.position.y=.4;mg.add(halo);
+    medkit={x:-HALF-ROOM_D+1.5,z:ROOM_Z+3.6,mesh:mg,taken:false};
+  }
+  function updateRoomDoor(dt){
+    if(!roomDoor)return;
+    const depth=-charX-HALF,zin=Math.abs(charZ-ROOM_Z);
+    const inside=depth>-.3&&zin<ROOM_W/2-.2;
+    const near=!inside&&depth<0&&zin<DOOR_W/2+1.1&&-depth<4.6;
+    const want=inside?(depth>2.9?0:1):(near?1:0);
+    roomDoor.open+=(want-roomDoor.open)*Math.min(1,dt*3.2);
+    if(roomDoor.open<.02)roomDoor.open=0;else if(roomDoor.open>.98)roomDoor.open=1;
+    roomDoor.slider.position.z=ROOM_Z+roomDoor.open*2.7;
+    roomDoor.ob.off=roomDoor.open>=.5;
+  }
+  // 1F 尽头：绿色 EXIT 安全门（长按 6 两秒开启，门上滑，走进去 → 逃出后室）
+  function buildExitDoor(){
+    const dg=new THREE.Group();dg.position.set(0,0,EXIT_Z);world.add(dg);
+    const frameM=mat("#1e4a30",{roughness:.6,metalness:.35});
+    const glowM=new THREE.MeshStandardMaterial({color:0x44ff88,emissive:new THREE.Color(0x2bff70),emissiveIntensity:1.5,roughness:.4});
+    [-1,1].forEach(s=>{const post=new THREE.Mesh(new THREE.BoxGeometry(.26,3.2,.34),frameM);post.position.set(s*1.2,1.6,.06);dg.add(post);});
+    const head=new THREE.Mesh(new THREE.BoxGeometry(2.7,.3,.34),frameM);head.position.set(0,3.05,.06);dg.add(head);
+    const leaf=new THREE.Mesh(new THREE.BoxGeometry(2.1,2.9,.12),mat("#2c5a40",{roughness:.55,metalness:.3}));
+    leaf.position.set(0,1.45,.09);dg.add(leaf);
+    [-1,1].forEach(s=>{const strip=new THREE.Mesh(new THREE.BoxGeometry(.06,2.9,.06),glowM);strip.position.set(s*1.05,1.45,.16);dg.add(strip);});
+    const topStrip=new THREE.Mesh(new THREE.BoxGeometry(2.1,.06,.06),glowM);topStrip.position.set(0,2.9,.16);dg.add(topStrip);
+    const lever=new THREE.Mesh(new THREE.BoxGeometry(.5,.07,.07),mat("#cfd3cd",{roughness:.3,metalness:.8}));
+    lever.position.set(.6,1.12,.18);dg.add(lever);
+    addSign("EXIT · 安全门",2.6,.8,"#6bff9a","#04140a",0,3.5,EXIT_Z+.12,0);
+    const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aglow",glowTex,1,1),color:0x2bff70,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.34,fog:false}));
+    halo.scale.set(5,5,1);halo.position.set(0,1.5,.4);dg.add(halo);
+    const pl=new THREE.PointLight(0x2bff70,1.4,16,2);pl.position.set(0,2,1.2);dg.add(pl);
+    const kick=new THREE.Mesh(new THREE.BoxGeometry(2.2,.22,.05),mat("#9aa0a6",{roughness:.35,metalness:.7}));
+    kick.position.set(0,.16,.16);dg.add(kick);
+    const ob={x:0,z:EXIT_Z+.1,hw:1.05,hd:.12,h:2.9,off:false};obstacles.push(ob);
+    exitDoor={grp:dg,x:0,z:EXIT_Z,leaf:leaf,open:false,ob:ob,glowM:glowM,halo:halo};
+  }
+  // 红色笑脸：只在 1F 游荡，发现玩家后追击（能跑赢）
+  function buildSmileyMesh(){
+    const g=new THREE.Group();
+    const orb=new THREE.Mesh(new THREE.SphereGeometry(.46,12,10),mat("#0a0405",{roughness:.98,metalness:0}));
+    orb.scale.set(1,1.05,.78);g.add(orb);
+    const fm=new THREE.MeshBasicMaterial({map:sharedTex("aredsmiler",redSmilerTex,1,1),transparent:true,depthWrite:false,side:THREE.DoubleSide});
+    const face=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),fm);face.position.set(0,.02,.4);g.add(face);
+    const face2=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),fm);face2.position.set(0,.02,-.4);face2.rotation.y=Math.PI;g.add(face2);
+    const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:sharedTex("aglow",glowTex,1,1),color:0xff3020,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5,fog:false}));
+    glow.scale.set(1.8,1.8,1);glow.position.set(0,.02,.42);g.add(glow);
+    const pl=new THREE.PointLight(0xff2018,1.1,10,2);g.add(pl);
+    g.userData.glow=glow;
+    return g;
+  }
+  function buildEntities(idx){
+    entities.length=0;
+    if(idx!==2)return;
+    const sm=buildSmileyMesh();sm.position.set(-6,1.5,-300);world.add(sm);
+    entities.push({kind:"smiley",x:-6,z:-300,spd:3.4,aggro:20,mesh:sm,ph:Math.random()*6.28});
+  }
+  // ---------- 指引箭头（贴地绿色，指向电梯 / 安全门） ----------
+  function makeGuideArrow(color){
+    const g=new THREE.Group();
+    const sh=new THREE.Shape();
+    sh.moveTo(-.13,-1.35);sh.lineTo(.13,-1.35);sh.lineTo(.13,0);sh.lineTo(.46,0);
+    sh.lineTo(0,1.55);sh.lineTo(-.46,0);sh.lineTo(-.13,0);sh.closePath();
+    const geo=new THREE.ShapeGeometry(sh);
+    const dark=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x07100c,side:THREE.DoubleSide}));
+    dark.rotation.x=Math.PI/2;dark.position.y=-.015;dark.scale.set(1.16,1.16,1.16);g.add(dark);
+    const m=new THREE.MeshBasicMaterial({color:color,side:THREE.DoubleSide});
+    const head=new THREE.Mesh(geo,m);head.rotation.x=Math.PI/2;g.add(head);
+    g.userData.mat=m;
+    return g;
+  }
+  function buildArrows(){
+    arrowLift=makeGuideArrow(0x62e8a0);world.add(arrowLift);
+    if(floorIdx===2){arrowExit=makeGuideArrow(0x62e8a0);world.add(arrowExit);}
+  }
+  function arrowBlocked(x,z){
+    for(const o of obstacles){
+      if(Math.abs(x-o.x)<o.hw+1.2&&Math.abs(z-o.z)<o.hd+1.2)return true;
+    }
+    return false;
+  }
+  function pointArrow(arrow,tx,tz,offX){
+    if(!arrow)return;
+    const Tx=tx-charX,Tz=tz-charZ,d=Math.hypot(Tx,Tz)||1;
+    const ahead=Math.min(4.6,d*.55);
+    const px=-Tz/d,pz=Tx/d;
+    const bx=charX+Tx/d*ahead,bz=charZ+Tz/d*ahead;
+    let ox=offX||0;
+    if(arrowBlocked(bx+px*ox,bz+pz*ox)){
+      const alt=-ox;
+      if(!arrowBlocked(bx+px*alt,bz+pz*alt))ox=alt;
+      else if(!arrowBlocked(bx+px*ox*.5,bz+pz*ox*.5))ox=ox*.5;
+      else if(!arrowBlocked(bx+px*alt*.5,bz+pz*alt*.5))ox=alt*.5;
+    }
+    arrow.visible=true;
+    arrow.position.set(bx+px*ox,.06+jumpY,bz+pz*ox);
+    arrow.rotation.y=Math.atan2(Tx,Tz);
+    const s=1.2+.07*Math.sin(gtime*4);
+    arrow.scale.set(s,s,s);
+  }
+
+  // ---------- 碰撞 ----------
+  function collide(nx,nz){
+    nz=clamp(nz,-LEN+PR,3.6-PR);
+    // 左墙：默认出不了走廊；电梯凹室 / 2F 配电室只有门洞能进（进去后沿墙滑动）
+    if(nx<-(HALF-PR)){
+      const wasIn=charX<-(HALF-PR)+.01;
+      const r=roomAt(nz)||(wasIn?roomAt(charZ):null);
+      const canIn=r&&((wasIn&&Math.abs(charZ-r.zc)<r.w/2)||Math.abs(nz-r.zc)<=r.doorHalf);
+      if(canIn){
+        nx=clamp(nx,-(HALF+r.d-PR),-(HALF-PR));
+        nz=clamp(nz,r.zc-r.w/2+PR,r.zc+r.w/2-PR);
+      }else nx=-(HALF-PR);
+    }
+    if(nx>HALF-PR)nx=HALF-PR;
+    for(const o of obstacles){
+      if(o.off)continue;
+      if(Math.abs(o.z-nz)>o.hd+PR+.5||Math.abs(o.x-nx)>o.hw+PR+.5)continue;
+      if(jumpY>o.h-.12)continue;
+      const dx=nx-o.x,dz=nz-o.z,px=o.hw+PR-Math.abs(dx),pz=o.hd+PR-Math.abs(dz);
+      if(px>0&&pz>0){ if(px<pz)nx=o.x+(dx<0?-1:1)*(o.hw+PR); else nz=o.z+(dz<0?-1:1)*(o.hd+PR); }
+    }
+    return [nx,nz];
+  }
+  // 低矮处（电梯轿厢 / 门洞）限制跳跃高度
+  const CHAR_H=2.55;
+  function ceilingAt(x,z){
+    const r=roomAt(z);
+    if(r&&r.kind==="elev"&&x<-HALF+0.6)return 3.2;
+    if(r&&x>-HALF-1.2&&x<-HALF+1.2&&Math.abs(z-r.zc)<r.doorHalf)return DOOR_H;
+    return CEILH;
+  }
+
+  // ---------- 伤害 / 死亡 / 胜利 ----------
+  function hurt(msg,src){
+    if(inv>0||dead||won)return;
+    if(lives>1){lives--;inv=1.8;aTone(500,120,.35,.14,"sine");}
+    else{lives=0;die(msg);return;}
+    hitFx=1;
+    if(src){const dx=src.x-charX,dz=src.z-charZ,dl=Math.hypot(dx,dz)||1;src.x+=dx/dl*7;src.z+=dz/dl*7;}
+  }
+  function die(msg,title){
+    if(dead||won)return;dead=true;lives=0;
+    S.best=Math.max(S.best,Math.floor(walked));
+    overTitleEl.textContent=title||"倒在管道长廊";
+    overTextEl.textContent=msg;
+    overStatEl.textContent="电玩城 "+FLABEL[floorIdx]+" · 已行进 "+Math.floor(walked)+" m · 积分 +0";
+    overEl.style.display="flex";aTone(260,40,1.2,.22,"sawtooth");
+  }
+  function finish(){
+    if(won||dead)return;won=true;
+    S.best=Math.max(S.best,Math.floor(walked));
+    teardown();P.x=walked*40;S.over=false;S.win=false;
+    win("电玩城 · 逃出后室");
+  }
+
+  // ---------- 音频：电流低鸣 + 随机咔嚓 ----------
+  function initAAudio(){ if(!AC)return;aMaster=AC.createGain();aMaster.gain.value=muted?0:.85;aMaster.connect(AC.destination);
+    humGain=AC.createGain();humGain.gain.value=.05;humGain.connect(aMaster);
+    const lp=AC.createBiquadFilter();lp.type="lowpass";lp.frequency.value=170;lp.connect(humGain);
+    for(const f of[48,55.5]){const o=AC.createOscillator();o.type="sawtooth";o.frequency.value=f;o.connect(lp);o.start();humOsc.push(o);} }
+  function aTone(f0,f1,dur,vol,type,delay){ if(!AC||!aMaster)return;const t0=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();
+    o.type=type||"triangle";o.frequency.setValueAtTime(f0,t0);o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),t0+dur);
+    g.gain.setValueAtTime(vol,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);o.connect(g).connect(aMaster);o.start(t0);o.stop(t0+dur+.02); }
+  function aNoise(){ if(!AC||!aMaster)return;
+    if(!noiseBuf){noiseBuf=AC.createBuffer(1,AC.sampleRate*.25|0,AC.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}
+    const s=AC.createBufferSource();s.buffer=noiseBuf;s.playbackRate.value=1.4+Math.random();
+    const g=AC.createGain();const t0=AC.currentTime;
+    g.gain.setValueAtTime(.16,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+.12);
+    const bp=AC.createBiquadFilter();bp.type="bandpass";bp.frequency.value=2400+Math.random()*2600;bp.Q.value=.8;
+    s.connect(bp).connect(g).connect(aMaster);s.start(t0);s.stop(t0+.14); }
+  function aCrackle(){ aTone(2600+Math.random()*1400,260,.09,.12,"square");aNoise(); }
+  function disposeAudio(){
+    for(const o of humOsc){try{o.stop();}catch(e){}}
+    humOsc.length=0;
+    if(humGain){try{humGain.disconnect();}catch(e){}}humGain=null;
+    if(aMaster){try{aMaster.disconnect();}catch(e){}}aMaster=null;
+  }
+  function toggleMute(){ muted=!muted;if(aMaster)aMaster.gain.value=muted?0:.85;muteBtn.classList.toggle("off",muted);muteLabel.textContent=muted?"静音":"声音"; }
+
+  // ---------- 主循环 ----------
+  function update(dt){
+    gtime+=dt;
+    if(inv>0)inv-=dt;
+    if(hitFx>0)hitFx=Math.max(0,hitFx-dt*2.2);
+    // 到站后把镜头平滑转向电梯门外（+X），并拉平俯仰
+    if(camTurn<CAM_TURN_T){
+      camTurn=Math.min(CAM_TURN_T,camTurn+dt);
+      const e=camTurn/CAM_TURN_T;
+      const ee=e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2;
+      yaw=angLerp(camTurnFrom,-Math.PI/2,ee);
+      pitch=camPitchFrom+(.02-camPitchFrom)*ee;
+    }
+    if(arriveCam&&(charX>-HALF+4.0||Math.abs(charZ-ELEV_Z)>3.0))arriveCam=false;
+    updateLamps(dt);updateNeon(dt);updateSparks(dt);updateSteam(dt);updateRoomDoor(dt);
+    // 电流咔嚓：3~9 秒一次，靠近电水渠 / 配电箱更频繁
+    crackHot=charX>4.5;
+    if(floorIdx===1&&charX<-HALF+2&&Math.abs(charZ-ROOM_Z)<ROOM_W)crackHot=true;
+    for(const b of boxList){if(Math.hypot(b.x-charX,b.z-charZ)<9)crackHot=true;}
+    crackT-=dt;
+    if(crackT<=0&&!dead&&!won){aCrackle();let base=3+Math.random()*6;if(crackHot)base*=.4;crackT=base;}
+    const canMove=active&&!dead&&!won&&!ride&&elevPhase!==EP_ARRIVE&&elevPhase!==EP_OPENDOOR;   // 乘梯/到站开门期间锁定移动
+    let ix=0,iz=0;
+    if(canMove){
+      if(keys.KeyW||keys.ArrowUp)iz+=1;if(keys.KeyS||keys.ArrowDown)iz-=1;
+      if(keys.KeyA||keys.ArrowLeft)ix-=1;if(keys.KeyD||keys.ArrowRight)ix+=1;
+      ix=clamp(ix+touchMove.x,-1,1);iz=clamp(iz-touchMove.y,-1,1);
+    }
+    const sprint=canMove&&(keys.ShiftLeft||keys.ShiftRight||touchSprint)&&fuel>1;
+    updateSpeedHUD(sprint?V_SPRINT:V_WALK);
+    if(sprint)fuel=Math.max(0,fuel-35*dt);else fuel=Math.min(100,fuel+16*dt);
+    const moving=(ix!==0||iz!==0);
+    const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw),Rx=Math.cos(yaw),Rz=-Math.sin(yaw);
+    let dx=Fx*iz+Rx*ix,dz=Fz*iz+Rz*ix;const dl=Math.hypot(dx,dz);
+    const spd=sprint?V_SPRINT:V_WALK;
+    if(dl>0){dx/=dl;dz/=dl;
+      const nx=charX+dx*spd*dt,nz=charZ+dz*spd*dt;
+      const c=collide(nx,nz);
+      const moved=Math.hypot(c[0]-charX,c[1]-charZ);
+      charX=c[0];charZ=c[1];walked+=moved;
+      heading=Math.atan2(dx,dz);
+    }
+    // 跳跃
+    if(jumpQueued&&onGround&&canMove){vy=6.4;onGround=false;aTone(220,440,.16,.06);}
+    jumpQueued=false;
+    if(!onGround){vy-=19*dt;jumpY+=vy*dt;if(jumpY<=0){jumpY=0;vy=0;onGround=true;aTone(120,50,.1,.05);}
+      const cap=Math.max(0,ceilingAt(charX,charZ)-CHAR_H);
+      if(jumpY>cap){jumpY=cap;if(vy>0)vy=0;}}
+    // 电水伤害：踩进栅栏缺口里的发光水面 → 扣命 + 强电流声 + 击退回路面 + 短无敌
+    if(!ride&&!dead&&!won&&inv<=0&&charX>FENCE_X+.1&&jumpY<.5){
+      hurt("踩进电水 —— 强电流穿过了你",null);
+      aTone(2000,120,.4,.22,"square");aNoise();
+      charX=FENCE_X-1.0;
+    }
+    // 电梯状态机（与车库同款）
+    const nearElev=!!elevator&&charX<-HALF+3.6&&charX>-HALF-2.4&&Math.abs(charZ-ELEV_Z)<5.5;
+    const insideElev=!!elevator&&charX<-HALF+0.5&&charX>-HALF-2.3&&Math.abs(charZ-ELEV_Z)<1.45;
+    if(elevator){
+      elevNext=floorIdx<2?floorIdx+1:1;
+      elevator.next=elevNext;
+      if(doorDelay>0)doorDelay=Math.max(0,doorDelay-dt);
+      if(elevPhase!==EP_RIDE) elevTimer+=dt;
+      if(elevPhase===EP_IDLE){
+        if((nearElev||insideElev)&&doorDelay<=0){ elevPhase=EP_OPEN;elevTimer=0;aTone(420,300,.25,.08,"triangle"); }
+      }else if(elevPhase===EP_OPEN){
+        if(insideElev){ elevPhase=EP_WAIT;elevTimer=0;tip("站好 · "+Math.round(T_WAIT)+" 秒后关门下行至 "+FLABEL[elevNext]+" · 走出去可取消"); }
+        else if(!nearElev){ elevPhase=EP_IDLE;elevTimer=0;doorDelay=.6; }
+      }else if(elevPhase===EP_WAIT){
+        if(!insideElev){ elevPhase=EP_OPEN;elevTimer=0;tip("已取消 · 电梯门保持打开"); }
+        else if(elevTimer>=T_WAIT){ elevPhase=EP_CLOSE;elevTimer=0;tip("电梯门正在关闭 …");aTone(240,180,.3,.08,"sine"); }
+      }else if(elevPhase===EP_CLOSE){
+        if(!insideElev){ elevPhase=EP_OPEN;elevTimer=0;tip("已取消 · 电梯门重新打开"); }
+        else if(elevTimer>=T_DOOR_CLOSE){ beginRide();return; }
+      }else if(elevPhase===EP_RIDE){
+        ride.t+=dt;
+        charX=-HALF-1.35;charZ=ELEV_Z;heading=Math.PI/2;      // 人留在轿厢正中
+        const p=Math.min(1,ride.t/ride.dur);
+        const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+        cabY=ride.from+(ride.to-ride.from)*e;
+        if(carGrp)carGrp.position.y=cabY;
+        if(p>.86&&fadeEl&&fadeEl.style.opacity!=="1")setFade(true);   // 换层前压黑
+        if(p>=1){ arriveFloor();return; }
+      }else if(elevPhase===EP_ARRIVE){
+        if(elevTimer>=T_ARRIVE){ elevPhase=EP_OPENDOOR;elevTimer=0;fadeOutSoon(180);aTone(420,280,.35,.12,"triangle");tip("门已打开 · 走出电梯，沿绿色箭头前进"); }
+      }else if(elevPhase===EP_OPENDOOR){
+        if(elevTimer>=T_DOOR_OPEN2){ elevPhase=EP_EXIT;elevTimer=0; }
+      }else if(elevPhase===EP_EXIT){
+        if(charX>-HALF+0.75||Math.abs(charZ-ELEV_Z)>1.7){ elevPhase=EP_IDLE;elevTimer=0;doorDelay=1.0; }
+      }
+      if(elevPhase===EP_OPEN||elevPhase===EP_OPENDOOR){
+        elevator.open=Math.min(1,elevator.open+dt/(elevPhase===EP_OPEN?T_DOOR_OPEN:T_DOOR_OPEN2));
+      }else if(elevPhase===EP_WAIT||elevPhase===EP_EXIT){
+        elevator.open=Math.min(1,elevator.open+dt*3);
+      }else if(elevPhase===EP_CLOSE){
+        elevator.open=Math.max(0,elevator.open-dt/T_DOOR_CLOSE);
+      }else{
+        elevator.open=Math.max(0,elevator.open-dt*3.2);
+      }
+      if(cabDl)cabDl.position.z=ELEV_Z-(.75+elevator.open*1.5);
+      if(cabDr)cabDr.position.z=ELEV_Z+(.75+elevator.open*1.5);
+      elevator.lamp.material.emissive.setHex(elevator.open>.6?0x66ff88:0xff5533);
+      elevator.lamp.material.emissiveIntensity=.6+elevator.open*1.4;
+      const docked=cabDocked();
+      if(elevDoorOb)elevDoorOb.off=(docked&&elevator.open>=.62);
+      if(elevator.shutter)elevator.shutter.visible=!docked;
+    }
+    // 实体（红色笑脸 · 只在 1F）
+    const hideout=charX<-HALF+PR&&!!roomAt(charZ);        // 躲进凹室 → 笑脸够不到
+    let minGap=99;
+    for(const e of entities){
+      const ddx=charX-e.x,ddz=charZ-e.z,dd=Math.hypot(ddx,ddz);
+      minGap=Math.min(minGap,dd);
+      const walled=hideout&&Math.abs(e.x)<HALF;
+      if(dd<e.aggro&&dd>.01&&!walled&&!ride){const mv=e.spd*dt;e.x+=ddx/dd*mv;e.z+=ddz/dd*mv;}
+      else{e.x+=Math.sin(gtime*.7+e.ph)*dt*.6;e.z+=Math.cos(gtime*.5+e.ph)*dt*.5;}
+      e.x=clamp(e.x,-HALF+1.1,FENCE_X-.8);e.z=clamp(e.z,-LEN+1.4,3.2);
+      if(!walled&&!dead&&!won&&dd<1.25&&inv<=0) hurt("红色笑脸贴上了你的脸",e);
+      e.mesh.position.set(e.x,1.5+Math.sin(gtime*2.1+e.ph)*.16,e.z);
+      e.mesh.rotation.y=Math.atan2(ddx,ddz);
+      e.mesh.userData.glow.material.opacity=.45+.3*Math.sin(gtime*3+e.ph);
+      const nearCam=Math.hypot(e.mesh.position.x-camera.position.x,e.mesh.position.z-camera.position.z)<2.2;
+      e.mesh.visible=!nearCam;
+    }
+    // 医疗包拾取（+1 命 · 一次性）
+    if(medkit&&!medkit.taken&&Math.hypot(charX-medkit.x,charZ-medkit.z)<1.3){
+      medkit.taken=true;medTaken=true;
+      world.remove(medkit.mesh);medkit.mesh=null;
+      lives=Math.min(9,lives+1);
+      aTone(700,1200,.18,.14,"square");
+      tip("捡到医疗包 · 生命 +1（现在 "+lives+" 条命）");
+    }
+    // 安全门：长按 6 两秒开启（触屏按钮等效），中途松开取消
+    const nearDoor=!!exitDoor&&!exitDoor.open&&Math.abs(charX)<3.6&&charZ<EXIT_Z+6.5;
+    if(isTouch&&doorBtn)doorBtn.style.display=nearDoor?"flex":"none";
+    if(nearDoor){
+      if(!doorTipShown){doorTipShown=true;tip("走近安全门 · 按住 6 两秒开启安全门");}
+      if(keys.Digit6||keys.Numpad6||btnHold){
+        dHold+=dt;showRing(true);setRing(Math.min(1,dHold/2));
+        if(dHold>=2){
+          exitDoor.open=true;exitDoor.ob.off=true;dHold=0;showRing(false);
+          aTone(300,1200,.6,.16,"sawtooth");
+          tip("安全门已开启 · 走进去逃出后室");
+        }
+      }else if(dHold>0){dHold=0;if(!eHolding)showRing(false);tip("松开了 · 开门取消");}
+    }else if(dHold>0){dHold=0;if(!eHolding)showRing(false);}
+    if(exitDoor){
+      if(exitDoor.open&&exitDoor.leaf.position.y<4.35)exitDoor.leaf.position.y=Math.min(4.35,exitDoor.leaf.position.y+dt*1.6);
+      exitDoor.glowM.emissiveIntensity=exitDoor.open?2.2:1.4+Math.sin(gtime*3)*.4;
+      exitDoor.halo.material.opacity=.3+Math.sin(gtime*3)*.1;
+      if(exitDoor.open&&!dead&&!won&&charZ<EXIT_Z-.6&&Math.abs(charX)<1.6){finish();return;}
+    }
+    // 小人动画
+    const ph=dt*(9+(sprint?4:0));
+    if(!dead){stepT+=moving?ph:0;const amp=moving?(sprint?1.15:1):0,sw=Math.sin(stepT)*amp;
+      armL.rotation.x=sw;armR.rotation.x=-sw;
+      armL.rotation.z=-(.1+amp*.2);armR.rotation.z=(.1+amp*.2);
+      legL.rotation.x=-sw*.9;legR.rotation.x=sw*.9;head.rotation.x=Math.sin(stepT*2)*.05;
+      if(moving&&onGround){const st=Math.floor(stepT/Math.PI);if(st!==cStep){cStep=st;aTone(70+Math.random()*24,45,.07,.04,"sine");}}}
+    const localG=ride?(cabY-worldY):0;
+    char.position.set(charX,worldY+localG+jumpY+Math.abs(Math.sin(stepT))*.05*(moving?1:0),charZ);
+    const faceTarget=firstPerson?Math.atan2(-Math.sin(yaw),-Math.cos(yaw)):heading;
+    char.rotation.y+=((faceTarget-char.rotation.y+Math.PI*3)%(Math.PI*2)-Math.PI)*Math.min(1,dt*12);
+    if(head)head.visible=!(firstPerson||ride||arriveCam);
+    if(char)char.visible=!arriveCam;
+    // 相机
+    const room=roomIn();
+    camDist+=(camDistT-camDist)*Math.min(1,dt*6);
+    let cd=room?Math.min(camDist,3.0):camDist;
+    const tx=charX,ty=1.35+jumpY*.5,tz=charZ,cp=Math.cos(pitch),sp=Math.sin(pitch);
+    let cx=tx+cd*Math.sin(yaw)*cp,cy=ty+cd*sp,cz=tz+cd*Math.cos(yaw)*cp;
+    let lx=tx,ly=ty+.4+worldY,lz=tz,cyAbs=cy+worldY;   // ly 必须是绝对高度，否则 2F/1F 会抬头看天花板
+    if(ride){
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=clamp(charX+Fx*.85,-HALF-2.5,-HALF+.35);
+      cz=clamp(charZ+Fz*.85,ELEV_Z-1.5,ELEV_Z+1.5);
+      cyAbs=cabY+1.62;
+      lx=cx+Fx*cp*6;ly=cyAbs+sp*6;lz=cz+Fz*cp*6;
+    }else if(arriveCam){
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=charX;cz=charZ;cyAbs=worldY+1.85;
+      lx=cx+Fx*cp*10;ly=cyAbs+sp*10;lz=cz+Fz*cp*10;
+    }else if(firstPerson){
+      const Fx=-Math.sin(yaw),Fz=-Math.cos(yaw);
+      cx=tx+Fx*.3;cz=tz+Fz*.3;cyAbs=worldY+1.98+jumpY;
+      lx=cx+Fx*cp*10;ly=cyAbs+sp*10;lz=cz+Fz*cp*10;
+    }else{
+      if(room){
+        cx=clamp(cx,-(HALF+room.d-.6),-HALF+.2);
+        cz=clamp(cz,room.zc-room.w/2+.5,room.zc+room.w/2-.5);
+        cy=clamp(cy,.6,CEILH-.4);
+      }else{
+        cy=clamp(cy,.6,CEILH-.4);
+        cx=clamp(cx,-HALF+.3,HALF-.3);cz=clamp(cz,-LEN+1,5);
+        if(charX>-HALF+PR)cx=Math.max(cx,-HALF+.1);     // 人在走廊里时镜头别探进凹室墙
+      }
+      cyAbs=cy+worldY;
+    }
+    const shk=hitFx*.14;
+    camera.position.set(cx+Math.sin(gtime*41)*shk,cyAbs+Math.sin(gtime*33)*shk,cz);
+    camera.lookAt(lx,ly,lz);
+    // 指引箭头 + 顶部罗盘
+    if(elevPhase===EP_RIDE){
+      wayEl.style.display="none";
+      if(arrowLift)arrowLift.visible=false;
+      if(arrowExit)arrowExit.visible=false;
+    }else if(elevPhase>=EP_ARRIVE){
+      const exitX=-HALF+5;
+      pointArrow(arrowLift,exitX,charZ,0);
+      if(arrowLift)arrowLift.visible=true;
+      if(arrowExit)arrowExit.visible=false;
+      const Tx=exitX-charX,Tz=0;
+      const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
+      const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
+      wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
+      wayText.textContent="走出电梯";wayDist.textContent=Math.max(0,Math.round(Tx))+"m";
+      wayEl.style.display="flex";wayEl.classList.remove("door");
+    }else{
+      if(floorIdx===2){
+        if(arrowLift)arrowLift.visible=false;
+        if(exitDoor)pointArrow(arrowExit,exitDoor.x,exitDoor.z,2.2);
+      }else{
+        pointArrow(arrowLift,-HALF,ELEV_Z,2.2);
+        if(arrowExit)arrowExit.visible=false;
+      }
+      const tgtX=floorIdx===2?0:-HALF,tgtZ=floorIdx===2?EXIT_Z:ELEV_Z;
+      const label=floorIdx===2?"安全门":"电梯";
+      const Tx=tgtX-charX,Tz=tgtZ-charZ;
+      const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
+      const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
+      wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
+      wayText.textContent=label;wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
+      wayEl.style.display="flex";wayEl.classList.toggle("door",floorIdx===2);
+    }
+    updateGoal(nearElev,insideElev,nearDoor);
+    // 联机同步
+    if(net3DSync(dt,walked,jumpY,lives,0,fuel,won,dead)){finish();return;}
+    updateHUD(minGap);
+    if(eHolding){const p=Math.min(1,(performance.now()-eHoldStart)/2000);setRing(p);if(p>=1){exit();return;}}
+  }
+  function tip(t){cortip.textContent=t;cortip.style.display="block";}
+  function shortFloor(i){return FLABEL[i].split(" ")[0];}
+  function setGoal(main,sub){
+    const k=main+"|"+sub;if(k===goalKey)return;goalKey=k;
+    if(goalText)goalText.textContent=main;
+    if(goalSub)goalSub.textContent=sub;
+  }
+  function updateGoal(nearElev,insideElev,nearDoor){
+    let m="",s="";
+    const nxt=shortFloor(elevNext);
+    if(elevPhase===EP_WAIT){m="下行至 "+nxt;s=Math.max(0,Math.ceil(T_WAIT-elevTimer))+" 秒后关门 · 走出可取消";}
+    else if(elevPhase===EP_CLOSE){m="下行至 "+nxt;s="门正在关闭 …";}
+    else if(elevPhase===EP_RIDE){m="下行至 "+nxt;s="电梯行驶中 · "+Math.max(0,Math.ceil(T_RIDE-(ride?ride.t:0)))+" 秒";}
+    else if(elevPhase===EP_ARRIVE){m="到达 "+shortFloor(floorIdx);s="轿厢停稳 · 门即将打开";}
+    else if(elevPhase===EP_OPENDOOR){m="走出电梯";s="门正在打开 …";}
+    else if(elevPhase===EP_EXIT){m="走出电梯";s="沿绿色箭头走到门外";}
+    else if(insideElev){m="下行至 "+nxt;s="站好，"+Math.round(T_WAIT)+" 秒后关门";}
+    else if(floorIdx===2){
+      const d=Math.round(Math.hypot(charX,charZ-EXIT_Z));
+      if(exitDoor&&exitDoor.open){m="走进安全门";s="穿过绿色门 · 逃出后室";}
+      else{m="安全门 · 长按 6 两秒开启";s=nearDoor?"现在就按住 6":"跟箭头走到走廊尽头 · "+d+"m";}
+    }
+    else if(nearElev){m="乘电梯下楼";s="前往 "+nxt;}
+    else{m="前往电梯";s="乘电梯下楼 · "+nxt+" · "+Math.round(Math.hypot(charX+HALF,charZ-ELEV_Z))+"m";}
+    setGoal(m,s);
+  }
+  function beginRide(){
+    ride={t:0,dur:T_RIDE,from:cabY,to:-elevNext*FLOOR_H,next:elevNext};
+    elevPhase=EP_RIDE;elevTimer=0;
+    if(fadeTimer){clearTimeout(fadeTimer);fadeTimer=0;}
+    setFade(false);
+    if(renderer)renderer.toneMappingExposure=.86;
+    aTone(200,90,.5,.12,"sawtooth");
+    tip("轿厢正在下行至 "+FLABEL[elevNext]+" …");
+  }
+  function arriveFloor(){
+    const next=elevNext;ride=null;
+    floorIdx=next;
+    buildFloor(next);                 // 重建该层几何（worldY 已在 buildFloor 里设好）
+    cabY=worldY;
+    if(carGrp)carGrp.position.y=cabY;
+    charX=-HALF-1.35;charZ=ELEV_Z;heading=Math.PI/2;jumpY=0;vy=0;onGround=true;
+    elevPhase=EP_ARRIVE;elevTimer=0;doorDelay=0;
+    arriveCam=true;camTurn=0;camTurnFrom=yaw;camPitchFrom=pitch;   // 到站镜头：平滑转向门外
+    if(renderer)renderer.toneMappingExposure=1.0;
+    aTone(520,240,.3,.14,"triangle");
+    doorTipShown=false;
+    tip("电梯到站 · "+FLABEL[next]+" · 轿厢停稳，门即将打开");
+  }
+  function updateHUD(minGap){
+    const key=[floorIdx,Math.round(minGap),lives,Math.round(fuel),Math.floor(walked),medTaken?1:0,exitDoor&&exitDoor.open?1:0,crackHot?1:0].join("|");
+    if(key===hudKey)return;hudKey=key;
+    rhead.textContent="电玩城 · "+FLABEL[floorIdx];
+    rDist.textContent=(floorIdx+1)+"/3";
+    rProg.style.width=((floorIdx+1)/3*100)+"%";
+    rGapLabel.textContent="最近实体";
+    rGap.textContent=(minGap>90?"—":Math.round(minGap)+"m");
+    rGapFill.style.width=clamp((30-minGap)/30*100,0,100)+"%";
+    rGapFill.style.background=minGap<5?"#ff5b5b":(minGap<10?"#ffcf5a":"#8fe06a");
+    rLife.textContent=String(lives);
+    rCharge.textContent=medTaken?"已拾取":(floorIdx===1?"2F 有":"未找到");
+    rFuelFill.style.width=fuel+"%";
+    const wd=Math.max(0,FENCE_X-charX);
+    rHazLabel.textContent="电水距离";
+    rHaz.textContent=(wd<=0?"触电!":wd.toFixed(1)+"m");
+    rHazFill.style.width=clamp((1-wd/6)*100,0,100)+"%";
+    rHazFill.style.background=wd<1?"#5affd8":(wd<3?"#ffcf5a":"#8fe06a");
+    rHazLeft.textContent="右侧发光水面带电 · 栅栏缺口踩进去会被电";
+    rLight.textContent=crackHot?"咔嚓作响":"不稳定";
+    rLight.style.color=crackHot?"#ff8a8a":"#7ce6c0";
+  }
+  function setFade(on){ if(fadeEl)fadeEl.style.opacity=on?"1":"0"; }
+  function setFadeNow(on){ if(!fadeEl)return; const tr=fadeEl.style.transition; fadeEl.style.transition="none"; fadeEl.style.opacity=on?"1":"0"; void fadeEl.offsetWidth; fadeEl.style.transition=tr||""; }
+  function fadeOutSoon(ms){ if(fadeTimer)clearTimeout(fadeTimer); fadeTimer=setTimeout(function(){fadeTimer=0;if(active)setFade(false);},ms); }
+  function render(){if(active&&renderer&&scene&&camera)renderer.render(scene,camera);}
+  function frame(now){
+    if(!active)return;
+    try{
+      const dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;update(dt);render();
+    }catch(err){
+      console.error("[Arcade3D]",err);
+      active=false;threeActive=false;
+      if(raf){cancelAnimationFrame(raf);raf=0;}
+      try{showError("电玩城渲染中断："+((err&&err.message)||err));}catch(_){}
+      return;
+    }
+    raf=requestAnimationFrame(frame);
+  }
+
+  // ---------- 输入 ----------
+  function showRing(on){ringEl.style.display=on?"flex":"none";if(!on)setRing(0);}
+  function hidePrompt(){promptEl.style.display="none";}
+  function setRing(p){ringFg.style.strokeDashoffset=String(RING_C*(1-p));ringPct.textContent=Math.round(p*100)+"%";}
+  function showError(msg){overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errTextEl.textContent=msg;}
+  function onResize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
+  function onKeyDown(e){if(!active)return;const c=e.code;
+    if(c==="Space"||c==="ArrowUp"||c==="ArrowDown"||c==="ArrowLeft"||c==="ArrowRight")e.preventDefault();
+    if(c==="KeyV"){if(!e.repeat)toggleView();return;}
+    if(c==="KeyE"){if(!e.repeat){eHolding=true;eHoldStart=performance.now();showRing(true);}return;}
+    if(c==="Space"){if(!e.repeat)jumpQueued=true;keys[c]=true;return;}
+    keys[c]=true;}
+  function onKeyUp(e){if(!active)return;const c=e.code;if(c==="KeyE"){eHolding=false;showRing(false);return;}keys[c]=false;}
+  function onWheel(e){if(!active)return;camDistT=clamp(camDistT+e.deltaY*.012,4.0,11);e.preventDefault();}
+  let dragId=null,dragLx=0,dragLy=0;
+  function dragDown(e){if(isTouch)return;dragId=e.pointerId;dragLx=e.clientX;dragLy=e.clientY;try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();}
+  function dragMove(e){if(e.pointerId!==dragId)return;const dx=e.clientX-dragLx,dy=e.clientY-dragLy;dragLx=e.clientX;dragLy=e.clientY;
+    yaw-=dx*.005;pitch=clamp(pitch-dy*.005,.08,.8);e.preventDefault();}
+  function dragUp(e){if(e.pointerId!==dragId)return;dragId=null;e.preventDefault();}
+  let stickId=null,stickCx=0,stickCy=0,lookId=null,lookLx=0,lookLy=0;
+  function stickDown(e){stickId=e.pointerId;const r=stick.getBoundingClientRect();stickCx=r.left+r.width/2;stickCy=r.top+r.height/2;try{stick.setPointerCapture(e.pointerId);}catch(_){}stickMove(e);e.preventDefault();}
+  function stickMove(e){if(e.pointerId!==stickId)return;let dx=e.clientX-stickCx,dy=e.clientY-stickCy;const max=50,d=Math.hypot(dx,dy);
+    if(d>max){dx=dx/d*max;dy=dy/d*max;}knob.style.transform="translate("+dx+"px,"+dy+"px)";touchMove.x=dx/max;touchMove.y=-dy/max;touchSprint=Math.abs(dx)/max>.92;e.preventDefault();}
+  function stickUp(e){if(e.pointerId!==stickId)return;stickId=null;touchMove.x=0;touchMove.y=0;touchSprint=false;knob.style.transform="translate(0,0)";e.preventDefault();}
+  function lookDown(e){lookId=e.pointerId;lookLx=e.clientX;lookLy=e.clientY;try{lookArea.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();}
+  function lookMove(e){if(e.pointerId!==lookId)return;const dx=e.clientX-lookLx,dy=e.clientY-lookLy;lookLx=e.clientX;lookLy=e.clientY;
+    yaw-=dx*.005;pitch=clamp(pitch-dy*.005,.08,.8);e.preventDefault();}
+  function lookUp(e){if(e.pointerId!==lookId)return;lookId=null;e.preventDefault();}
+  function jumpDown(e){jumpQueued=true;e.preventDefault();}
+  function doorBtnDown(e){btnHold=true;e.preventDefault();}
+  function doorBtnUp(e){btnHold=false;if(e)e.preventDefault();}
+  function addDyn(t,ev,fn,opts){t.addEventListener(ev,fn,opts);dyn.push([t,ev,fn,opts]);}
+  function addListeners(){
+    addDyn(window,"resize",onResize);addDyn(window,"keydown",onKeyDown);addDyn(window,"keyup",onKeyUp);
+    addDyn(window,"wheel",onWheel,{passive:false});
+    addDyn(renderer.domElement,"pointerdown",dragDown,{passive:false});
+    addDyn(renderer.domElement,"pointermove",dragMove,{passive:false});
+    addDyn(renderer.domElement,"pointerup",dragUp);addDyn(renderer.domElement,"pointercancel",dragUp);
+    if(isTouch){
+      addDyn(stick,"pointerdown",stickDown,{passive:false});addDyn(stick,"pointermove",stickMove,{passive:false});
+      addDyn(stick,"pointerup",stickUp);addDyn(stick,"pointercancel",stickUp);
+      addDyn(lookArea,"pointerdown",lookDown,{passive:false});addDyn(lookArea,"pointermove",lookMove,{passive:false});
+      addDyn(lookArea,"pointerup",lookUp);addDyn(lookArea,"pointercancel",lookUp);
+      addDyn(jumpBtnEl,"pointerdown",jumpDown,{passive:false});
+      if(doorBtn){addDyn(doorBtn,"pointerdown",doorBtnDown,{passive:false});
+        addDyn(doorBtn,"pointerup",doorBtnUp);addDyn(doorBtn,"pointercancel",doorBtnUp);}
+    }
+  }
+  function removeListeners(){for(const a of dyn)a[0].removeEventListener(a[1],a[2],a[3]);dyn.length=0;}
+
+  // ---------- 生命周期 ----------
+  function disposeScene(){
+    if(scene)scene.traverse(o=>{ if(o.geometry)o.geometry.dispose();
+      if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];
+        ms.forEach(m=>{for(const k in m){const v=m[k];if(v&&v.isTexture&&!isSharedTex(v))v.dispose();}m.dispose();});} });
+    disposeWorld();
+    if(renderer){renderer.dispose();const el=renderer.domElement;if(el&&el.parentNode)el.parentNode.removeChild(el);}
+    scene=null;renderer=null;camera=null;char=null;armL=armR=legL=legR=head=null;
+    amb=hemi=null;carGrp=null;shaftGrp=null;cabDl=null;cabDr=null;carLight=null;
+  }
+  function teardown(){
+    active=false;threeActive=false;
+    if(fadeTimer){clearTimeout(fadeTimer);fadeTimer=0;}
+    setFade(false);
+    if(dreadEl)dreadEl.style.opacity="0";
+    if(blissEl)blissEl.style.opacity="0";
+    if(raf)cancelAnimationFrame(raf);raf=0;
+    removeListeners();disposeAudio();disposeScene();
+    keys={};eHolding=false;showRing(false);touchMove.x=0;touchMove.y=0;touchSprint=false;
+    btnHold=false;
+    if(doorBtn){doorBtn.remove();doorBtn=null;}
+    mount.style.filter="none";
+    overlay.classList.remove("arcade");
+    hzEl.style.display="block";runEl.style.display="none";cortip.style.display="none";wayEl.style.display="none";
+    goalEl.style.display="";goalKey="";
+    rLightRow.style.display="none";rTorchRow.style.display="none";rTeamRow.style.display="none";
+    // 还原被电玩城改过的共享 HUD 行文案，避免泄漏到图书馆等其它引擎
+    if(rCharge.previousElementSibling)rCharge.previousElementSibling.textContent="防护";
+    rCharge.textContent="×1";rLife.textContent="5";
+    rHazLabel.textContent="精神危害 4级";rHaz.textContent="0%";rHazFill.style.width="0";rHazFill.style.background="";
+    rHazLeft.textContent="裸装 60 秒满值";
+    rLightLabel.textContent="照明";rLight.textContent="通电";rLight.style.color="";
+    overEl.style.display="none";loadingEl.style.display="none";errorEl.style.display="none";touchLayer.style.display="none";
+    overlay.style.display="none";showViewBtn(false);
+    hidePrompt();
+  }
+  function exit(){ teardown();openMenu(); }
+  function restart(){ exit();launch(); }
+  function launch(){
+    if(active)return;
+    if(typeof THREE==="undefined"){showError("3D 引擎（Three.js）加载失败，请检查网络后重试。");return;}
+    threeActive=true;active=true;ThreeOver.mode="arcade";
+    menuEl.style.display="none";cv.style.display="none";hudEl.style.display="none";
+    overlay.style.display="block";overlay.classList.add("arcade");
+    if(dreadEl)dreadEl.style.opacity="0";
+    if(blissEl)blissEl.style.opacity="0";
+    mount.style.filter="none";
+    if(fadeTimer){clearTimeout(fadeTimer);fadeTimer=0;}
+    setFade(false);
+    hidePrompt();
+    errorEl.style.display="none";loadingEl.style.display="flex";
+    titleB.textContent="电玩城";titleSpan.textContent="三层管道长廊 · 3D";
+    showViewBtn(true);updateViewLabel(firstPerson?"第一人称":"第三人称");
+    exitBtnEl.title="退出电玩城";
+    hzEl.style.display="none";runEl.style.display="block";overEl.style.display="none";
+    rLightRow.style.display="flex";rTorchRow.style.display="none";rTeamRow.style.display="none";
+    if(rCharge.previousElementSibling)rCharge.previousElementSibling.textContent="医疗包";
+    if(rLightLabel)rLightLabel.textContent="电网";
+    floorIdx=0;charX=0;charZ=START_Z;heading=Math.PI;jumpY=0;vy=0;onGround=true;jumpQueued=false;walked=0;
+    fuel=100;lives=5;inv=0;dead=false;won=false;hitFx=0;medTaken=false;crackHot=false;crackT=4;
+    elevPhase=EP_IDLE;elevTimer=0;elevNext=1;doorDelay=0;arriveCam=false;camTurn=99;goalKey="";
+    doorTipShown=false;dHold=0;btnHold=false;
+    yaw=0;pitch=.13;camDist=6.2;camDistT=6.2;gtime=0;stepT=0;cStep=-1;hudKey="";
+    keys={};eHolding=false;touchMove.x=0;touchMove.y=0;touchSprint=false;
+    muted=false;muteBtn.classList.remove("off");muteLabel.textContent="声音";
+    S.lives=5;S.over=false;S.win=false;
+    isTouch=matchMedia("(pointer: coarse)").matches||(navigator.maxTouchPoints>0&&"ontouchstart" in window);
+    cabY=0;worldY=0;ride=null;
+    try{ buildRenderer();buildLights();buildCab();buildShaft();buildFloor(0);buildCharacter(); }
+    catch(err){showError("初始化电玩城失败："+((err&&err.message)||err));active=false;threeActive=false;loadingEl.style.display="none";return;}
+    initAAudio();addListeners();loadingEl.style.display="none";
+    overlay.classList.toggle("touch",isTouch);
+    if(isTouch&&!doorBtn){
+      doorBtn=document.createElement("button");doorBtn.id="a3d-doorbtn";doorBtn.textContent="按住开门";
+      doorBtn.style.cssText="position:absolute;right:calc(30px + env(safe-area-inset-right));bottom:calc(190px + env(safe-area-inset-bottom));width:86px;height:86px;border-radius:50%;background:rgba(8,26,18,.6);border:2px solid rgba(143,224,106,.6);color:#8fe06a;font-family:inherit;font-size:13px;letter-spacing:2px;pointer-events:auto;touch-action:none;display:none;z-index:4;";
+      touchLayer.appendChild(doorBtn);
+      addDyn(doorBtn,"pointerdown",doorBtnDown,{passive:false});
+      addDyn(doorBtn,"pointerup",doorBtnUp);addDyn(doorBtn,"pointercancel",doorBtnUp);
+    }
+    cortip.style.display="block";
+    cortip.textContent="电玩城 · 三层管道长廊 · 3F 起点 → 乘电梯逐层下行 → 1F 安全门 · 两侧管道冒蒸汽，青绿灯光不安地闪烁 · 右侧栅栏内是带电水渠，踩进去会被电 · 2F 左墙有配电室，角落医疗包 +1 命 · 1F 暗处游荡着红色笑脸，跑得比它快 · 走廊尽头长按 6 两秒开安全门";
+    updateHUD(99);
+    if(isTouch){touchLayer.style.display="block";
+      hintEl.innerHTML='<span><b>左下摇杆</b> 移动</span><span><b>推到底</b> 冲刺</span><span><b>跳跃键</b> 跳</span><span><b>右侧拖动</b> 视角</span><span><b>门旁按住开门</b> 安全门</span>';}
+    else{touchLayer.style.display="none";
+      hintEl.innerHTML='<span><span class="k">W</span><span class="k">A</span><span class="k">S</span><span class="k">D</span> 移动</span><span><b>拖拽画面</b> 视角</span><span><span class="k">Shift</span> 冲刺</span><span><span class="k">空格</span> 跳跃</span><span><span class="k">V</span> 视角</span><span><span class="k">6</span> 长按 2 秒开门</span><span><span class="k">E</span> 长按 2 秒退出</span>';}
+    onResize();last=performance.now();raf=requestAnimationFrame(frame);
+  }
+  function buildCharacter(){
+    const SU=SUITS[save.equipped],w=makeWanderer(SU);
+    char=w.g;armL=w.armL;armR=w.armR;legL=w.legL;legR=w.legR;head=w.head;
+    char.position.set(charX,worldY,charZ);scene.add(char);
+  }
+  function toggleView(){
+    firstPerson=!firstPerson;
+    updateViewLabel(firstPerson?"第一人称":"第三人称");
+    aTone(firstPerson?520:760,firstPerson?760:520,.12,.09,"triangle");
+  }
+  return {launch:launch,exit:exit,isActive:function(){return active;},restart:restart,muteToggle:toggleMute,toggleView:toggleView,tag:"arcade"};
+})();
 // ================= 大型 3D 迷宫引擎（电玩城 / 图书馆 · 共用） =================
 const Maze3D=(function(){
   const gid=s=>document.getElementById(s);
@@ -8141,7 +9349,7 @@ const Maze3D=(function(){
 function updateViewLabel(t){ const el=document.getElementById("g3d-viewlabel"); if(el)el.textContent=t; }
 function showViewBtn(on){ const el=document.getElementById("g3d-viewbtn"); if(el)el.style.display=on?"flex":"none"; }
 (function(){
-  const cur=()=>ThreeOver.mode==="run"?Runner3D:(ThreeOver.mode==="corridor"?Corridor3D:(ThreeOver.mode==="garage"?Garage3D:(ThreeOver.mode==="maze"?Maze3D:Grassland3D)));
+  const cur=()=>ThreeOver.mode==="run"?Runner3D:(ThreeOver.mode==="corridor"?Corridor3D:(ThreeOver.mode==="garage"?Garage3D:(ThreeOver.mode==="arcade"?Arcade3D:(ThreeOver.mode==="maze"?Maze3D:Grassland3D))));
   document.getElementById("g3d-viewbtn").addEventListener("click",()=>{ const m=cur(); if(m&&m.toggleView)m.toggleView(); });
   document.getElementById("g3d-exitbtn").addEventListener("click",()=>cur().exit());
   document.getElementById("g3d-errback").addEventListener("click",()=>cur().exit());
