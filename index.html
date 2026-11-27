@@ -912,8 +912,8 @@
     </div>
   </div>
 
-  <div id="g3d-loading"><div><div class="spin"></div><p>正在生成草原…</p></div></div>
-  <div id="g3d-error"><div class="ecard"><h2>无法进入 3D 草原</h2><p id="g3d-errtext">你的浏览器不支持 WebGL。</p><button class="g3d-iconbtn" id="g3d-errback" style="margin:18px auto 0">返回菜单</button></div></div>
+  <div id="g3d-loading"><div><div class="spin"></div><p>正在生成关卡…</p></div></div>
+  <div id="g3d-error"><div class="ecard"><h2>无法进入关卡</h2><p id="g3d-errtext">你的浏览器不支持 WebGL。</p><button class="g3d-iconbtn" id="g3d-errback" style="margin:18px auto 0">返回菜单</button></div></div>
 </div>
 
 <script>
@@ -1116,6 +1116,14 @@ function openMenu(){
   if(typeof netCleanup==="function")netCleanup();
 }
 let curMode=0;
+function show3DLaunchError(err){
+  console.error("[3D launch]",err);
+  threeActive=false;
+  const ov=document.getElementById("grass3d");if(ov)ov.style.display="block";
+  const ld=document.getElementById("g3d-loading");if(ld)ld.style.display="none";
+  const er=document.getElementById("g3d-error");if(er)er.style.display="flex";
+  const et=document.getElementById("g3d-errtext");if(et)et.textContent="进入关卡失败："+((err&&err.message)||err);
+}
 function startMode(i, teamSize=1){
   curMode=i;
   S.teamSize=teamSize;
@@ -1125,10 +1133,12 @@ function startMode(i, teamSize=1){
   cv.style.display="block";hudEl.style.display="block";
   smileyWrapEl.style.display=CFG.smileys?"inline":"none";
   initAudio();if(AC&&AC.state==="suspended")AC.resume();
-  if(CFG.runner3d){Runner3D.launch();return;} // 快跑层：第三人称 3D 追逐关
-  if(CFG.garage){Garage3D.launch();return;}   // 车库：地下三层 3D 关
-  if(CFG.maze){Maze3D.launch();return;}       // 电玩城 / 图书馆：大型 3D 迷宫
-  if(CFG.world){Corridor3D.launch();return;}  // 其余层级：通用 3D 长廊（自由移动）
+  try{
+    if(CFG.runner3d){Runner3D.launch();return;} // 快跑层：第三人称 3D 追逐关
+    if(CFG.garage){Garage3D.launch();return;}   // 车库：地下三层 3D 关
+    if(CFG.maze){Maze3D.launch();return;}       // 电玩城 / 图书馆：大型 3D 迷宫
+    if(CFG.world){Corridor3D.launch();return;}  // 其余层级：通用 3D 长廊（自由移动）
+  }catch(err){ show3DLaunchError(err); return; }
   reset();
   // 初始化 AI 队友
   teammates=[];
@@ -1148,7 +1158,7 @@ document.querySelectorAll(".team-btn").forEach(b=>b.addEventListener("click",()=
   b.style.opacity="1";
 }));
 document.querySelectorAll(".mode").forEach(b=>{ if(b.dataset.mode==="grass")return; b.addEventListener("click",()=>startMode(+b.dataset.mode, selectedTeam)); });
-document.getElementById("grassCard").addEventListener("click",()=>{ initAudio(); if(AC&&AC.state==="suspended")AC.resume(); Grassland3D.launch(); });
+document.getElementById("grassCard").addEventListener("click",()=>{ initAudio(); if(AC&&AC.state==="suspended")AC.resume(); try{Grassland3D.launch();}catch(err){show3DLaunchError(err);} });
 
 // ---------- 叠加层级传送：红色长廊 → 跑命医院 → 办公室 / 草原 / 红色长廊 ----------
 const PORTAL_NAME={runner:"跑命医院",office:"办公室",grass:"草原",red:"红色长廊",arcade:"电玩城",library:"图书馆"};
@@ -7720,6 +7730,7 @@ const Maze3D=(function(){
         loadingEl=gid("g3d-loading"),errorEl=gid("g3d-error"),errText=gid("g3d-errtext"),
         muteBtn=gid("g3d-mute"),muteLabel=gid("g3d-mutelabel"),swatch=gid("g3d-swatch"),suitName=gid("g3d-suitname"),
         ringEl=gid("g3d-exitring"),ringFg=gid("g3d-ringfg"),ringPct=gid("g3d-ringpct"),
+        titleB=gid("g3d-titleb"),titleSpan=gid("g3d-titlespan"),
         touchLayer=gid("g3d-touch"),stick=gid("g3d-stick"),knob=gid("g3d-knob"),lookArea=gid("g3d-look"),jumpBtn=gid("g3d-jumpbtn"),
         hzEl=gid("g3d-hazard"),runEl=gid("g3d-run"),rhead=gid("g3d-rhead"),rdist=gid("g3d-rdist"),rprog=gid("g3d-rprog"),
         menuEl=gid("menu"),cvEl=gid("game"),hudEl=gid("hud"),exitBtnEl=gid("g3d-exitbtn");
@@ -7864,8 +7875,8 @@ const Maze3D=(function(){
       }
     }
     // 紫色氛围灯（电玩城）/ 昏暗吊灯（图书馆）
-    const灯数=arcade?26:20;
-    for(let i=0;i<灯数;i++){
+    const lampCount=arcade?26:20;
+    for(let i=0;i<lampCount;i++){
       const r=1+Math.floor(Math.random()*(GW-2)),c=1+Math.floor(Math.random()*(GW-2));
       if(grid[r][c]!==0){i--;continue;}
       const pl=new THREE.PointLight(arcade?0xa24cff:0xffcf8a,arcade?1.5:1.0,arcade?26:22,2);
@@ -8033,6 +8044,7 @@ const Maze3D=(function(){
     teardown();P.x=2000;S.over=false;S.win=false;win("电玩城 · 逃出后室");}
   function setRing(p){ringFg.style.strokeDashoffset=String(RING_C*(1-p));ringPct.textContent=Math.round(p*100)+"%";}
   function showRing(on){ringEl.style.display=on?"flex":"none";if(!on)setRing(0);}
+  function showError(msg){overlay.style.display="block";loadingEl.style.display="none";errorEl.style.display="flex";errText.textContent=msg;}
 
   function render(){if(active&&renderer&&scene&&camera)renderer.render(scene,camera);}
   function frame(now){if(!active)return;const dt=Math.min(.05,(now-last)/1000);last=now;update(dt);render();raf=requestAnimationFrame(frame);}
