@@ -275,8 +275,8 @@
   #g3d-way{position:absolute;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:none;align-items:center;gap:10px;
     background:rgba(12,26,8,.7);border:1px solid rgba(255,194,77,.5);border-radius:999px;padding:6px 16px 6px 8px;
     backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,.45);z-index:6;pointer-events:none;white-space:nowrap;}
-  #g3d-wayarrow{display:flex;align-items:center;justify-content:center;width:26px;height:26px;color:#ffc24d;transition:transform .08s linear;}
-  #g3d-wayarrow svg{width:24px;height:24px;filter:drop-shadow(0 0 7px rgba(255,194,77,.75));}
+  #g3d-wayarrow{display:flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px;color:#ffc24d;transition:transform .08s linear;transform-origin:50% 50%;overflow:visible;}
+  #g3d-wayarrow svg{width:28px;height:28px;display:block;overflow:visible;filter:drop-shadow(0 0 7px rgba(255,194,77,.75));}
   #g3d-way b{font-size:13px;letter-spacing:2px;color:#ffe1b0;}
   #g3d-way i{font-style:normal;font-size:12px;letter-spacing:1px;color:#cfe6b8;min-width:44px;text-align:right;}
   #g3d-way.door{border-color:rgba(143,230,106,.62);}
@@ -7967,15 +7967,38 @@ const Arcade3D=(function(){
   function buildPipes(){
     const pipeM=mat("#5a6b66",{roughness:.55,metalness:.55});
     const flangeM=mat("#3c4a46",{roughness:.6,metalness:.5});
+    // 左墙管道在电梯 / 配电室门洞处断开，不能挡住入口
+    const gaps=sideRooms.map(r=>({z0:r.zc-(r.kind==="elev"?ALC_W/2:DOOR_W/2)-.45,z1:r.zc+(r.kind==="elev"?ALC_W/2:DOOR_W/2)+.45,top:r.kind==="elev"?4.4:DOOR_H}));
+    const inGap=(z,y)=>gaps.some(g=>z>g.z0&&z<g.z1&&y<g.top+.35);
     const lines=[[-HALF+.55,1.5,.26],[-HALF+.55,2.3,.2],[-HALF+.75,4.6,.3],
                  [HALF-.55,1.2,.24],[HALF-.55,2.0,.2],[HALF-.75,4.6,.3]];
+    const addPipe=(p,z0,z1)=>{
+      const len=z0-z1;if(len<.2)return;
+      const c=new THREE.Mesh(new THREE.CylinderGeometry(p[2],p[2],len,10),pipeM);
+      c.rotation.x=Math.PI/2;c.position.set(p[0],p[1],(z0+z1)/2);world.add(c);
+    };
     for(const p of lines){
-      const c=new THREE.Mesh(new THREE.CylinderGeometry(p[2],p[2],LEN,10),pipeM);
-      c.rotation.x=Math.PI/2;c.position.set(p[0],p[1],-(LEN/2)+1.5);world.add(c);
+      if(p[0]>0){addPipe(p,1.5,-(LEN-1.5));continue;}          // 右墙不切
+      let cur=1.5;
+      for(const g of gaps.filter(g=>p[1]<g.top+.35).sort((a,b)=>b.z1-a.z1)){
+        if(g.z1<cur){addPipe(p,cur,g.z1);cur=g.z0;}
+      }
+      if(cur>-(LEN-1.5))addPipe(p,cur,-(LEN-1.5));
     }
-    // 法兰环（合批）
+    // 断口法兰：让切口看起来是设计好的，而不是管道凭空消失
+    for(const p of lines){
+      if(p[0]>0)continue;
+      for(const g of gaps){
+        if(p[1]>=g.top+.35)continue;
+        for(const z of [g.z0-.04,g.z1+.04]){
+          const t=new THREE.Mesh(new THREE.TorusGeometry(1,.22,6,12),flangeM);
+          t.scale.set(p[2]+.07,p[2]+.07,1);t.position.set(p[0],p[1],z);world.add(t);
+        }
+      }
+    }
+    // 法兰环（合批，跳过门洞）
     const fl=[];
-    for(const p of lines)for(let z=-4;z>=-(LEN-4);z-=12)fl.push([p[0],p[1],z,p[2]]);
+    for(const p of lines)for(let z=-4;z>=-(LEN-4);z-=12)if(!inGap(z,p[1]))fl.push([p[0],p[1],z,p[2]]);
     const flMesh=new THREE.InstancedMesh(new THREE.TorusGeometry(1,.22,6,12),flangeM,fl.length);
     const m4=new THREE.Matrix4(),q0=new THREE.Quaternion(),v3=new THREE.Vector3(),s3=new THREE.Vector3();
     fl.forEach((f,i)=>{v3.set(f[0],f[1],f[2]);const r=f[3]+.05;s3.set(r,r,1);m4.compose(v3,q0,s3);flMesh.setMatrixAt(i,m4);});
@@ -7984,7 +8007,9 @@ const Arcade3D=(function(){
     const vw=[];
     for(let z=-20;z>=-(LEN-20);z-=40){
       const k=Math.floor(-z/40)%2;
-      vw.push([k?-HALF+.28:HALF-.28,k?2.3:1.2,z,k?1:-1]);
+      const vx=k?-HALF+.28:HALF-.28,vy=k?2.3:1.2;
+      if(inGap(z,vy))continue;
+      vw.push([vx,vy,z,k?1:-1]);
     }
     const wheelMesh=new THREE.InstancedMesh(new THREE.TorusGeometry(.3,.055,6,14),mat("#8a4a3a",{roughness:.5,metalness:.4}),vw.length);
     const qz=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2);
@@ -8329,17 +8354,24 @@ const Arcade3D=(function(){
     entities.push({kind:"smiley",x:-6,z:-300,spd:3.4,aggro:20,mesh:sm,ph:Math.random()*6.28,atk:0,cool:0,saw:false,lx:0,lz:0});
   }
   // ---------- 指引箭头（贴地绿色，指向电梯 / 安全门） ----------
+  // 悬浮导航箭头：Sprite 始终面向镜头，按屏幕方位旋转，不会被地面/玩家模型裁切
+  let guideArrowTex=null;
   function makeGuideArrow(color){
     const g=new THREE.Group();
-    const sh=new THREE.Shape();
-    sh.moveTo(-.13,-1.35);sh.lineTo(.13,-1.35);sh.lineTo(.13,0);sh.lineTo(.46,0);
-    sh.lineTo(0,1.55);sh.lineTo(-.46,0);sh.lineTo(-.13,0);sh.closePath();
-    const geo=new THREE.ShapeGeometry(sh);
-    const dark=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x07100c,side:THREE.DoubleSide}));
-    dark.rotation.x=Math.PI/2;dark.position.y=-.015;dark.scale.set(1.16,1.16,1.16);g.add(dark);
-    const m=new THREE.MeshBasicMaterial({color:color,side:THREE.DoubleSide});
-    const head=new THREE.Mesh(geo,m);head.rotation.x=Math.PI/2;g.add(head);
-    g.userData.mat=m;
+    if(!guideArrowTex){
+      const c=document.createElement("canvas");c.width=128;c.height=192;
+      const x=c.getContext("2d");
+      const path=()=>{x.beginPath();x.moveTo(64,10);x.lineTo(112,78);x.lineTo(86,78);x.lineTo(86,178);x.lineTo(42,178);x.lineTo(42,78);x.lineTo(16,78);x.closePath();};
+      x.shadowColor="rgba(98,232,160,.85)";x.shadowBlur=16;
+      path();x.lineWidth=14;x.strokeStyle="rgba(3,12,8,.92)";x.stroke();
+      path();x.fillStyle="#62e8a0";x.fill();
+      x.shadowBlur=0;path();x.lineWidth=3;x.strokeStyle="rgba(220,255,238,.55)";x.stroke();
+      guideArrowTex=new THREE.CanvasTexture(c);
+      sharedTexSet.add(guideArrowTex);   // 跨楼层复用，换层不销毁/重传
+    }
+    const m=new THREE.SpriteMaterial({map:guideArrowTex,transparent:true,depthWrite:false,depthTest:false,toneMapped:false,alphaTest:.02,fog:false});
+    const sp=new THREE.Sprite(m);sp.scale.set(1.15,1.65,1);sp.renderOrder=999;
+    g.add(sp);g.userData.mat=m;g.userData.sprite=sp;
     return g;
   }
   function buildArrows(){
@@ -8365,11 +8397,20 @@ const Arcade3D=(function(){
       else if(!arrowBlocked(bx+px*ox*.5,bz+pz*ox*.5))ox=ox*.5;
       else if(!arrowBlocked(bx+px*alt*.5,bz+pz*alt*.5))ox=alt*.5;
     }
+    const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
+    const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
     arrow.visible=true;
-    arrow.position.set(bx+px*ox,.06+jumpY,bz+pz*ox);
-    arrow.rotation.y=Math.atan2(Tx,Tz);
-    const s=1.2+.07*Math.sin(gtime*4);
+    arrow.position.set(bx+px*ox,2.0+jumpY+Math.sin(gtime*3)*.06,bz+pz*ox);
+    if(arrow.userData.mat)arrow.userData.mat.rotation=-ang;   // Sprite 屏幕空间朝向目标
+    const s=1.05+.05*Math.sin(gtime*4);
     arrow.scale.set(s,s,s);
+  }
+  // 相对方位词：配合罗盘箭头，避免“箭头到底指哪边”的歧义
+  function bearingWord(a){
+    const d=Math.abs(a)*180/Math.PI;
+    if(d<18)return "正前";
+    if(d>162)return "正后";
+    return (a>0?"右":"左")+(d<75?"前":"后");
   }
 
   // ---------- 碰撞 ----------
@@ -8720,7 +8761,7 @@ const Arcade3D=(function(){
       const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
       const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
       wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
-      wayText.textContent="走出电梯";wayDist.textContent=Math.max(0,Math.round(Tx))+"m";
+      wayText.textContent="走出电梯 · "+bearingWord(ang);wayDist.textContent=Math.max(0,Math.round(Tx))+"m";
       wayEl.style.display="flex";wayEl.classList.remove("door");
     }else{
       if(floorIdx===2){
@@ -8736,7 +8777,7 @@ const Arcade3D=(function(){
       const ffx=-Math.sin(yaw),ffz=-Math.cos(yaw),rrx=-ffz,rrz=ffx;
       const ang=Math.atan2(Tx*rrx+Tz*rrz,Tx*ffx+Tz*ffz);
       wayArrow.style.transform="rotate("+(ang*180/Math.PI)+"deg)";
-      wayText.textContent=label;wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
+      wayText.textContent=label+(Math.abs(ang)*180/Math.PI>18?" · "+bearingWord(ang):"");wayDist.textContent=Math.round(Math.hypot(Tx,Tz))+"m";
       wayEl.style.display="flex";wayEl.classList.toggle("door",floorIdx===2);
     }
     updateGoal(nearElev,insideElev,nearDoor);
